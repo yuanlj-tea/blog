@@ -1,0 +1,4 @@
+{!! NoCaptcha::renderJs() !!}
+
+
+{!! NoCaptcha::display() !!}
