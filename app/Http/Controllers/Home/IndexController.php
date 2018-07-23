@@ -43,7 +43,6 @@ class IndexController extends CommonController
 
     public function article($art_id)
     {
-        dd($art_id);
         $field = Article::Join('category','article.cate_id','=','category.cate_id')->where('art_id',$art_id)->first();
 
         //查看次数自增
