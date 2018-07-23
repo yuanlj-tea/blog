@@ -26,7 +26,7 @@ Route::group(['middleware' => ['web']], function () {
 });
 
 
-Route::group(['middleware' => ['web','admin.login'],'prefix'=>'admin','namespace'=>'Admin'], function () {
+Route::group(['middleware' => ['web', 'admin.login'], 'prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::get('index', 'IndexController@index');
     Route::get('info', 'IndexController@info');
     Route::get('quit', 'LoginController@quit');
@@ -57,11 +57,20 @@ Route::get('vaptcha/challenge', 'VaptchaController@getChallenge');
 Route::get('vaptcha/downtime', 'VaptchaController@getDownTime');
 Route::get('vaptcha/vaptchaView', 'VaptchaController@vaptchaView');
 
-Route::get('/test','Home\IndexController@test');
-Route::get('/qrCode','Home\IndexController@qrCode');
+Route::get('/test', 'Home\IndexController@test');
+Route::get('/qrCode', 'Home\IndexController@qrCode');
 
-Route::group(['prefix'=>'swagger'],function(){
-    Route::any('/getJson','SwaggerController@getJson');
-    Route::any('/my-data','SwaggerController@getMyData');
-    Route::any('/getMyData1','SwaggerController@getMyData1');
+Route::group(['prefix' => 'swagger'], function () {
+    Route::any('/getJson', 'SwaggerController@getJson');
+    Route::any('/my-data', 'SwaggerController@getMyData');
+    Route::any('/getMyData1', 'SwaggerController@getMyData1');
+});
+
+// jwt token
+Route::group(['middleware' => ['api', 'cors'], 'prefix' => 'api','namespace' => 'Api'], function () {
+    Route::any('register', 'ApiController@register');     // 注册
+    Route::any('login', 'ApiController@login');           // 登陆
+    Route::group(['middleware' => 'jwt.auth'], function () {
+        Route::any('get_user_details', 'APIController@get_user_details');  // 获取用户详情
+    });
 });
