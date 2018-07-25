@@ -74,3 +74,10 @@ Route::group(['middleware' => ['api', 'cors'], 'prefix' => 'api','namespace' => 
         Route::any('get_user_details', 'APIController@get_user_details');  // 获取用户详情
     });
 });
+
+
+Route::group(['namespace' => 'Home','prefix'=>'api'], function () {
+    Route::any('index', 'TestJwt@index');    
+    Route::any('login', 'TestJwt@login');    
+    
+});
