@@ -65,9 +65,9 @@ class TestJwt extends Controller
                 JWT::$leeway = 60;
                 $decoded = JWT::decode($jwt, KEY, ['HS256']);
                 $arr = (array)$decoded;
-                echo '<pre>';
-                print_r($arr);
-                die;
+//                echo '<pre>';
+//                print_r($arr);
+//                die;
                 if ($arr['exp'] < time()) {
                     $res['msg'] = '请重新登录';
                 } else {
