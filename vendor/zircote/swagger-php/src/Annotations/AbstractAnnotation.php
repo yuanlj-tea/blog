@@ -127,7 +127,7 @@ abstract class AbstractAnnotation implements JsonSerializable
     public function __get($property)
     {
         $properties = get_object_vars($this);
-        Logger::notice('Property "' . $property . '" doesn\'t exist in a ' . $this->identity() . ', exising properties: "' . implode('", "', array_keys($properties)) . '" in ' . $this->_context);
+        Logger::notice('Property "' . $property . '" doesn\'t exist in a ' . $this->identity() . ', existing properties: "' . implode('", "', array_keys($properties)) . '" in ' . $this->_context);
     }
 
     public function __set($property, $value)
@@ -276,11 +276,15 @@ abstract class AbstractAnnotation implements JsonSerializable
             }
             $keyField = $nested[1];
             $object = new stdClass();
-            foreach ($this->$property as $item) {
-                $key = $item->$keyField;
-                if ($key && empty($object->$key)) {
-                    $object->$key = $item->jsonSerialize();
-                    unset($object->$key->$keyField);
+            foreach ($this->$property as $key => $item) {
+                if (is_numeric($key) === false && is_array($item)) {
+                    $object->$key = $item;
+                } else {
+                    $key = $item->$keyField;
+                    if ($key && empty($object->$key)) {
+                        $object->$key = $item->jsonSerialize();
+                        unset($object->$key->$keyField);
+                    }
                 }
             }
             $data->$property = $object;
@@ -301,7 +305,7 @@ abstract class AbstractAnnotation implements JsonSerializable
      * @return boolean
      * @throws Exception
      */
-    public function validate($parents = [], $skip = [])
+    public function validate($parents = [], $skip = [], $ref = '')
     {
         if (in_array($this, $skip, true)) {
             return true;
@@ -332,7 +336,7 @@ abstract class AbstractAnnotation implements JsonSerializable
         }
         // Report conflicting key
 
-        foreach (static::$_nested as $nested) {
+        foreach (static::$_nested as $annotationClass => $nested) {
             if (is_string($nested) || count($nested) === 1) {
                 continue;
             }
@@ -342,8 +346,11 @@ abstract class AbstractAnnotation implements JsonSerializable
             }
             $keys = [];
             $keyField = $nested[1];
-            foreach ($this->$property as $item) {
-                if (empty($item->$keyField)) {
+            foreach ($this->$property as $key => $item) {
+                if (is_array($item) && is_numeric($key) === false) {
+                    Logger::notice($this->identity() . '->' . $property . ' is an object literal, use nested @' . str_replace('Swagger\\Annotations\\', 'SWG\\', $annotationClass) . '() annotation(s) in ' . $this->_context);
+                    $keys[$key] = $item;
+                } elseif (empty($item->$keyField)) {
                     Logger::notice($item->identity() . ' is missing key-field: "' . $keyField . '" in ' . $item->_context);
                 } elseif (isset($keys[$item->$keyField])) {
                     Logger::notice('Multiple ' . $item->_identity([]) . ' with the same ' . $keyField . '="' . $item->$keyField . "\":\n  " . $item->_context . "\n  " . $keys[$item->$keyField]->_context);
@@ -352,7 +359,15 @@ abstract class AbstractAnnotation implements JsonSerializable
                 }
             }
         }
-        if (empty($this->ref)) {
+        if (isset($this->ref)) {
+            if (substr($this->ref, 0, 2) === '#/' && count($parents) > 0  && $parents[0] instanceof Swagger) { // Internal reference
+                try {
+                    $parents[0]->ref($this->ref);
+                } catch (Exception $exception) {
+                    Logger::notice($exception->getMessage().' for '.$this->identity().' in '.$this->_context);
+                }
+            }
+        } else {
             // Report missing required fields (when not a $ref)
             foreach (static::$_required as $property) {
                 if ($this->$property === null || $this->$property === UNDEFINED) {
@@ -394,22 +409,19 @@ abstract class AbstractAnnotation implements JsonSerializable
             }
         }
         $parents[] = $this;
-        return self::_validate($this, $parents, $skip) ? $valid : false;
+        return self::_validate($this, $parents, $skip, $ref) ? $valid : false;
     }
 
     /**
      * Recursively validate all annotation properties.
      *
      * @param array|object $fields
-     * @param array $path The path of annotations above this annotation in the tree.
+     * @param array $parents The path of annotations above this annotation in the tree.
      * @param array [$skip] Array with objects which are already validated
      * @return boolean
      */
-    private static function _validate($fields, $path, $skip)
+    private static function _validate($fields, $parents, $skip, $baseRef)
     {
-        $parents = $path;
-        array_pop($parents);
-        
         $valid = true;
         $blacklist = [];
         if (is_object($fields)) {
@@ -419,20 +431,21 @@ abstract class AbstractAnnotation implements JsonSerializable
             $skip[] = $fields;
             $blacklist = property_exists($fields, '_blacklist') ? $fields::$_blacklist : [];
         }
-        
+
         foreach ($fields as $field => $value) {
             if ($value === null || is_scalar($value) || in_array($field, $blacklist)) {
                 continue;
             }
+            $ref = $baseRef !== '' ? $baseRef.'/'.urlencode($field) : urlencode($field);
             if (is_object($value)) {
                 if (method_exists($value, 'validate')) {
-                    if (!$value->validate($path, $skip)) {
+                    if (!$value->validate($parents, $skip, $ref)) {
                         $valid = false;
                     }
-                } elseif (!self::_validate($value, $parents, $skip)) {
+                } elseif (!self::_validate($value, $parents, $skip, $ref)) {
                     $valid = false;
                 }
-            } elseif (is_array($value) && !self::_validate($value, $parents, $skip)) {
+            } elseif (is_array($value) && !self::_validate($value, $parents, $skip, $ref)) {
                 $valid = false;
             }
         }
@@ -513,6 +526,7 @@ abstract class AbstractAnnotation implements JsonSerializable
                 throw new Exception('Invalid type "' . $type . '"');
         }
     }
+
     /**
      * Wrap the context with a reference to the annotation it is nested in.
      * @param AbstractAnnotation $annotation

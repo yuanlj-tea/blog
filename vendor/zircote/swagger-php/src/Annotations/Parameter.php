@@ -71,8 +71,14 @@ class Parameter extends AbstractAnnotation
     public $format;
 
     /**
+     * Sets the ability to pass empty-valued parameters. This is valid only for either query or formData parameters and allows you to send a parameter with a name only or an empty value. Default value is false.
+     * @var boolean
+     */
+    public $allowEmptyValue;
+    
+    /**
      * Required if type is "array". Describes the type of items in the array.
-     * @var array
+     * @var \Swagger\Annotations\Items
      */
     public $items;
 
@@ -205,12 +211,12 @@ class Parameter extends AbstractAnnotation
     ];
 
     /** @inheritdoc */
-    public function validate($parents = [], $skip = [])
+    public function validate($parents = [], $skip = [], $ref = '')
     {
         if (in_array($this, $skip, true)) {
             return true;
         }
-        $valid = parent::validate($parents, $skip);
+        $valid = parent::validate($parents, $skip, $ref);
         if (empty($this->ref)) {
             if ($this->in === 'body') {
                 if ($this->schema === null) {
