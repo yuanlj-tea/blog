@@ -67,11 +67,11 @@ Route::group(['prefix' => 'swagger'], function () {
 });
 
 // jwt token
-Route::group(['middleware' => ['api', 'cors'], 'prefix' => 'api','namespace' => 'Api'], function () {
+Route::group(['middleware' => ['api', 'cors'], 'prefix' => 'api/jwt','namespace' => 'Api'], function () {
     Route::any('register', 'ApiController@register');     // 注册
     Route::any('login', 'ApiController@login');           // 登陆
     Route::group(['middleware' => 'jwt.auth'], function () {
-        Route::any('get_user_details', 'APIController@get_user_details');  // 获取用户详情
+        Route::any('get_user_details', 'ApiController@get_user_details');  // 获取用户详情
     });
 });
 

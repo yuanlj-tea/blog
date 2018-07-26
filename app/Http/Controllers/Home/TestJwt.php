@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Firebase\JWT\JWT;
+use AjaxResponse;
 
 class TestJwt extends Controller
 {
+
     public function index()
     {
 
@@ -23,12 +25,12 @@ class TestJwt extends Controller
 
         $res['result'] = 'failed';
 
-        $action = $request->input('action','');
+        $action = $request->input('action', '');
 
         if ($action == 'login') {
 
-            $username = htmlentities($request->input('user',''));
-            $password = htmlentities($request->input('pass',''));
+            $username = htmlentities($request->input('user', ''));
+            $password = htmlentities($request->input('pass', ''));
 
             if ($username == 'demo' && $password == 'demo') { //用户名和密码正确，则签发tokon
                 $nowtime = time();

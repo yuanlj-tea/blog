@@ -162,6 +162,8 @@ return [
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        App\Providers\AjaxResponseProvider::class,
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     ],
 
     /*
@@ -212,7 +214,10 @@ return [
 
         'NoCaptcha' => Anhskohbo\NoCaptcha\Facades\NoCaptcha::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
-        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'AjaxResponse' => App\Services\Common\Facades\AjaxResponse::class,
+
     ],
 
 ];

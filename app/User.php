@@ -2,14 +2,14 @@
 
 namespace App;
 
-use Tymon\JWTAuth\Contracts\JWTSubject;
+//use Tymon\JWTAuth\Contracts\JWTSubject;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use Illuminate\Notifications\Notifiable;
+//use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable //implements JWTSubject
 {
-    use Notifiable;
+    //use Notifiable;
 
     // Rest omitted for brevity
 

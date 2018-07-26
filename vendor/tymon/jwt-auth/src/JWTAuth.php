@@ -91,7 +91,6 @@ class JWTAuth
     public function fromUser($user, array $customClaims = [])
     {
         $payload = $this->makePayload($user->{$this->identifier}, $customClaims);
-
         return $this->manager->encode($payload)->get();
     }
 
@@ -122,7 +121,7 @@ class JWTAuth
     public function authenticate($token = false)
     {
         $id = $this->getPayload($token)->get('sub');
-
+//dd($this->auth->byId());
         if (! $this->auth->byId($id)) {
             return false;
         }
