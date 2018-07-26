@@ -9,6 +9,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable //implements JWTSubject
 {
+    protected $table='user';
+
+    protected $primaryKey='user_id';
+
     //use Notifiable;
 
     // Rest omitted for brevity

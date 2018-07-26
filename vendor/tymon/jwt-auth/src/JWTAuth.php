@@ -72,7 +72,7 @@ class JWTAuth
     public function toUser($token = false)
     {
         $payload = $this->getPayload($token);
-
+//dd($this->identifier);
         if (! $user = $this->user->getBy($this->identifier, $payload['sub'])) {
             return false;
         }
@@ -121,7 +121,7 @@ class JWTAuth
     public function authenticate($token = false)
     {
         $id = $this->getPayload($token)->get('sub');
-//dd($this->auth->byId());
+
         if (! $this->auth->byId($id)) {
             return false;
         }

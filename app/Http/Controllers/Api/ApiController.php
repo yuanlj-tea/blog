@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use JWTAuth;
 use JWTFactory;
 
+
 class ApiController extends Controller
 {
     /*登陆*/
@@ -17,7 +18,7 @@ class ApiController extends Controller
     {
         $userInfo = User::where('user_name','admin')->first();
 
-        $userInfo->id =1;
+        //$userInfo->id =1;
         $token = JWTAuth::fromUser($userInfo);
 
         dd($token);
@@ -34,7 +35,7 @@ class ApiController extends Controller
 
     public function get_user_details()
     {
-        
+
     }
 
 

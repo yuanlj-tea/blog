@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use PDF;
 use App\Jobs\test;
 use QrCode;
+use PdfWatermarker\PdfWatermarker;
+
 class IndexController extends CommonController
 {
     public function index()
@@ -73,6 +75,16 @@ class IndexController extends CommonController
      */
     public function testDownloadPdf()
     {
+        $watermarker = new PdfWatermarker(
+            $_SERVER['DOCUMENT_ROOT'].'/public/1471231264.pdf', // input
+            $_SERVER['DOCUMENT_ROOT'].'/public/output.pdf', // output
+            $_SERVER['DOCUMENT_ROOT'].'/public/new.png', // watermark file
+            'center', // watermark position (topleft, topright, bottomleft, bottomright, center)
+            true // set to true - replace original input file
+        );
+        $watermarker->create();
+die;
+
         $data = array('name'=>'测试');
         return view('invoice',$data);
         $pdf = PDF::loadView('invoice', $data);

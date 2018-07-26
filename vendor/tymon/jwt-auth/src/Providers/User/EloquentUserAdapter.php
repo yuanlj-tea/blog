@@ -39,6 +39,7 @@ class EloquentUserAdapter implements UserInterface
      */
     public function getBy($key, $value)
     {
+        //dd($this->user);
         return $this->user->where($key, $value)->first();
     }
 }
