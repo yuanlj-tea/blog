@@ -17,7 +17,8 @@
         "firebase/php-jwt": "^5.0",
         "barryvdh/laravel-ide-helper": "^2.4",
         "doctrine/inflector": "1.1.0",
-        "h2akim/pdfwatermarker": "dev-master"
+        "h2akim/pdfwatermarker": "dev-master",
+        "elasticsearch/elasticsearch": "^6.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
