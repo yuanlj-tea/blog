@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Model\Article;
 use App\Http\Model\Category;
 use Illuminate\Http\Request;
-
+use App\Libs\Es;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -45,8 +45,25 @@ class ArticleController extends CommonController
         $validator = Validator::make($input,$rules,$message);
 
         if($validator->passes()){
-            $re = Article::create($input);
-            if($re){
+            $art_id = Article::insertGetId([
+                'art_title' => $input['art_title'],
+                'art_tag' => $input['art_tag'],
+                'art_description' => $input['art_description'],
+                'art_thumb' => $input['art_thumb'],
+                'art_content' => $input['art_content'],
+                'art_time' => $input['art_time'],
+                'art_editor' => $input['art_editor'],
+                'cate_id' => $input['cate_id']
+            ]);
+
+
+
+            if($art_id){
+                $es_index = env('ES_INDEX');
+                $es_type = 'article';
+                $data = Article::where('art_id',$art_id)->first()->toArray();
+                Es::addIndex($es_index,$es_type,$art_id,$data);
+
                 return redirect('admin/article');
             }else{
                 return back()->with('errors','数据填充失败，请稍后重试！');

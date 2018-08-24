@@ -15,6 +15,12 @@ class LoginController extends CommonController
 {
     public function login()
     {
+//        $res = User::first();
+//        $pwd = Crypt::encrypt(123456);
+//        User::where('user_id',$res->user_id)->update([
+//            'user_pass' => $pwd
+//        ]);
+//        die('ok');
         if($input = Input::all()){
             $code = new \Code;
             $_code = $code->get();

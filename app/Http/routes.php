@@ -60,6 +60,7 @@ Route::get('vaptcha/vaptchaView', 'VaptchaController@vaptchaView');
 Route::get('/test', 'Home\IndexController@test');
 Route::get('/qrCode', 'Home\IndexController@qrCode');
 
+// test swagger
 Route::group(['prefix' => 'swagger'], function () {
     Route::any('/getJson', 'SwaggerController@getJson');
     Route::any('/my-data', 'SwaggerController@getMyData');
@@ -75,9 +76,15 @@ Route::group(['middleware' => ['api', 'cors'], 'prefix' => 'api/jwt','namespace'
     });
 });
 
-
+// test common jwt
 Route::group(['namespace' => 'Home','prefix'=>'api'], function () {
     Route::any('index', 'TestJwt@index');    
     Route::any('login', 'TestJwt@login');    
     
+});
+
+// test es
+Route::group(['namespace' => 'Home','prefix'=>'es'], function () {
+    Route::any('initIndex', 'EsController@initIndex');
+
 });

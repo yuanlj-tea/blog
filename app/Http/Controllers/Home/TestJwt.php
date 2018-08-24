@@ -14,7 +14,6 @@ class TestJwt extends Controller
 
     public function index()
     {
-
         return view('home.test');
     }
 
