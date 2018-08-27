@@ -62,7 +62,7 @@ class ArticleController extends CommonController
                 $es_index = env('ES_INDEX');
                 $es_type = 'article';
                 $data = Article::where('art_id',$art_id)->first()->toArray();
-                Es::addIndex($es_index,$es_type,$art_id,$data);
+                Es::addDoc($es_index,$es_type,$art_id,$data);
 
                 return redirect('admin/article');
             }else{
@@ -84,9 +84,14 @@ class ArticleController extends CommonController
     //put.admin/article/{article}    更新文章
     public function update($art_id)
     {
-        $input = Input::except('_token','_method');
+        $input = Input::except('_token','_method','file_upload');
         $re = Article::where('art_id',$art_id)->update($input);
         if($re){
+            $es_index = env('ES_INDEX');
+            $es_type = 'article';
+            $data = Article::where('art_id',$art_id)->first()->toArray();
+
+            Es::addDoc($es_index,$es_type,$art_id,$data);
             return redirect('admin/article');
         }else{
             return back()->with('errors','文章更新失败，请稍后重试！');
@@ -98,6 +103,10 @@ class ArticleController extends CommonController
     {
         $re = Article::where('art_id',$art_id)->delete();
         if($re){
+            $es_index = env('ES_INDEX');
+            $es_type = 'article';
+
+            Es::delDoc($es_index,$es_type,$art_id);
             $data = [
                 'status' => 0,
                 'msg' => '文章删除成功！',

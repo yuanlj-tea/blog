@@ -86,5 +86,7 @@ Route::group(['namespace' => 'Home','prefix'=>'api'], function () {
 // test es
 Route::group(['namespace' => 'Home','prefix'=>'es'], function () {
     Route::any('initIndex', 'EsController@initIndex');
+    Route::any('search', 'EsController@search');
+    Route::any('searchArticle', 'EsController@searchArticle');
 
 });
