@@ -15,6 +15,10 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+
+        //OAuth2 Server
+//        \LucaDegasperi\OAuth2Server\Middleware\OAuthExceptionHandlerMiddleware::class,
+//        \App\Http\Middleware\OAuthExceptionHandlerMiddleware::class,
     ];
 
     /**
@@ -51,5 +55,12 @@ class Kernel extends HttpKernel
         'admin.login' => \App\Http\Middleware\AdminLogin::class,
         'cors' => \App\Http\Middleware\CORS::class,
         'jwt.auth' => \App\Http\Middleware\authJWT::class,
+
+        //OAuth2 Server
+        'oauth' => \LucaDegasperi\OAuth2Server\Middleware\OAuthMiddleware::class,
+        'oauth-user' => \LucaDegasperi\OAuth2Server\Middleware\OAuthUserOwnerMiddleware::class,
+        'oauth-client' => \LucaDegasperi\OAuth2Server\Middleware\OAuthClientOwnerMiddleware::class,
+        'check-authorization-params' => \LucaDegasperi\OAuth2Server\Middleware\CheckAuthCodeRequestMiddleware::class,
+        'oauth-exception' => \App\Http\Middleware\OAuthExceptionHandlerMiddleware::class,
     ];
 }

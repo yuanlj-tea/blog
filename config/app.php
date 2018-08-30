@@ -164,6 +164,9 @@ return [
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         App\Providers\AjaxResponseProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+
+        LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider::class,
+        LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class,
     ],
 
     /*
@@ -217,6 +220,9 @@ return [
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'AjaxResponse' => App\Services\Common\Facades\AjaxResponse::class,
+
+        //OAuth2 Server
+        'Authorizer' => LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
 
     ],
 

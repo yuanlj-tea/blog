@@ -18,7 +18,9 @@
         "barryvdh/laravel-ide-helper": "^2.4",
         "doctrine/inflector": "1.1.0",
         "h2akim/pdfwatermarker": "dev-master",
-        "elasticsearch/elasticsearch": "^6.0"
+        "elasticsearch/elasticsearch": "^6.0",
+        "lucadegasperi/oauth2-server-laravel": "5.1.*",
+        "doctrine/dbal": "~2.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -65,7 +67,7 @@
     "repositories": {
         "packagist": {
             "type": "composer",
-            "url": "https://packagist.phpcomposer.com"
+            "url": "https://packagist.laravel-china.org"
         }
     }
 }

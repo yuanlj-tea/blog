@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
-Source Server Version : 50617
-Source Host           : localhost:3306
+Source Server         : 192.168.79.206
+Source Server Version : 80000
+Source Host           : 192.168.79.206:3306
 Source Database       : blog
 
 Target Server Type    : MYSQL
-Target Server Version : 50617
+Target Server Version : 80000
 File Encoding         : 65001
 
-Date: 2018-07-22 21:54:57
+Date: 2018-08-30 16:08:40
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -31,7 +31,7 @@ CREATE TABLE `blog_article` (
   `art_view` int(11) DEFAULT '0' COMMENT '//查看次数',
   `cate_id` int(11) DEFAULT '0' COMMENT '//分类id',
   PRIMARY KEY (`art_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='//文章';
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COMMENT='//文章';
 
 -- ----------------------------
 -- Records of blog_article
@@ -44,11 +44,11 @@ INSERT INTO `blog_article` VALUES ('5', '总局发2015年2、3月电视动画备
 INSERT INTO `blog_article` VALUES ('6', '白宫下封口令禁止美军将领谈南海问题', '美国,南海问题', '美国《海军时报》网站7日报道称，围绕南海问题，美国太平洋司令部司令哈里斯最近正暗中积极寻求更具对抗性的手段，试图“回击和逆转中国的南海战略优势”', 'uploads/20160408101541221.jpg', '<p style=\"margin-top: 0px; margin-bottom: 20px; padding: 0px; line-height: 32px; font-size: 18px; font-family: &#39;Microsoft Yahei&#39;, 微软雅黑, &#39;STHeiti Light&#39;, 华文细黑, SimSun, 宋体, Arial, sans-serif; white-space: normal;\">美国《海军时报》网站7日报道称，围绕南海问题，美国太平洋司令部司令哈里斯最近正暗中积极寻求更具对抗性的手段，试图“回击和逆转中国的南海战略优势”。不过，他的这些诉求屡在白宫碰壁，<strong>美国总统国家安全事务助理苏珊·赖斯甚至曾在核安全峰会前夕要求哈里斯和其他军方人士在南海问题上“闭嘴”。</strong></p><p style=\"margin-top: 0px; margin-bottom: 20px; padding: 0px; line-height: 32px; font-size: 18px; font-family: &#39;Microsoft Yahei&#39;, 微软雅黑, &#39;STHeiti Light&#39;, 华文细黑, SimSun, 宋体, Arial, sans-serif; white-space: normal;\">　　报道称，哈里斯和他的太平洋司令部过去几个月不停地在公开和私下场合拔高中国“攫取南海岛礁的做法”。他一直游说美国国家安全委员会（NSC）、国会和五角大楼，向中国发出明确信号，强调美方不能容忍中国“欺负邻居”。有消息人士对《海军时报》表示，哈里斯想在巡航频次上翻倍。曾担任美国海军作战部长乔纳森·格林纳特的高级顾问的卜瑞安·克拉克表示，哈里斯正寻求在南海岛礁12海里之内利用直升机等采取军事行动，“他想进行真正的自由航行”。</p><p style=\"margin-top: 0px; margin-bottom: 20px; padding: 0px; line-height: 32px; font-size: 18px; font-family: &#39;Microsoft Yahei&#39;, 微软雅黑, &#39;STHeiti Light&#39;, 华文细黑, SimSun, 宋体, Arial, sans-serif; white-space: normal;\">　　不过，距离结束任期只有9个月的奥巴马正加强与中国在核不扩散、贸易等方面的合作。美国智库新美国安全中心专家、退役海军上校杰瑞·亨德里克斯认为，“奥巴马政府希望在任期结束时与中国之间的乱子最小，合作最大”。克拉克说，NSC会定期审查海军作战部长的言论。专家称，奥巴马政府不想给南海添乱。</p><p style=\"margin-top: 0px; margin-bottom: 20px; padding: 0px; line-height: 32px; font-size: 18px; font-family: &#39;Microsoft Yahei&#39;, 微软雅黑, &#39;STHeiti Light&#39;, 华文细黑, SimSun, 宋体, Arial, sans-serif; white-space: normal;\">　　两名五角大楼官员披露称，赖斯曾在核安全峰会前夕向哈里斯和其他美军官员下了封口令，<strong>要求他们在那段时间不要对中国的南海活动进行公开评论，以保障奥巴马与中方在核峰会期间会谈时有“最大的政治操作空间”。</strong>据称，封口令是3月18日NSC会议的内容之一。熟悉此次会议的美国官员称：“我们谈论中国的举动有时可以，有时不行。与此同时，中国向外传递的信息始终一致。”军方人士认为，对中国的“强硬举动”沉默这样胆小的反应会让中国更加大胆，让被欺负的盟友更担心。美国参议员麦凯恩对《海军时报》称，“白宫的避险行为导致政策制定犹豫不决，这无法威慑中国”。专家称，奥巴马政府经常要求军方在会谈前降低嗓门，但现在正值艰难时刻。美方正寻求在与中国不发生对峙的情况下，有效阻止其造岛行动。</p><p style=\"margin-top: 0px; margin-bottom: 20px; padding: 0px; line-height: 32px; font-size: 18px; font-family: &#39;Microsoft Yahei&#39;, 微软雅黑, &#39;STHeiti Light&#39;, 华文细黑, SimSun, 宋体, Arial, sans-serif; white-space: normal;\">　　《海军时报》就其了解的上述内容向哈里斯和美国海军作战部询问时，对方都拒绝置评。美国海军行政人员只是说，他们就涉及中国的问题上保持部门之间的沟通。《海军时报》评论称，封口令至少有了一个效果。美国的一艘两栖攻击舰和一艘海滩登陆舰3月底通过南海时，悄悄然无人知晓。</p><p><br/></p>', '1460081749', '后盾网', '5', '9');
 INSERT INTO `blog_article` VALUES ('7', '深圳楼市调控措施立竿见影：成交量连续5周下滑', '深圳,成交量', '3月25日，上海发布实施九条房地产调控措施，包括非户籍人士购房社保缴纳年限从累计2年提高到连续5年，二套非普通住房首付比例从四成激增到七成', 'uploads/20160408101821971.jpg', '<p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; line-height: 2em; font-family: &#39;Microsoft YaHei&#39;, u5FAEu8F6Fu96C5u9ED1, Arial, SimSun, u5B8Bu4F53; white-space: normal;\">近两周来，房地产调控措施的降温效果明显，上海、深圳的楼市成交量遭遇“速冻”。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; line-height: 2em; font-family: &#39;Microsoft YaHei&#39;, u5FAEu8F6Fu96C5u9ED1, Arial, SimSun, u5B8Bu4F53; white-space: normal;\">　　3月25日，上海发布实施九条房地产调控措施，包括非户籍人士购房社保缴纳年限从累计2年提高到连续5年，二套非普通住房首付比例从四成激增到七成，限购资格审核流程从交易阶段前置到了签约环节等；同日出台的深圳版调控措施，提出实施提高房贷首付、从严收紧限购等。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; line-height: 2em; font-family: &#39;Microsoft YaHei&#39;, u5FAEu8F6Fu96C5u9ED1, Arial, SimSun, u5B8Bu4F53; white-space: normal;\">　　调控措施效果立竿见影，市场如期降温。信义房屋企研室监测数据显示，上海二手商品住宅在3月24日成交曾猛增至4400套，之后锐减，保持在1000套左右，仅为3月前期水平的一半。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; line-height: 2em; font-family: &#39;Microsoft YaHei&#39;, u5FAEu8F6Fu96C5u9ED1, Arial, SimSun, u5B8Bu4F53; white-space: normal;\">　　记者从上海多家二手房中介门店了解到，清明小长假3天，上海中环以外区域门店来客量比平时减少4成至5成，而类似<span id=\"stock_sh600663\"><a href=\"http://finance.sina.com.cn/realstock/company/sh600663/nc.shtml\" class=\"keyword\" target=\"_blank\" style=\"color: rgb(17, 62, 170); text-decoration: none;\">陆家嘴</a></span><span id=\"quote_sh600663\">(<span style=\"color:black\">38.610</span>,&nbsp;<span style=\"color:black\">0.00</span>,&nbsp;<span style=\"color:black\">0.00%</span>)</span>这样的中心区门店，来客量比平时减少7成至8成。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; line-height: 2em; font-family: &#39;Microsoft YaHei&#39;, u5FAEu8F6Fu96C5u9ED1, Arial, SimSun, u5B8Bu4F53; white-space: normal;\">　　有银行个贷部人员告诉记者，近两周前来办理贷款的购房人少了五六成，“以前每周至少20组，现在只有不到10组。”中原地产门店业务员说：“现在不少卖家下调报价，一套房的挂牌价可下调10万元至30万元，基本接近年初的价格水平。”</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; line-height: 2em; font-family: &#39;Microsoft YaHei&#39;, u5FAEu8F6Fu96C5u9ED1, Arial, SimSun, u5B8Bu4F53; white-space: normal;\">　　深圳规划和国土资源委员会的数据显示，3月28日至4月3日，深圳一手住宅成交652套，成交面积约7.05万平方米，分别环比下滑16%和15.7%。这已经是深圳新房成交面积连续第五周下滑，与春节前的周成交量相比接近腰斩。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; line-height: 2em; font-family: &#39;Microsoft YaHei&#39;, u5FAEu8F6Fu96C5u9ED1, Arial, SimSun, u5B8Bu4F53; white-space: normal;\">　　对未来房价预期则出现分歧。经济学家<a class=\"wt_article_link\" href=\"http://weibo.com/lawma?zw=finance\" target=\"_blank\" style=\"color: rgb(17, 62, 170); text-decoration: none;\">马光远</a>认为，上海、深圳的房价已透支了全年的涨幅。而在调控周期下，整个市场预期已经出现明显逆转，同时很多具有购买能力但没有购房资格的人将退出市场，因此深圳、上海的房价不排除下跌调整的可能。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; line-height: 2em; font-family: &#39;Microsoft YaHei&#39;, u5FAEu8F6Fu96C5u9ED1, Arial, SimSun, u5B8Bu4F53; white-space: normal;\">　　有房企负责人认为，由于地价高企，且前期大量成交所导致的开发商大量回款，短期内期望房价下降并不现实。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; line-height: 2em; font-family: &#39;Microsoft YaHei&#39;, u5FAEu8F6Fu96C5u9ED1, Arial, SimSun, u5B8Bu4F53; white-space: normal;\">　　上海财经大学不动产研究所所长陈杰表示，通过加强资金流的约束提高二套房首付比例，可以大幅提高炒房成本，一定程度上会抑制投机炒作。“楼市短期内会冷却一段时间，但还要警惕反弹。上海2015年房地产开发量和新开工都不旺盛，供给回升需要一个周期。”</p><p><br/></p>', '1460081905', '后盾网', '0', '8');
 INSERT INTO `blog_article` VALUES ('8', '部分山寨社团被曝光后仍有活动', '山寨,活动', '在“中华民营企业联合会年会——专题页”网页上，“中华民营企业联合会”称，该组织于2013年1月25日在北京钓鱼台国宾馆举行年会，歌唱家蒋大为献唱。', 'uploads/20160408101938116.jpg', '<p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; line-height: 2em; font-family: &#39;Microsoft YaHei&#39;, u5FAEu8F6Fu96C5u9ED1, Arial, SimSun, u5B8Bu4F53; white-space: normal;\">　在“中华民营企业联合会年会——专题页”网页上，“中华民营企业联合会”称，该组织于2013年1月25日在北京钓鱼台国宾馆举行年会，歌唱家蒋大为献唱。网络截图</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; line-height: 2em; font-family: &#39;Microsoft YaHei&#39;, u5FAEu8F6Fu96C5u9ED1, Arial, SimSun, u5B8Bu4F53; white-space: normal;\">　　新京报讯 近日，民政部在中国社会组织网陆续曝光了3批共228家“离岸社团”、“山寨社团”名单，还公布了曝光后已注销的3家组织名单。民政部相关负责人表示，将监控“山寨社团”，对继续以该组织名义开展活动的及时处罚。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; line-height: 2em; font-family: &#39;Microsoft YaHei&#39;, u5FAEu8F6Fu96C5u9ED1, Arial, SimSun, u5B8Bu4F53; white-space: normal;\">　　据民政部民间组织管理局局长詹成付介绍，这些山寨协会主要是内地居民利用境内外对社会组织登记管理制度的差异，在登记条件宽松的国家和地区进行注册的，如美国、澳大利亚、中国香港等地。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; line-height: 2em; font-family: &#39;Microsoft YaHei&#39;, u5FAEu8F6Fu96C5u9ED1, Arial, SimSun, u5B8Bu4F53; white-space: normal;\">　　“这些组织通过开展活动、吸收会员、设立分支组织的形式行骗敛财。”詹成付称，山寨协会的敛财手段主要有发展会员、成立分会收取会费，发牌照、搞评选颁奖活动收钱，搞行业培训收费等方式，也有些山寨组织直接对企业敲诈勒索。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; line-height: 2em; font-family: &#39;Microsoft YaHei&#39;, u5FAEu8F6Fu96C5u9ED1, Arial, SimSun, u5B8Bu4F53; white-space: normal;\">　　詹成付表示，民政部将对曝光名单进行动态管理，及时更新，并对已注销的社团进行监控。如果这些注册在境外的山寨组织，未登记或未取得临时活动许可开展活动的，将予以取缔，没收非法财物所得，对责任人进行警告、罚款甚至拘留。</p><p><br/></p>', '1460081995', '后盾网', '0', '8');
-INSERT INTO `blog_article` VALUES ('9', '王凯：花式吻戏我害羞 感情上我主动', '新浪,王凯', '新浪娱乐讯 4月7日，电视剧《欢乐颂》在杭州举办发布会，刘涛[微博]、蒋欣[微博]、王子文[微博]、乔欣、王凯[微博]、祖峰等主演亮相。', 'uploads/20160408102048702.jpg', '<p>新浪娱乐讯 4月7日，电视剧《欢乐颂》在杭州举办发布会，刘涛[微博]、蒋欣[微博]、王子文[微博]、乔欣、王凯[微博]、祖峰等主演亮相。制片人侯鸿亮透露，第二部已经启动，将保证完整原班人马。而王凯则自曝在剧中无时无刻不在花式接吻，自己很害羞，而在感情中，自己也是主动型的，“我喜欢就大方去追，就说出来。”据悉，刘涛的女儿将在剧中献出荧幕首秀，但她表示女儿不会因此进军娱乐圈。此外，刘涛还爆料，蒋欣对两位男演员靳东[微博]和霍建华十分中意。</p><p><br/></p><p>　　制片人侯鸿亮：第二部已启动 保证原班人马</p><p><br/></p><p>　　自去年《琅琊榜》《伪装者》霸屏之后，其背后的东阳正午阳光影视有限公司浮出水面，而《欢乐颂》是这个团队的第一部女性题材作品。据悉，该剧由孔笙[微博]、简川訸[微博]执导，袁子弹编剧，侯鸿亮制片，改编自阿耐的同名小说，讲述了各自携带往事和憧憬的五位女性先后住进欢乐颂小区22楼，彼此间产生的交集以及各自的情感故事。</p><p><br/></p><p>　　“他们说我会拍男人戏，不会拍女人戏，这次就要拍一部女人戏。”导演孔笙打趣道。 而制片人侯鸿亮则现场透露，《欢乐颂》第二部项目已经启动，剧本正在创作中，预计今年9月开机，明年春天与观众见面。第二部会保证原班人马，“所有男女主角，哪怕是小配角都不会有变动。”</p><p><br/></p>', '1460082082', '陈华', '12', '11');
+INSERT INTO `blog_article` VALUES ('9', '王凯：花式吻戏我害羞 感情上我主动', '新浪,王凯', '新浪娱乐讯 4月7日，电视剧《欢乐颂》在杭州举办发布会，刘涛[微博]、蒋欣[微博]、王子文[微博]、乔欣、王凯[微博]、祖峰等主演亮相。', 'uploads/20160408102048702.jpg', '<p>新浪娱乐讯 4月7日，电视剧《欢乐颂》在杭州举办发布会，刘涛[微博]、蒋欣[微博]、王子文[微博]、乔欣、王凯[微博]、祖峰等主演亮相。制片人侯鸿亮透露，第二部已经启动，将保证完整原班人马。而王凯则自曝在剧中无时无刻不在花式接吻，自己很害羞，而在感情中，自己也是主动型的，“我喜欢就大方去追，就说出来。”据悉，刘涛的女儿将在剧中献出荧幕首秀，但她表示女儿不会因此进军娱乐圈。此外，刘涛还爆料，蒋欣对两位男演员靳东[微博]和霍建华十分中意。</p><p><br/></p><p>　　制片人侯鸿亮：第二部已启动 保证原班人马</p><p><br/></p><p>　　自去年《琅琊榜》《伪装者》霸屏之后，其背后的东阳正午阳光影视有限公司浮出水面，而《欢乐颂》是这个团队的第一部女性题材作品。据悉，该剧由孔笙[微博]、简川訸[微博]执导，袁子弹编剧，侯鸿亮制片，改编自阿耐的同名小说，讲述了各自携带往事和憧憬的五位女性先后住进欢乐颂小区22楼，彼此间产生的交集以及各自的情感故事。</p><p><br/></p><p>　　“他们说我会拍男人戏，不会拍女人戏，这次就要拍一部女人戏。”导演孔笙打趣道。 而制片人侯鸿亮则现场透露，《欢乐颂》第二部项目已经启动，剧本正在创作中，预计今年9月开机，明年春天与观众见面。第二部会保证原班人马，“所有男女主角，哪怕是小配角都不会有变动。”</p><p><br/></p>', '1460082082', '陈华', '14', '11');
 INSERT INTO `blog_article` VALUES ('10', '曝中国企业与巴萨谈胸前赞助 巴萨球衣前印汉字?', '体育,赞助商', '你能想象，巴萨球衣前面印上中国汉字吗？如今看来，这个设想真有可能变成现实。根据《每日体育报》的报道，一家中国公司正在和巴萨进行谈判，有可能成为巴萨新的球衣胸前赞助商。', 'uploads/20160408102224712.jpg', '<p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; font-size: 14px; line-height: 23px; color: rgb(51, 51, 51); font-family: 宋体; white-space: normal; background-color: rgb(255, 255, 255);\">你能想象，巴萨球衣前面印上中国汉字吗？如今看来，这个设想真有可能变成现实。根据《每日体育报》的报道，一家中国公司正在和巴萨进行谈判，有可能成为巴萨新的球衣胸前赞助商。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; font-size: 14px; line-height: 23px; color: rgb(51, 51, 51); font-family: 宋体; white-space: normal; background-color: rgb(255, 255, 255);\">　　巴萨如今的球衣胸前赞助商是卡塔尔航空公司，双方从2013年开始合作，此后3个赛季的总赞助金额为1.65亿欧元，合同于今年6月30日到期。此前，由于巴萨方面提高要价，双方一直没有就续约事宜达成一致。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; font-size: 14px; line-height: 23px; color: rgb(51, 51, 51); font-family: 宋体; white-space: normal; background-color: rgb(255, 255, 255);\">　　《每日体育报》报道称，在与卡塔尔方面就续约继续谈判的同时，巴萨也在寻找其他可能的新赞助商，其中就包括一家中国公司。<strong>报道称，双方的谈判目前还处于初级阶段，该中方公司的名字也还没有曝光，能否在下赛季开始前达成协议，还要打上一个大大的问号。</strong></p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; font-size: 14px; line-height: 23px; color: rgb(51, 51, 51); font-family: 宋体; white-space: normal; background-color: rgb(255, 255, 255);\">　　据悉，如果巴萨与其他赞助商达成一致，卡塔尔航空有匹配报价的权利。《每日体育报》还报道称，巴萨方面不打算在价格上让步，为了找到合适的赞助商，他们甚至不惜“裸奔”一年。</p><p><br/></p>', '1460082149', '后盾网', '0', '1');
 INSERT INTO `blog_article` VALUES ('12', '最强大脑挑战围棋速成未果 成人普及迎新希望', '最强大脑,围棋', '4月7日下午，最强大脑挑战速成围棋活动在新浪网演播室结束，四位最强大脑人气选手经过了五天半的围棋特训，最终在挑战环节中，被让九子对阵世界冠军遗憾落败。', 'uploads/20160408102712947.jpg', '<p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; font-size: 14px; line-height: 23px; color: rgb(51, 51, 51); font-family: 宋体; white-space: normal; background-color: rgb(255, 255, 255);\">4月7日下午，最强大脑挑战速成围棋活动在新浪网演播室结束，四位最强大脑人气选手经过了五天半的围棋特训，最终在挑战环节中，被让九子对阵世界冠军遗憾落败，对阵围棋人工智能两盘棋因为直播时间的缘故未能下完，两位最强大脑棋手形势不佳。不过四位最强大脑的棋艺得到了职业棋手的肯定，四人也表示围棋非常有趣，后面还要继续学习。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; font-size: 14px; line-height: 23px; color: rgb(51, 51, 51); font-family: 宋体; white-space: normal; background-color: rgb(255, 255, 255);\">　　围棋变化无穷，博大精深，但围棋的规则其实非常简单。知道“气”和“眼”的概念，就可以下棋了。但更进一步的了解攻防，战斗，子效，棋理等就需要多年的积累和参悟，这也是在围棋普及工作上遇到的最大困难。很多人对围棋感兴趣，但由于时间成本太高，只能知难而退。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; font-size: 14px; line-height: 23px; color: rgb(51, 51, 51); font-family: 宋体; white-space: normal; background-color: rgb(255, 255, 255);\">网名为“真疯叔叔”的围棋教练李振沣发明了一套适用于成年人的教学方法，把围棋的理念与现实生活中的道理类比，让人先明白围棋中的道理，然后在对弈中感悟，实践，与普通的教学方法相比，反其道而行之。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; font-size: 14px; line-height: 23px; color: rgb(51, 51, 51); font-family: 宋体; white-space: normal; background-color: rgb(255, 255, 255);\">　　围棋速成法一出，真疯叔叔和教学团队就不止一次表态，这套教学方法不适用于少儿培训。举个简单到例子，关于棋子之间的关系、配合，真疯叔叔是用职场之间人与人之间的关系类比的，成年人可以很轻松的明白其中关键，但给孩子解释起来就不知从何说起了……</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; font-size: 14px; line-height: 23px; color: rgb(51, 51, 51); font-family: 宋体; white-space: normal; background-color: rgb(255, 255, 255);\">　　这种教学方法在成人普及中取得了非常不错的效果，四位最强大脑虽然只是学习了五天半的围棋，但已经基本能够看懂围棋的攻守争战。虽然在局部计算上肯定还有欠缺，但用他们队长王昱珩的话说：“人机大战的时候我可以得意的告诉别人，我知道李世石和阿尔法在做什么了。”</p><p><br/></p>', '1460082468', '后盾网', '3', '11');
 INSERT INTO `blog_article` VALUES ('13', '考完主持人考普通话 孟非：这碗饭吃得险象环生', '孟非,主持人', '名嘴孟非在网上发文感慨“主持人这碗饭吃得险象环生”，文中称：“刚通过主持人上岗考试还没几天，又接到通知要我参加普通话等级测试。这碗饭吃得越发险象环生了……”', 'uploads/20160408103118110.jpg', '<p style=\"margin-top: 1em; margin-bottom: 1em; padding: 0px; border: 0px; outline: none; list-style: none; font-family: 宋体; line-height: 28.8px; white-space: normal; background-color: rgb(255, 255, 255);\">　今日，名嘴孟非在网上发文感慨“主持人这碗饭吃得险象环生”，文中称：“刚通过主持人上岗考试还没几天，又接到通知要我参加普通话等级测试。这碗饭吃得越发险象环生了……”名嘴也是烦恼颇多。</p><p style=\"margin-top: 1em; margin-bottom: 1em; padding: 0px; border: 0px; outline: none; list-style: none; font-family: 宋体; line-height: 28.8px; white-space: normal; background-color: rgb(255, 255, 255);\">　　有网友表示：“闹半天你这么多年是无证主持～”，也有网友安慰孟非：“你要是上德云社说相声，还得考你贯口和绕口令呢。普通话，小菜一碟!”，更有网友直言：“咱是靠脸吃饭的好吗？”</p><p><br/></p>', '1460082704', '后盾网', '0', '8');
-INSERT INTO `blog_article` VALUES ('14', '苹果7/7 Plus齐曝光:双摄像头 售价提高', '苹果,摄像头', '国外科技媒体BGR指出，Youtube频道「iPhone-Tricks.com」释出一段iPhone 7概念视频。从视频中可以看到该概念iPhone 7采取完全无边框的是设计，搭配OLED屏幕；而Touch ID与屏幕融为一体。', 'uploads/20160408113758707.jpg', '<p style=\"margin-top: 20px; margin-bottom: 0px; padding: 0px; border: 0px; line-height: 32px; color: rgb(36, 36, 36); font-family: &#39;Microsoft YaHei&#39;; white-space: normal; background-color: rgb(255, 255, 255);\">　国外科技媒体BGR指出，Youtube频道「iPhone-Tricks.com」释出一段iPhone 7概念视频。从视频中可以看到该概念iPhone 7采取完全无边框的是设计，搭配OLED屏幕；而Touch ID与屏幕融为一体。此外，Touch ID除了解锁以外，还有更多好用的功能，比如说快速查看信息、拨打电话等。</p><p style=\"margin-top: 20px; margin-bottom: 0px; padding: 0px; border: 0px; line-height: 32px; color: rgb(36, 36, 36); font-family: &#39;Microsoft YaHei&#39;; white-space: normal; background-color: rgb(255, 255, 255);\">　　此外，郭明池还表示，5.5寸版本的iPhone 7 Plus要用双摄像头，这是跟4.7寸版本最明显的区别，当然售价也会提高一些，同时该机的造型可能不会那么惊艳，毕竟大家对新一代iPhone的期望有些过高了。</p><p style=\"margin-top: 20px; margin-bottom: 0px; padding: 0px; border: 0px; line-height: 32px; color: rgb(36, 36, 36); font-family: &#39;Microsoft YaHei&#39;; white-space: normal; background-color: rgb(255, 255, 255);\">　　之前就有消息称，苹果想要iPhone 4.7寸和5.5寸之间的差距更明显，而现在双摄像头的运用，的确是一个不错的办法，而对于国内用户来说，首选应该iPhone 7 Plus了吧，不管外形有多平庸，售价有多贵，是吧？</p><p><br/></p>', '1460082782', '后盾网', '7', '8');
+INSERT INTO `blog_article` VALUES ('14', '苹果7/7 Plus齐曝光:双摄像头 售价提高', '苹果,摄像头', '国外科技媒体BGR指出，Youtube频道「iPhone-Tricks.com」释出一段iPhone 7概念视频。从视频中可以看到该概念iPhone 7采取完全无边框的是设计，搭配OLED屏幕；而Touch ID与屏幕融为一体。', 'uploads/20160408113758707.jpg', '<p style=\"margin-top: 20px; margin-bottom: 0px; padding: 0px; border: 0px; line-height: 32px; color: rgb(36, 36, 36); font-family: &#39;Microsoft YaHei&#39;; white-space: normal; background-color: rgb(255, 255, 255);\">　国外科技媒体BGR指出，Youtube频道「iPhone-Tricks.com」释出一段iPhone 7概念视频。从视频中可以看到该概念iPhone 7采取完全无边框的是设计，搭配OLED屏幕；而Touch ID与屏幕融为一体。此外，Touch ID除了解锁以外，还有更多好用的功能，比如说快速查看信息、拨打电话等。</p><p style=\"margin-top: 20px; margin-bottom: 0px; padding: 0px; border: 0px; line-height: 32px; color: rgb(36, 36, 36); font-family: &#39;Microsoft YaHei&#39;; white-space: normal; background-color: rgb(255, 255, 255);\">　　此外，郭明池还表示，5.5寸版本的iPhone 7 Plus要用双摄像头，这是跟4.7寸版本最明显的区别，当然售价也会提高一些，同时该机的造型可能不会那么惊艳，毕竟大家对新一代iPhone的期望有些过高了。</p><p style=\"margin-top: 20px; margin-bottom: 0px; padding: 0px; border: 0px; line-height: 32px; color: rgb(36, 36, 36); font-family: &#39;Microsoft YaHei&#39;; white-space: normal; background-color: rgb(255, 255, 255);\">　　之前就有消息称，苹果想要iPhone 4.7寸和5.5寸之间的差距更明显，而现在双摄像头的运用，的确是一个不错的办法，而对于国内用户来说，首选应该iPhone 7 Plus了吧，不管外形有多平庸，售价有多贵，是吧？</p><p><br/></p>', '1460082782', '后盾网', '8', '8');
 
 -- ----------------------------
 -- Table structure for blog_category
@@ -157,6 +157,20 @@ CREATE TABLE `blog_migrations` (
 -- ----------------------------
 INSERT INTO `blog_migrations` VALUES ('2016_04_11_095342_create_links_table', '1');
 INSERT INTO `blog_migrations` VALUES ('2018_06_21_181029_create_failed_jobs_table', '2');
+INSERT INTO `blog_migrations` VALUES ('2014_04_24_110151_create_oauth_scopes_table', '3');
+INSERT INTO `blog_migrations` VALUES ('2014_04_24_110304_create_oauth_grants_table', '3');
+INSERT INTO `blog_migrations` VALUES ('2014_04_24_110403_create_oauth_grant_scopes_table', '3');
+INSERT INTO `blog_migrations` VALUES ('2014_04_24_110459_create_oauth_clients_table', '3');
+INSERT INTO `blog_migrations` VALUES ('2014_04_24_110557_create_oauth_client_endpoints_table', '3');
+INSERT INTO `blog_migrations` VALUES ('2014_04_24_110705_create_oauth_client_scopes_table', '3');
+INSERT INTO `blog_migrations` VALUES ('2014_04_24_110817_create_oauth_client_grants_table', '3');
+INSERT INTO `blog_migrations` VALUES ('2014_04_24_111002_create_oauth_sessions_table', '3');
+INSERT INTO `blog_migrations` VALUES ('2014_04_24_111109_create_oauth_session_scopes_table', '3');
+INSERT INTO `blog_migrations` VALUES ('2014_04_24_111254_create_oauth_auth_codes_table', '3');
+INSERT INTO `blog_migrations` VALUES ('2014_04_24_111403_create_oauth_auth_code_scopes_table', '3');
+INSERT INTO `blog_migrations` VALUES ('2014_04_24_111518_create_oauth_access_tokens_table', '3');
+INSERT INTO `blog_migrations` VALUES ('2014_04_24_111657_create_oauth_access_token_scopes_table', '3');
+INSERT INTO `blog_migrations` VALUES ('2014_04_24_111810_create_oauth_refresh_tokens_table', '3');
 
 -- ----------------------------
 -- Table structure for blog_navs
@@ -183,6 +197,288 @@ INSERT INTO `blog_navs` VALUES ('6', '学无止境', 'Learn', 'http://', '6');
 INSERT INTO `blog_navs` VALUES ('7', '留言版', 'Gustbook', 'http://', '7');
 
 -- ----------------------------
+-- Table structure for blog_oauth_access_tokens
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_oauth_access_tokens`;
+CREATE TABLE `blog_oauth_access_tokens` (
+  `id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `session_id` int(10) unsigned NOT NULL,
+  `expire_time` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `oauth_access_tokens_id_session_id_unique` (`id`,`session_id`),
+  KEY `oauth_access_tokens_session_id_index` (`session_id`),
+  CONSTRAINT `oauth_access_tokens_session_id_foreign` FOREIGN KEY (`session_id`) REFERENCES `blog_oauth_sessions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of blog_oauth_access_tokens
+-- ----------------------------
+INSERT INTO `blog_oauth_access_tokens` VALUES ('16skBM3Kt8CGco6EqpKNTlYDEsBcnnRpDkitr9we', '1', '1535616222', '2018-08-30 15:03:42', '2018-08-30 15:03:42');
+INSERT INTO `blog_oauth_access_tokens` VALUES ('u3NgEtUof0c4gFD1svSGrPCn1UzlA9KcO4OuWlHw', '2', '1535617228', '2018-08-30 15:20:28', '2018-08-30 15:20:28');
+
+-- ----------------------------
+-- Table structure for blog_oauth_access_token_scopes
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_oauth_access_token_scopes`;
+CREATE TABLE `blog_oauth_access_token_scopes` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `access_token_id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `scope_id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `oauth_access_token_scopes_access_token_id_index` (`access_token_id`),
+  KEY `oauth_access_token_scopes_scope_id_index` (`scope_id`),
+  CONSTRAINT `oauth_access_token_scopes_access_token_id_foreign` FOREIGN KEY (`access_token_id`) REFERENCES `blog_oauth_access_tokens` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `oauth_access_token_scopes_scope_id_foreign` FOREIGN KEY (`scope_id`) REFERENCES `blog_oauth_scopes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of blog_oauth_access_token_scopes
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for blog_oauth_auth_codes
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_oauth_auth_codes`;
+CREATE TABLE `blog_oauth_auth_codes` (
+  `id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `session_id` int(10) unsigned NOT NULL,
+  `redirect_uri` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `expire_time` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `oauth_auth_codes_session_id_index` (`session_id`),
+  CONSTRAINT `oauth_auth_codes_session_id_foreign` FOREIGN KEY (`session_id`) REFERENCES `blog_oauth_sessions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of blog_oauth_auth_codes
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for blog_oauth_auth_code_scopes
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_oauth_auth_code_scopes`;
+CREATE TABLE `blog_oauth_auth_code_scopes` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `auth_code_id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `scope_id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `oauth_auth_code_scopes_auth_code_id_index` (`auth_code_id`),
+  KEY `oauth_auth_code_scopes_scope_id_index` (`scope_id`),
+  CONSTRAINT `oauth_auth_code_scopes_auth_code_id_foreign` FOREIGN KEY (`auth_code_id`) REFERENCES `blog_oauth_auth_codes` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `oauth_auth_code_scopes_scope_id_foreign` FOREIGN KEY (`scope_id`) REFERENCES `blog_oauth_scopes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of blog_oauth_auth_code_scopes
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for blog_oauth_clients
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_oauth_clients`;
+CREATE TABLE `blog_oauth_clients` (
+  `id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `secret` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `oauth_clients_id_secret_unique` (`id`,`secret`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of blog_oauth_clients
+-- ----------------------------
+INSERT INTO `blog_oauth_clients` VALUES ('demo', 'aikdhakshdajsdga', '测试', '2018-08-30 13:53:40', '2018-08-30 13:53:43');
+
+-- ----------------------------
+-- Table structure for blog_oauth_client_endpoints
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_oauth_client_endpoints`;
+CREATE TABLE `blog_oauth_client_endpoints` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `client_id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `redirect_uri` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `oauth_client_endpoints_client_id_redirect_uri_unique` (`client_id`,`redirect_uri`),
+  CONSTRAINT `oauth_client_endpoints_client_id_foreign` FOREIGN KEY (`client_id`) REFERENCES `blog_oauth_clients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of blog_oauth_client_endpoints
+-- ----------------------------
+INSERT INTO `blog_oauth_client_endpoints` VALUES ('1', 'demo', 'http://www.blog.com/oauth/callback', '2018-08-30 13:57:45', '2018-08-30 13:57:48');
+
+-- ----------------------------
+-- Table structure for blog_oauth_client_grants
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_oauth_client_grants`;
+CREATE TABLE `blog_oauth_client_grants` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `client_id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `grant_id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `oauth_client_grants_client_id_index` (`client_id`),
+  KEY `oauth_client_grants_grant_id_index` (`grant_id`),
+  CONSTRAINT `oauth_client_grants_client_id_foreign` FOREIGN KEY (`client_id`) REFERENCES `blog_oauth_clients` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `oauth_client_grants_grant_id_foreign` FOREIGN KEY (`grant_id`) REFERENCES `blog_oauth_grants` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of blog_oauth_client_grants
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for blog_oauth_client_scopes
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_oauth_client_scopes`;
+CREATE TABLE `blog_oauth_client_scopes` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `client_id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `scope_id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `oauth_client_scopes_client_id_index` (`client_id`),
+  KEY `oauth_client_scopes_scope_id_index` (`scope_id`),
+  CONSTRAINT `oauth_client_scopes_client_id_foreign` FOREIGN KEY (`client_id`) REFERENCES `blog_oauth_clients` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `oauth_client_scopes_scope_id_foreign` FOREIGN KEY (`scope_id`) REFERENCES `blog_oauth_scopes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of blog_oauth_client_scopes
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for blog_oauth_grants
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_oauth_grants`;
+CREATE TABLE `blog_oauth_grants` (
+  `id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of blog_oauth_grants
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for blog_oauth_grant_scopes
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_oauth_grant_scopes`;
+CREATE TABLE `blog_oauth_grant_scopes` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `grant_id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `scope_id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `oauth_grant_scopes_grant_id_index` (`grant_id`),
+  KEY `oauth_grant_scopes_scope_id_index` (`scope_id`),
+  CONSTRAINT `oauth_grant_scopes_grant_id_foreign` FOREIGN KEY (`grant_id`) REFERENCES `blog_oauth_grants` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `oauth_grant_scopes_scope_id_foreign` FOREIGN KEY (`scope_id`) REFERENCES `blog_oauth_scopes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of blog_oauth_grant_scopes
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for blog_oauth_refresh_tokens
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_oauth_refresh_tokens`;
+CREATE TABLE `blog_oauth_refresh_tokens` (
+  `id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `access_token_id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `expire_time` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`access_token_id`),
+  UNIQUE KEY `oauth_refresh_tokens_id_unique` (`id`),
+  CONSTRAINT `oauth_refresh_tokens_access_token_id_foreign` FOREIGN KEY (`access_token_id`) REFERENCES `blog_oauth_access_tokens` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of blog_oauth_refresh_tokens
+-- ----------------------------
+INSERT INTO `blog_oauth_refresh_tokens` VALUES ('V0pQdKO4oD626QCtGSBC9iwipoznXTvTxiBRm3b3', '16skBM3Kt8CGco6EqpKNTlYDEsBcnnRpDkitr9we', '1535648622', '2018-08-30 15:03:42', '2018-08-30 15:03:42');
+INSERT INTO `blog_oauth_refresh_tokens` VALUES ('ti4sFL5SU1Ie4MFj5HUbPEYnqL312p8q3iB7zGzC', 'u3NgEtUof0c4gFD1svSGrPCn1UzlA9KcO4OuWlHw', '1535649628', '2018-08-30 15:20:28', '2018-08-30 15:20:28');
+
+-- ----------------------------
+-- Table structure for blog_oauth_scopes
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_oauth_scopes`;
+CREATE TABLE `blog_oauth_scopes` (
+  `id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of blog_oauth_scopes
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for blog_oauth_sessions
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_oauth_sessions`;
+CREATE TABLE `blog_oauth_sessions` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `client_id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `owner_type` enum('client','user') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'user',
+  `owner_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `client_redirect_uri` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `oauth_sessions_client_id_owner_type_owner_id_index` (`client_id`,`owner_type`,`owner_id`),
+  CONSTRAINT `oauth_sessions_client_id_foreign` FOREIGN KEY (`client_id`) REFERENCES `blog_oauth_clients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of blog_oauth_sessions
+-- ----------------------------
+INSERT INTO `blog_oauth_sessions` VALUES ('1', 'demo', 'user', 'root', 'http://www.blog.com/oauth/callback', '2018-08-30 14:51:02', '2018-08-30 14:51:02');
+INSERT INTO `blog_oauth_sessions` VALUES ('2', 'demo', 'user', 'root', 'http://www.blog.com/oauth/callback', '2018-08-30 15:20:26', '2018-08-30 15:20:26');
+
+-- ----------------------------
+-- Table structure for blog_oauth_session_scopes
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_oauth_session_scopes`;
+CREATE TABLE `blog_oauth_session_scopes` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `session_id` int(10) unsigned NOT NULL,
+  `scope_id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `oauth_session_scopes_session_id_index` (`session_id`),
+  KEY `oauth_session_scopes_scope_id_index` (`scope_id`),
+  CONSTRAINT `oauth_session_scopes_scope_id_foreign` FOREIGN KEY (`scope_id`) REFERENCES `blog_oauth_scopes` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `oauth_session_scopes_session_id_foreign` FOREIGN KEY (`session_id`) REFERENCES `blog_oauth_sessions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of blog_oauth_session_scopes
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for blog_user
 -- ----------------------------
 DROP TABLE IF EXISTS `blog_user`;
@@ -191,10 +487,11 @@ CREATE TABLE `blog_user` (
   `user_name` varchar(50) DEFAULT '' COMMENT '//用户名',
   `user_pass` varchar(255) DEFAULT '' COMMENT '//密码',
   PRIMARY KEY (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='//管理员';
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='//管理员';
 
 -- ----------------------------
 -- Records of blog_user
 -- ----------------------------
-INSERT INTO `blog_user` VALUES ('1', 'admin', 'eyJpdiI6IlBBNTJjV2ZkWkp3TXZvQm5xdGR3R2c9PSIsInZhbHVlIjoiM3RGYVg3U2pCellJbEdHTlwvS0MzTWc9PSIsIm1hYyI6ImRmYzdjZDhmNGQ2N2I5MTBjOTMxYjdkYmMzNGExZThhZmE2YWMxNGUzYWIzYWM5Mzg4MTQyZDI4OGJkMzJhYTUifQ');
+INSERT INTO `blog_user` VALUES ('1', 'admin', 'eyJpdiI6ImhkUjQwZjBjOVRkbHlkdFwvdTd0XC9RUT09IiwidmFsdWUiOiI1YUtUYjVKTUZGRlZOdm82QkdrYUFRPT0iLCJtYWMiOiJhZDk3NmRlODU4OTM2YmQ4ZTlkM2I0ZWNlMTI2YzAxNTkzOWM5MGUyZmIxZDRjN2E4ZTI0YmM2MWI3YjRmMTdmIn0=');
+INSERT INTO `blog_user` VALUES ('2', 'root', '123123');
 SET FOREIGN_KEY_CHECKS=1;

@@ -90,3 +90,21 @@ Route::group(['namespace' => 'Home','prefix'=>'es'], function () {
     Route::any('searchArticle', 'EsController@searchArticle');
 
 });
+
+
+//用户授权
+Route::group(['prefix' => 'oauth','middleware' => 'oauth-exception'], function () {
+    //grant type: authorization code GET
+    Route::get('authorize', ['as' => 'oauth.authorize.get', 'middleware' => ['check-authorization-params'], 'uses' => 'OAuthController@newAuthorize']);
+
+    //grant type: authorization code POST
+    Route::post('authorize', ['as' => 'oauth.authorize.post', 'middleware' => [ 'check-authorization-params'], 'uses' => 'OAuthController@newAuthorize']);
+
+    //获取 access_token
+    Route::any('access_token', ['as' => 'access_token', 'uses' => 'OAuthController@accessToken']);
+
+    //获取用户信息
+    Route::get('user_info', ['middleware' => ['oauth'], 'uses' => 'OAuthController@userInfo']);
+});
+//成功授权后的跳转地址
+Route::get('oauth/callback','OAuthController@callback');
