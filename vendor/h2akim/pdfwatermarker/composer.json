@@ -1,0 +1,21 @@
+{
+    "name": "h2akim/pdfwatermarker",
+    "description": "PDF Watermarking Package",
+    "require": {
+        "setasign/fpdi-fpdf": "^2.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hakim Razalan",
+            "email": "akimrr@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4":
+        {
+            "PdfWatermarker\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
