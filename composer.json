@@ -20,7 +20,9 @@
         "h2akim/pdfwatermarker": "dev-master",
         "elasticsearch/elasticsearch": "^6.0",
         "lucadegasperi/oauth2-server-laravel": "5.1.*",
-        "doctrine/dbal": "~2.3"
+        "doctrine/dbal": "~2.3",
+        "grpc/grpc": "^v1.3.0",
+        "google/protobuf": "^v3.3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -34,7 +36,9 @@
             "database"
         ],
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "GPBMetadata\\":"GPBMetadata/",
+            "Xuexitest\\":"Xuexitest/"
         },
         "files": [
             "app/helpers.php"
