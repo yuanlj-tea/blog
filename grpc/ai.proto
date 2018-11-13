@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+option java_package = "com.longan.rpc"; //编译器为以此作为生成的Java类的包名
+
+option java_multiple_files = true; //该选项为true时，生成的Java类将是包级别的，否则会在一个包装类中。
+
+package rpc;
+
+service LonganRpc {
+    //人脸检测接口
+    rpc FaceCheck(PictureDataParam) returns(CheckReply) {}
+
+    //人脸库信息初始化接口
+    rpc FacesInfoBatchImports(EmployeesParam) returns(ImportReply) {}
+    
+    //人脸库信息更新接口
+    rpc UpdateFacesInfo(EmployeesParam) returns(ImportReply) {}
+
+    //人脸注册接口
+    rpc RegisterFace(RegParam) returns(RegReply) {}
+}
+
+//注册人脸参数
+message RegParam {
+    string name = 1; //姓名
+    
+    string login_name = 2; //登录名
+
+    string employee_id = 3; //工号
+
+    uint64 user_id = 4; //用户id
+
+    PictureDataParam photo = 5; //多张图片
+}
+
+//注册人脸返回值
+message RegReply {
+    bool is_success = 1;
+}
+
+//员工信息
+message EmployeeInfo {
+    string name = 1; //姓名
+     
+    string login_name = 2; //登录名
+
+    string employee_id = 3; //工号
+
+    uint64 user_id = 4; //用户id
+
+    repeated PictureDataParam photos = 5; //照片
+
+    PictureDataParam ref_photo = 6; //底片
+}
+
+//所有员工
+message EmployeesParam {
+    repeated EmployeeInfo employees = 1;
+}
+
+//导入数据情况
+message ImportReply {
+    bool is_success = 1;
+
+    //如果失败, employees记录的是导入失败的员工信息
+    repeated EmployeeInfo employees = 2;
+}
+
+//图片数据参数
+message PictureDataParam {
+
+    uint32 photo_width = 1;
+
+    uint32 photo_height = 2;
+
+    uint32 format = 3;
+
+    bytes photo_datas = 4;
+
+    string photo_url = 5;
+}
+
+//FaceCheck 返回值
+message CheckReply {
+    bool is_face = 1;
+}
