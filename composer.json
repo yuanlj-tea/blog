@@ -22,7 +22,8 @@
         "lucadegasperi/oauth2-server-laravel": "5.1.*",
         "doctrine/dbal": "~2.3",
         "grpc/grpc": "^v1.3.0",
-        "google/protobuf": "^v3.3.0"
+        "google/protobuf": "^v3.3.0",
+        "lustre/php-dfa-sensitive": "^1.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

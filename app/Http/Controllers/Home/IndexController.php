@@ -11,6 +11,7 @@ use PDF;
 use App\Jobs\test;
 use QrCode;
 use PdfWatermarker\PdfWatermarker;
+use DfaFilter\SensitiveHelper;
 
 class IndexController extends CommonController
 {
@@ -121,5 +122,33 @@ die;
             ->size(380)
             ->merge('/public/test.png',.15)
             ->generate('你好，Laravel学院！');
+    }
+
+    /**
+     * 敏感词检测
+     * @throws \DfaFilter\Exceptions\PdsBusinessException
+     * @throws \DfaFilter\Exceptions\PdsSystemException
+     */
+    public function check()
+    {
+        $path = public_path() . '/' . 'pub_sms_banned_words.txt';
+        // $file = file($path);
+
+        $content = '妈的呃呃呃呃呃呃鹅鹅鹅鹅鹅鹅饿';
+        $handle = SensitiveHelper::init()->setTreeByFile($path);
+
+
+        $islegal = $handle->islegal($content);
+        var_dump($content,$islegal);
+
+        // 敏感词替换为***为例
+        $filterContent = $handle->replace($content, '***');
+        var_dump($filterContent);
+
+        // 获取内容中所有的敏感词
+        $sensitiveWordGroup = $handle->getBadWord($content);
+        // 仅且获取一个敏感词
+        $sensitiveWordGroup = $handle->getBadWord($content, 1);
+        VAR_DUMP($sensitiveWordGroup);
     }
 }

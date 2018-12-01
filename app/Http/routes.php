@@ -59,6 +59,7 @@ Route::get('vaptcha/vaptchaView', 'VaptchaController@vaptchaView');
 
 Route::get('/test', 'Home\IndexController@test');
 Route::get('/qrCode', 'Home\IndexController@qrCode');
+Route::get('/check', 'Home\IndexController@check');
 
 // test swagger
 Route::group(['prefix' => 'swagger'], function () {
