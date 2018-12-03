@@ -553,6 +553,7 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'App\\Services\\Common\\AjaxResponse' => __DIR__ . '/../..' . '/app/Services/Common/AjaxResponse.php',
         'App\\Services\\Common\\Facades\\AjaxResponse' => __DIR__ . '/../..' . '/app/Services/Common/Facades/AjaxResponse.php',
         'App\\User' => __DIR__ . '/../..' . '/app/User.php',
+        'App\\libs\\Guzzle' => __DIR__ . '/../..' . '/app/Libs/Guzzle.php',
         'BaconQrCode\\Common\\AbstractEnum' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/BaconQrCode/Common/AbstractEnum.php',
         'BaconQrCode\\Common\\BitArray' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/BaconQrCode/Common/BitArray.php',
         'BaconQrCode\\Common\\BitMatrix' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/BaconQrCode/Common/BitMatrix.php',

@@ -12,6 +12,7 @@ use App\Jobs\test;
 use QrCode;
 use PdfWatermarker\PdfWatermarker;
 use DfaFilter\SensitiveHelper;
+use App\Libs\Guzzle;
 
 class IndexController extends CommonController
 {
@@ -149,6 +150,8 @@ die;
         $sensitiveWordGroup = $handle->getBadWord($content);
         // 仅且获取一个敏感词
         $sensitiveWordGroup = $handle->getBadWord($content, 1);
-        VAR_DUMP($sensitiveWordGroup);
+        var_dump($sensitiveWordGroup);
     }
+
+
 }

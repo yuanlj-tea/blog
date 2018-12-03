@@ -60,6 +60,7 @@ return array(
     'App\\Services\\Common\\AjaxResponse' => $baseDir . '/app/Services/Common/AjaxResponse.php',
     'App\\Services\\Common\\Facades\\AjaxResponse' => $baseDir . '/app/Services/Common/Facades/AjaxResponse.php',
     'App\\User' => $baseDir . '/app/User.php',
+    'App\\libs\\Guzzle' => $baseDir . '/app/Libs/Guzzle.php',
     'BaconQrCode\\Common\\AbstractEnum' => $vendorDir . '/bacon/bacon-qr-code/src/BaconQrCode/Common/AbstractEnum.php',
     'BaconQrCode\\Common\\BitArray' => $vendorDir . '/bacon/bacon-qr-code/src/BaconQrCode/Common/BitArray.php',
     'BaconQrCode\\Common\\BitMatrix' => $vendorDir . '/bacon/bacon-qr-code/src/BaconQrCode/Common/BitMatrix.php',

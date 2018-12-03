@@ -23,7 +23,8 @@
         "doctrine/dbal": "~2.3",
         "grpc/grpc": "^v1.3.0",
         "google/protobuf": "^v3.3.0",
-        "lustre/php-dfa-sensitive": "^1.2"
+        "lustre/php-dfa-sensitive": "^1.2",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
