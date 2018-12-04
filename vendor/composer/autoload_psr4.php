@@ -73,5 +73,6 @@ return array(
     'Barryvdh\\Debugbar\\' => array($vendorDir . '/barryvdh/laravel-debugbar/src'),
     'App\\' => array($baseDir . '/app'),
     'Anhskohbo\\NoCaptcha\\' => array($vendorDir . '/anhskohbo/no-captcha/src'),
+    'AetherUpload\\' => array($vendorDir . '/peinhu/aetherupload-laravel/src'),
     '' => array($vendorDir . '/nesbot/carbon/src'),
 );

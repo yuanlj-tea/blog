@@ -2955,6 +2955,67 @@
         ]
     },
     {
+        "name": "peinhu/aetherupload-laravel",
+        "version": "v1.0.7",
+        "version_normalized": "1.0.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/peinhu/AetherUpload-Laravel.git",
+            "reference": "5bd6a076d8c892b15984e04c36af718dc48d1873"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/peinhu/AetherUpload-Laravel/zipball/5bd6a076d8c892b15984e04c36af718dc48d1873",
+            "reference": "5bd6a076d8c892b15984e04c36af718dc48d1873",
+            "shasum": "",
+            "mirrors": [
+                {
+                    "url": "https://dl.laravel-china.org/%package%/%reference%.%type%",
+                    "preferred": true
+                }
+            ]
+        },
+        "require": {
+            "php": ">=5.5.9"
+        },
+        "suggest": {
+            "predis/predis": "Needed to support instant completion"
+        },
+        "time": "2017-12-14T08:05:03+00:00",
+        "type": "library",
+        "extra": {
+            "laravel": {
+                "providers": [
+                    "AetherUpload\\AetherUploadServiceProvider"
+                ]
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "AetherUpload\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Payne Hu",
+                "email": "huyang110yahoo@gmail.com",
+                "homepage": "http://www.2ndrenais.com",
+                "role": "Manager"
+            }
+        ],
+        "description": "Upload large files for Laravel 上传 大文件 laravel包",
+        "keywords": [
+            "big",
+            "large",
+            "大文件"
+        ]
+    },
+    {
         "name": "phenx/php-font-lib",
         "version": "0.5.1",
         "version_normalized": "0.5.1.0",

@@ -6,6 +6,17 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AetherUpload\\AetherUploadServiceProvider' => $vendorDir . '/peinhu/aetherupload-laravel/src/AetherUploadServiceProvider.php',
+    'AetherUpload\\ConfigMapper' => $vendorDir . '/peinhu/aetherupload-laravel/src/ConfigMapper.php',
+    'AetherUpload\\Console\\BuildRedisHashesCommand' => $vendorDir . '/peinhu/aetherupload-laravel/src/Console/BuildRedisHashesCommand.php',
+    'AetherUpload\\Console\\CleanUpDirectoryCommand' => $vendorDir . '/peinhu/aetherupload-laravel/src/Console/CleanUpDirectoryCommand.php',
+    'AetherUpload\\Console\\CreateGroupDirectoryCommand' => $vendorDir . '/peinhu/aetherupload-laravel/src/Console/CreateGroupDirectoryCommand.php',
+    'AetherUpload\\Console\\PublishCommand' => $vendorDir . '/peinhu/aetherupload-laravel/src/Console/PublishCommand.php',
+    'AetherUpload\\Receiver' => $vendorDir . '/peinhu/aetherupload-laravel/src/Receiver.php',
+    'AetherUpload\\RedisHandler' => $vendorDir . '/peinhu/aetherupload-laravel/src/RedisHandler.php',
+    'AetherUpload\\ResourceHandler' => $vendorDir . '/peinhu/aetherupload-laravel/src/ResourceHandler.php',
+    'AetherUpload\\Responser' => $vendorDir . '/peinhu/aetherupload-laravel/src/Responser.php',
+    'AetherUpload\\UploadHandler' => $vendorDir . '/peinhu/aetherupload-laravel/src/UploadHandler.php',
     'Anhskohbo\\NoCaptcha\\Facades\\NoCaptcha' => $vendorDir . '/anhskohbo/no-captcha/src/Facades/NoCaptcha.php',
     'Anhskohbo\\NoCaptcha\\NoCaptcha' => $vendorDir . '/anhskohbo/no-captcha/src/NoCaptcha.php',
     'Anhskohbo\\NoCaptcha\\NoCaptchaServiceProvider' => $vendorDir . '/anhskohbo/no-captcha/src/NoCaptchaServiceProvider.php',
@@ -60,7 +71,6 @@ return array(
     'App\\Services\\Common\\AjaxResponse' => $baseDir . '/app/Services/Common/AjaxResponse.php',
     'App\\Services\\Common\\Facades\\AjaxResponse' => $baseDir . '/app/Services/Common/Facades/AjaxResponse.php',
     'App\\User' => $baseDir . '/app/User.php',
-    'App\\libs\\Guzzle' => $baseDir . '/app/Libs/Guzzle.php',
     'BaconQrCode\\Common\\AbstractEnum' => $vendorDir . '/bacon/bacon-qr-code/src/BaconQrCode/Common/AbstractEnum.php',
     'BaconQrCode\\Common\\BitArray' => $vendorDir . '/bacon/bacon-qr-code/src/BaconQrCode/Common/BitArray.php',
     'BaconQrCode\\Common\\BitMatrix' => $vendorDir . '/bacon/bacon-qr-code/src/BaconQrCode/Common/BitMatrix.php',

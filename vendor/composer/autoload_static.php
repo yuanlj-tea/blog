@@ -149,6 +149,7 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         array (
             'App\\' => 4,
             'Anhskohbo\\NoCaptcha\\' => 20,
+            'AetherUpload\\' => 13,
         ),
     );
 
@@ -423,6 +424,10 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         array (
             0 => __DIR__ . '/..' . '/anhskohbo/no-captcha/src',
         ),
+        'AetherUpload\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/peinhu/aetherupload-laravel/src',
+        ),
     );
 
     public static $fallbackDirsPsr4 = array (
@@ -499,6 +504,17 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
     );
 
     public static $classMap = array (
+        'AetherUpload\\AetherUploadServiceProvider' => __DIR__ . '/..' . '/peinhu/aetherupload-laravel/src/AetherUploadServiceProvider.php',
+        'AetherUpload\\ConfigMapper' => __DIR__ . '/..' . '/peinhu/aetherupload-laravel/src/ConfigMapper.php',
+        'AetherUpload\\Console\\BuildRedisHashesCommand' => __DIR__ . '/..' . '/peinhu/aetherupload-laravel/src/Console/BuildRedisHashesCommand.php',
+        'AetherUpload\\Console\\CleanUpDirectoryCommand' => __DIR__ . '/..' . '/peinhu/aetherupload-laravel/src/Console/CleanUpDirectoryCommand.php',
+        'AetherUpload\\Console\\CreateGroupDirectoryCommand' => __DIR__ . '/..' . '/peinhu/aetherupload-laravel/src/Console/CreateGroupDirectoryCommand.php',
+        'AetherUpload\\Console\\PublishCommand' => __DIR__ . '/..' . '/peinhu/aetherupload-laravel/src/Console/PublishCommand.php',
+        'AetherUpload\\Receiver' => __DIR__ . '/..' . '/peinhu/aetherupload-laravel/src/Receiver.php',
+        'AetherUpload\\RedisHandler' => __DIR__ . '/..' . '/peinhu/aetherupload-laravel/src/RedisHandler.php',
+        'AetherUpload\\ResourceHandler' => __DIR__ . '/..' . '/peinhu/aetherupload-laravel/src/ResourceHandler.php',
+        'AetherUpload\\Responser' => __DIR__ . '/..' . '/peinhu/aetherupload-laravel/src/Responser.php',
+        'AetherUpload\\UploadHandler' => __DIR__ . '/..' . '/peinhu/aetherupload-laravel/src/UploadHandler.php',
         'Anhskohbo\\NoCaptcha\\Facades\\NoCaptcha' => __DIR__ . '/..' . '/anhskohbo/no-captcha/src/Facades/NoCaptcha.php',
         'Anhskohbo\\NoCaptcha\\NoCaptcha' => __DIR__ . '/..' . '/anhskohbo/no-captcha/src/NoCaptcha.php',
         'Anhskohbo\\NoCaptcha\\NoCaptchaServiceProvider' => __DIR__ . '/..' . '/anhskohbo/no-captcha/src/NoCaptchaServiceProvider.php',
@@ -553,7 +569,6 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'App\\Services\\Common\\AjaxResponse' => __DIR__ . '/../..' . '/app/Services/Common/AjaxResponse.php',
         'App\\Services\\Common\\Facades\\AjaxResponse' => __DIR__ . '/../..' . '/app/Services/Common/Facades/AjaxResponse.php',
         'App\\User' => __DIR__ . '/../..' . '/app/User.php',
-        'App\\libs\\Guzzle' => __DIR__ . '/../..' . '/app/Libs/Guzzle.php',
         'BaconQrCode\\Common\\AbstractEnum' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/BaconQrCode/Common/AbstractEnum.php',
         'BaconQrCode\\Common\\BitArray' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/BaconQrCode/Common/BitArray.php',
         'BaconQrCode\\Common\\BitMatrix' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/BaconQrCode/Common/BitMatrix.php',
