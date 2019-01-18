@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Home;
 use App\Http\Model\Article;
 use App\Http\Model\Category;
 use App\Http\Model\Links;
-//use App\Http\Requests\Request;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use PDF;
 use App\Jobs\test;
@@ -153,5 +153,14 @@ die;
         var_dump($sensitiveWordGroup);
     }
 
+    public function testGuzzle(Request $request)
+    {
+        $base_uri = 'http://192.168.79.206';
+        $api = '/login?a=b';
+        $headers = ['Accept-Encoding' => 'gzip','User-Agent'=>'(kingnet oa web server)'];
+        $proxy = 'http://127.0.0.1:8888';
 
+        $res = Guzzle::get($base_uri,$api,[],$headers,$proxy);
+        p($res,1);
+    }
 }

@@ -109,3 +109,8 @@ Route::group(['prefix' => 'oauth','middleware' => 'oauth-exception'], function (
 });
 //成功授权后的跳转地址
 Route::get('oauth/callback','OAuthController@callback');
+
+//test guzzle
+Route::group(['namespace'=>'Home','prefix'=>'guzzle'],function(){
+    Route::get('testGuzzle','IndexController@testGuzzle');
+});
