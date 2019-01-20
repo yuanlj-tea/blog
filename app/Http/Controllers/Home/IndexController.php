@@ -18,8 +18,6 @@ class IndexController extends CommonController
 {
     public function index(Request $request)
     {
-        file_put_contents('./a.log','hehe');
-        return response()->json($request->all());
         //点击量最高的6篇文章（站长推荐）
         $pics = Article::orderBy('art_view','desc')->take(6)->get();
 
