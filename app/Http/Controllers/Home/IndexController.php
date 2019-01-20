@@ -187,7 +187,5 @@ die;
         $domain = '127.0.0.1';
         // $res = Guzzle::get($base_uri,$api,['c'=>'d','a'=>'b'],$headers,$proxy);
         // p($res,1);
-        $res = Guzzle::getAsync($base_uri,$api,$query,$headers,$proxy,$cookie,$domain);
-        dump($res);
     }
 }
