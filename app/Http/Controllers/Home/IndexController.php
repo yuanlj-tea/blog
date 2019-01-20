@@ -16,8 +16,9 @@ use App\Libs\Guzzle;
 
 class IndexController extends CommonController
 {
-    public function index()
+    public function index(Request $request)
     {
+        return response()->json($request->all());
         //点击量最高的6篇文章（站长推荐）
         $pics = Article::orderBy('art_view','desc')->take(6)->get();
 
@@ -155,12 +156,12 @@ die;
 
     public function testGuzzle(Request $request)
     {
-        $base_uri = 'http://192.168.79.206';
-        $api = '/login?a=b';
+        $base_uri = 'http://127.0.0.1';
+        $api = '/?a=b';
         $headers = ['Accept-Encoding' => 'gzip','User-Agent'=>'(kingnet oa web server)'];
         $proxy = 'http://127.0.0.1:8888';
 
-        $res = Guzzle::get($base_uri,$api,[],$headers,$proxy);
+        $res = Guzzle::get($base_uri,$api,['c'=>'d','a'=>'b'],$headers,$proxy);
         p($res,1);
     }
 }

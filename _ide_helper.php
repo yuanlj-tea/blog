@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.2.45 on 2018-08-30 15:53:27.
+ * Generated for Laravel 5.2.45 on 2019-01-20 10:39:38.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -2415,7 +2415,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function increment($key, $value = 1)
         {
-            return \Illuminate\Cache\RedisStore::increment($key, $value);
+            return \Illuminate\Cache\FileStore::increment($key, $value);
         }
         
         /**
@@ -2428,7 +2428,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function decrement($key, $value = 1)
         {
-            return \Illuminate\Cache\RedisStore::decrement($key, $value);
+            return \Illuminate\Cache\FileStore::decrement($key, $value);
         }
         
         /**
@@ -2439,41 +2439,29 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function flush()
         {
-            \Illuminate\Cache\RedisStore::flush();
+            \Illuminate\Cache\FileStore::flush();
         }
         
         /**
-         * Get the Redis connection instance.
+         * Get the Filesystem instance.
          *
-         * @return \Predis\ClientInterface 
+         * @return \Illuminate\Filesystem\Filesystem 
          * @static 
          */ 
-        public static function connection()
+        public static function getFilesystem()
         {
-            return \Illuminate\Cache\RedisStore::connection();
+            return \Illuminate\Cache\FileStore::getFilesystem();
         }
         
         /**
-         * Set the connection name to be used.
+         * Get the working directory of the cache.
          *
-         * @param string $connection
-         * @return void 
+         * @return string 
          * @static 
          */ 
-        public static function setConnection($connection)
+        public static function getDirectory()
         {
-            \Illuminate\Cache\RedisStore::setConnection($connection);
-        }
-        
-        /**
-         * Get the Redis database instance.
-         *
-         * @return \Illuminate\Redis\Database 
-         * @static 
-         */ 
-        public static function getRedis()
-        {
-            return \Illuminate\Cache\RedisStore::getRedis();
+            return \Illuminate\Cache\FileStore::getDirectory();
         }
         
         /**
@@ -2484,19 +2472,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function getPrefix()
         {
-            return \Illuminate\Cache\RedisStore::getPrefix();
-        }
-        
-        /**
-         * Set the cache key prefix.
-         *
-         * @param string $prefix
-         * @return void 
-         * @static 
-         */ 
-        public static function setPrefix($prefix)
-        {
-            \Illuminate\Cache\RedisStore::setPrefix($prefix);
+            return \Illuminate\Cache\FileStore::getPrefix();
         }
          
     }
@@ -5432,11 +5408,12 @@ namespace Illuminate\Support\Facades {
          * @param mixed $data
          * @param string $queue
          * @return mixed 
+         * @throws \Exception|\Throwable
          * @static 
          */ 
         public static function push($job, $data = '', $queue = null)
         {
-            return \Illuminate\Queue\RedisQueue::push($job, $data, $queue);
+            return \Illuminate\Queue\SyncQueue::push($job, $data, $queue);
         }
         
         /**
@@ -5450,7 +5427,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function pushRaw($payload, $queue = null, $options = array())
         {
-            return \Illuminate\Queue\RedisQueue::pushRaw($payload, $queue, $options);
+            return \Illuminate\Queue\SyncQueue::pushRaw($payload, $queue, $options);
         }
         
         /**
@@ -5465,22 +5442,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function later($delay, $job, $data = '', $queue = null)
         {
-            return \Illuminate\Queue\RedisQueue::later($delay, $job, $data, $queue);
-        }
-        
-        /**
-         * Release a reserved job back onto the queue.
-         *
-         * @param string $queue
-         * @param string $payload
-         * @param int $delay
-         * @param int $attempts
-         * @return void 
-         * @static 
-         */ 
-        public static function release($queue, $payload, $delay, $attempts)
-        {
-            \Illuminate\Queue\RedisQueue::release($queue, $payload, $delay, $attempts);
+            return \Illuminate\Queue\SyncQueue::later($delay, $job, $data, $queue);
         }
         
         /**
@@ -5492,67 +5454,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function pop($queue = null)
         {
-            return \Illuminate\Queue\RedisQueue::pop($queue);
-        }
-        
-        /**
-         * Delete a reserved job from the queue.
-         *
-         * @param string $queue
-         * @param string $job
-         * @return void 
-         * @static 
-         */ 
-        public static function deleteReserved($queue, $job)
-        {
-            \Illuminate\Queue\RedisQueue::deleteReserved($queue, $job);
-        }
-        
-        /**
-         * Migrate the delayed jobs that are ready to the regular queue.
-         *
-         * @param string $from
-         * @param string $to
-         * @return void 
-         * @static 
-         */ 
-        public static function migrateExpiredJobs($from, $to)
-        {
-            \Illuminate\Queue\RedisQueue::migrateExpiredJobs($from, $to);
-        }
-        
-        /**
-         * Get the underlying Redis instance.
-         *
-         * @return \Illuminate\Redis\Database 
-         * @static 
-         */ 
-        public static function getRedis()
-        {
-            return \Illuminate\Queue\RedisQueue::getRedis();
-        }
-        
-        /**
-         * Get the expiration time in seconds.
-         *
-         * @return int|null 
-         * @static 
-         */ 
-        public static function getExpire()
-        {
-            return \Illuminate\Queue\RedisQueue::getExpire();
-        }
-        
-        /**
-         * Set the expiration time in seconds.
-         *
-         * @param int|null $seconds
-         * @return void 
-         * @static 
-         */ 
-        public static function setExpire($seconds)
-        {
-            \Illuminate\Queue\RedisQueue::setExpire($seconds);
+            return \Illuminate\Queue\SyncQueue::pop($queue);
         }
         
         /**
@@ -5567,7 +5469,7 @@ namespace Illuminate\Support\Facades {
         public static function pushOn($queue, $job, $data = '')
         {
             //Method inherited from \Illuminate\Queue\Queue            
-            return \Illuminate\Queue\RedisQueue::pushOn($queue, $job, $data);
+            return \Illuminate\Queue\SyncQueue::pushOn($queue, $job, $data);
         }
         
         /**
@@ -5583,7 +5485,7 @@ namespace Illuminate\Support\Facades {
         public static function laterOn($queue, $delay, $job, $data = '')
         {
             //Method inherited from \Illuminate\Queue\Queue            
-            return \Illuminate\Queue\RedisQueue::laterOn($queue, $delay, $job, $data);
+            return \Illuminate\Queue\SyncQueue::laterOn($queue, $delay, $job, $data);
         }
         
         /**
@@ -5598,7 +5500,7 @@ namespace Illuminate\Support\Facades {
         public static function bulk($jobs, $data = '', $queue = null)
         {
             //Method inherited from \Illuminate\Queue\Queue            
-            return \Illuminate\Queue\RedisQueue::bulk($jobs, $data, $queue);
+            return \Illuminate\Queue\SyncQueue::bulk($jobs, $data, $queue);
         }
         
         /**
@@ -5611,7 +5513,7 @@ namespace Illuminate\Support\Facades {
         public static function setContainer($container)
         {
             //Method inherited from \Illuminate\Queue\Queue            
-            \Illuminate\Queue\RedisQueue::setContainer($container);
+            \Illuminate\Queue\SyncQueue::setContainer($container);
         }
         
         /**
@@ -5624,7 +5526,7 @@ namespace Illuminate\Support\Facades {
         public static function setEncrypter($encrypter)
         {
             //Method inherited from \Illuminate\Queue\Queue            
-            \Illuminate\Queue\RedisQueue::setEncrypter($encrypter);
+            \Illuminate\Queue\SyncQueue::setEncrypter($encrypter);
         }
          
     }
@@ -10762,6 +10664,31 @@ namespace Anhskohbo\NoCaptcha\Facades {
         public static function display($attributes = array())
         {
             return \Anhskohbo\NoCaptcha\NoCaptcha::display($attributes);
+        }
+        
+        /**
+         * 
+         *
+         * @see display()
+         * @static 
+         */ 
+        public static function displayWidget($attributes = array())
+        {
+            return \Anhskohbo\NoCaptcha\NoCaptcha::displayWidget($attributes);
+        }
+        
+        /**
+         * Display a Invisible reCAPTCHA by embedding a callback into a form submit button.
+         *
+         * @param string $formIdentifier the html ID of the form that should be submitted.
+         * @param string $text the text inside the form button
+         * @param array $attributes array of additional html elements
+         * @return string 
+         * @static 
+         */ 
+        public static function displaySubmit($formIdentifier, $text = 'submit', $attributes = array())
+        {
+            return \Anhskohbo\NoCaptcha\NoCaptcha::displaySubmit($formIdentifier, $text, $attributes);
         }
         
         /**

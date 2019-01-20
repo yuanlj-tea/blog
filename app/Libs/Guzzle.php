@@ -61,10 +61,12 @@ class Guzzle
      * @param $query 请求数据 eg:['foo' => 'bar']
      * @param array $headers 请求头 eg:['Accept-Encoding' => 'gzip']
      * @param array $proxy 设置代理 eg:设置代理：http://127.0.0.1:8888,charles可以抓到请求包
+     * @param array $cookies 请求cookie eg:['PHPSESSID' => 'web2~ri5m4tjbi6gk6eeu72ghg27l61']
+     * @param string $domain 请求cookie的域名
      * @return mixed
      * @throws \Exception
      */
-    public static function get($base_uri, $api, $query = [], $headers = [], $proxy = '')
+    public static function get($base_uri, $api, $query = [], $headers = [], $proxy = '', $cookies = [], $domain = '')
     {
         try {
             $instance = self::getGuzzle($base_uri);
@@ -78,6 +80,12 @@ class Guzzle
             if (!empty($proxy)) {
                 $data['proxy'] = $proxy;
             }
+            if(!empty($cookies)){
+                $jar = new \GuzzleHttp\Cookie\CookieJar();
+                $cookieJar = $jar->fromArray($cookies, $domain);
+                $data['cookies'] = $cookieJar;
+            }
+
             $response = $instance->get($api, $data);
             $resCode = $response->getStatusCode();
 
