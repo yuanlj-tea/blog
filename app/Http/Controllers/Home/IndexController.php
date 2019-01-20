@@ -18,6 +18,7 @@ class IndexController extends CommonController
 {
     public function index(Request $request)
     {
+        file_put_contents('./a.log','hehe');
         return response()->json($request->all());
         //点击量最高的6篇文章（站长推荐）
         $pics = Article::orderBy('art_view','desc')->take(6)->get();
@@ -174,7 +175,19 @@ die;
             ]
         ];
         // $postData = http_build_query($postData);
-        $res = Guzzle::post($base_uri,$api,$multipartData,1,$headers,$proxy,$cookie,'192.168.79.206');
-        p($res,1);
+        // $res = Guzzle::post($base_uri,$api,$multipartData,1,$headers,$proxy,$cookie,'192.168.79.206');
+        // p($res,1);
+
+        $base_uri = 'http://127.0.0.1/';
+        $api = '/';
+        $query = ['c'=>'d','a'=>'b'];
+        $headers = ['Accept-Encoding' => 'gzip','User-Agent'=>'(kingnet oa web server)'];
+        $proxy = 'http://127.0.0.1:8888';
+        $cookie = ['PHPSESSID' => 'web2~ri5m4tjbi6gk6eeu72ghg27l61'];
+        $domain = '127.0.0.1';
+        // $res = Guzzle::get($base_uri,$api,['c'=>'d','a'=>'b'],$headers,$proxy);
+        // p($res,1);
+        $res = Guzzle::getAsync($base_uri,$api,$query,$headers,$proxy,$cookie,$domain);
+        dump($res);
     }
 }

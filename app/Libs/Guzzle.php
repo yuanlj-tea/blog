@@ -12,6 +12,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Promise;
+use Psr\Http\Message\ResponseInterface;
 
 class Guzzle
 {
@@ -71,6 +72,7 @@ class Guzzle
         try {
             $instance = self::getGuzzle($base_uri);
 
+            $data = [];
             if (!empty($query)) {
                 $data['query'] = $query;
             }
@@ -109,8 +111,11 @@ class Guzzle
     {
         try {
             $instance = self::getGuzzle($base_uri);
+            $data = [];
 
-            $data['headers'] = $headers;
+            if(!empty($headers)){
+                $data['headers'] = $headers;
+            }
             if (!empty($post_data)) {
                 if ($type == 1) {
                     $data['json'] = $post_data;
