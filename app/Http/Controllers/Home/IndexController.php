@@ -156,12 +156,25 @@ die;
 
     public function testGuzzle(Request $request)
     {
-        $base_uri = 'http://127.0.0.1';
-        $api = '/?a=b';
+        $base_uri = 'http://192.168.79.206';
+        $api = '/login?a=b';
         $headers = ['Accept-Encoding' => 'gzip','User-Agent'=>'(kingnet oa web server)'];
         $proxy = 'http://127.0.0.1:8888';
+        $cookie = ['PHPSESSID' => 'web2~ri5m4tjbi6gk6eeu72ghg27l61'];
+        $domain = '192.168.79.206';
 
-        $res = Guzzle::get($base_uri,$api,['c'=>'d','a'=>'b'],$headers,$proxy);
+        // $res = Guzzle::get($base_uri,$api,['c'=>'d','a'=>'b'],$headers,$proxy,$cookie,'192.168.79.206');
+        // p($res,1);
+
+        $postData = ['a'=>'c'];
+        $multipartData = [
+            [
+                'name' => 'a',
+                'contents' => 'hello'
+            ]
+        ];
+        // $postData = http_build_query($postData);
+        $res = Guzzle::post($base_uri,$api,$multipartData,1,$headers,$proxy,$cookie,'192.168.79.206');
         p($res,1);
     }
 }
