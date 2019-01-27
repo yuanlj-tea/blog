@@ -13,6 +13,7 @@ use QrCode;
 use PdfWatermarker\PdfWatermarker;
 use DfaFilter\SensitiveHelper;
 use App\Libs\Guzzle;
+use DB;
 
 class IndexController extends CommonController
 {
@@ -155,6 +156,12 @@ die;
 
     public function testGuzzle(Request $request)
     {
+        $user = DB::table('user1')->get();
+        // DB::beginTransaction();
+        // DB::table('user1')->insert(['name'=>'李四']);
+        // DB::commit();
+        p($user,1);die;
+
         $base_uri = 'http://192.168.79.206';
         $api = '/login?a=b';
         $headers = ['Accept-Encoding' => 'gzip','User-Agent'=>'(kingnet oa web server)'];
