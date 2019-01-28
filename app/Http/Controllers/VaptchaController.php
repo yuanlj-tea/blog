@@ -27,7 +27,7 @@ class VaptchaController extends Controller
     }
 
     public function getChallenge(Request $request){
-        $data = json_decode($this->vaptcha->getChallenge($request->sceneid));
+        $data = ($this->vaptcha->getChallenge($request->sceneid));
         return $this->responseSuccess($data);
     }
 
