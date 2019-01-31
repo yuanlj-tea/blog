@@ -75,10 +75,10 @@ class TestJwt extends Controller
                     $res['result'] = 'success';
                     $res['info'] = $arr;
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $res['msg'] = 'Token验证失败,请重新登录';
             }
-
+            return response($res)->header('X-TOKEN', $jwt);
             echo json_encode($res);
         }
     }

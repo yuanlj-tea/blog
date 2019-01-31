@@ -19,7 +19,7 @@
     $('#sub-btn').click(function(){
         var user = $('#username').val();
         var pass = $('#password').val();
-        $.get("http://www.blog.com/api/login?action=login", { user: user, pass: pass },
+        $.get("/api/login?action=login", { user: user, pass: pass },
             function(data){
                 console.log(data);
 
@@ -37,7 +37,7 @@
         console.log("token = ",token);
         $.ajax({
             type: "GET",
-            url: "http://www.blog.com/api/login",
+            url: "/api/login",
             beforeSend: function(request) {
                 request.setRequestHeader("X-token", token);
             },
