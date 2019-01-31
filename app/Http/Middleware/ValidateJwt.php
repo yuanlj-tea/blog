@@ -69,8 +69,6 @@ class ValidateJwt
                 //更改请求头为新的jwt token
                 $request->headers->set('x-token', $newJwt);
 
-                $data = Jwt::decode($newJwt,self::KEY,['HS256']);p($data);
-
                 //黑名单中不存在，则将旧token存到redis中；60秒有效期，60秒内的过期的token的请求是有效的
                 if (empty($blackListNewJwt)) {
                     Redis::setex($this->tokenBlackList . $jwt, 60, $newJwt);
