@@ -37,7 +37,7 @@
         console.log("token = ",token);
         $.ajax({
             type: "GET",
-            url: "/api/login",
+            url: "/api/getUserInfo",
             beforeSend: function(request) {
                 request.setRequestHeader("X-token", token);
             },

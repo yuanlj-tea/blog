@@ -56,11 +56,14 @@ class Kernel extends HttpKernel
         'cors' => \App\Http\Middleware\CORS::class,
         'jwt.auth' => \App\Http\Middleware\authJWT::class,
 
-        //OAuth2 Server
+        // OAuth2 Server
         'oauth' => \LucaDegasperi\OAuth2Server\Middleware\OAuthMiddleware::class,
         'oauth-user' => \LucaDegasperi\OAuth2Server\Middleware\OAuthUserOwnerMiddleware::class,
         'oauth-client' => \LucaDegasperi\OAuth2Server\Middleware\OAuthClientOwnerMiddleware::class,
         'check-authorization-params' => \LucaDegasperi\OAuth2Server\Middleware\CheckAuthCodeRequestMiddleware::class,
         'oauth-exception' => \App\Http\Middleware\OAuthExceptionHandlerMiddleware::class,
+
+        // 验证jwt token
+        'validate-jwt' => \App\Http\Middleware\ValidateJwt::class
     ];
 }

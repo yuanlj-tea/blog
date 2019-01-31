@@ -78,10 +78,13 @@ Route::group(['middleware' => ['api', 'cors'], 'prefix' => 'api/jwt','namespace'
 });
 
 // test common jwt
-Route::group(['namespace' => 'Home','prefix'=>'api'], function () {
-    Route::any('index', 'TestJwt@index');    
-    Route::any('login', 'TestJwt@login');    
-    
+Route::group(['namespace' => 'Home', 'prefix' => 'api'], function () {
+    Route::get('index', 'TestJwt@index');
+    Route::any('login', 'TestJwt@login');
+});
+Route::group(['middleware' => 'validate-jwt', 'namespace' => 'Home', 'prefix' => 'api'], function () {
+    Route::any('getUserInfo','TestJwt@getUserInfo');
+
 });
 
 // test es
