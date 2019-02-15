@@ -68,16 +68,19 @@ Route::group(['prefix' => 'swagger'], function () {
     Route::any('/getMyData1', 'SwaggerController@getMyData1');
 });
 
-// jwt token
+// jwt token(tymon)
 Route::group(['middleware' => ['api', 'cors'], 'prefix' => 'api/jwt','namespace' => 'Api'], function () {
-    Route::any('register', 'ApiController@register');     // 注册
-    Route::any('login', 'ApiController@login');           // 登陆
+    #登陆
+    Route::any('login', 'ApiController@login');
+    #测试jwt生成的方式
+    Route::any('test', 'ApiController@test');
     Route::group(['middleware' => 'jwt.auth'], function () {
-        Route::any('get_user_details', 'ApiController@get_user_details');  // 获取用户详情
+        #获取用户详情
+        Route::any('get_user_details', 'ApiController@get_user_details');
     });
 });
 
-// test common jwt
+// test common jwt(firebase)
 Route::group(['namespace' => 'Home', 'prefix' => 'api'], function () {
     Route::get('index', 'TestJwt@index');
     Route::any('login', 'TestJwt@login');
