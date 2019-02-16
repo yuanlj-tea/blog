@@ -45,7 +45,6 @@ class ApiController extends Controller
     public function getUserDetails(Request $request)
     {
         $user = JWTAuth::parseToken()->authenticate();
-        p($user,1);
         return AjaxResponse::success($user);
     }
 
