@@ -10,24 +10,43 @@ use App\Http\Controllers\Controller;
 use JWTAuth;
 use JWTFactory;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use AjaxResponse;
 
 class ApiController extends Controller
 {
-    /*登陆*/
+    /**
+     * 用户登录
+     * @param Request $request
+     */
     public function login(Request $request)
     {
-        $userInfo = User::where('user_name', 'admin')->first();
+        $user = xss_filter($request->input('user', ''));
+        $pwd = xss_filter($request->input('pwd', ''));
 
-        //$userInfo->id =1;
-        $token = JWTAuth::fromUser($userInfo);
-
-        dd($token);
+        $user = User::where('user_name', $user)->first();
+        if (!isset($user->user_id)) {
+            return AjaxResponse::fail('无效的用户名');
+        }
+        if ($pwd != $user->user_pass) {
+            return AjaxResponse::fail('密码错误');
+        }
+        try {
+            $token = JWTAuth::fromUser($user);
+            return AjaxResponse::success($token);
+        } catch (\Exception $e) {
+            return AjaxResponse::fail($e->getMessage());
+        }
     }
 
-
-    public function get_user_details()
+    /**
+     * 获取用户信息
+     * @param Request $request
+     */
+    public function getUserDetails(Request $request)
     {
-
+        $user = JWTAuth::parseToken()->authenticate();
+        p($user,1);
+        return AjaxResponse::success($user);
     }
 
     /**
@@ -51,19 +70,28 @@ class ApiController extends Controller
         return response()->json(compact('token'));*/
 
         //2、从用户表创建token
-        /*$userInfo = User::where('user_name', 'admin')->first();
+        $userInfo = User::where('user_name', 'admin')->first();
         $token = JWTAuth::fromUser($userInfo);
 
-        dd($token);*/
+        dd($token);
 
         //3、基于任意数据创建token
-        $customClaims = ['foo' => 'bar', 'baz' => 'bob', 'user_id' => 1];
+        /*$customClaims = ['foo' => 'bar', 'baz' => 'bob', 'user_id' => 1];
 
         $payload = JWTFactory::make($customClaims);
 
         $token = JWTAuth::encode($payload);
         dump($token);
-        dd((string)$token);
+        dd((string)$token);*/
+
+        //解析token
+        // $res = JWTAuth::parseToken();// and you can continue to chain methods
+        $user = JWTAuth::parseToken()->authenticate();
+        p($user,1);
+
+        //获取token
+        $token = JWTAuth::getToken();
+        dd($token);
     }
 
 

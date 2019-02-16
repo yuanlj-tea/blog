@@ -69,25 +69,27 @@ Route::group(['prefix' => 'swagger'], function () {
 });
 
 // jwt token(tymon)
-Route::group(['middleware' => ['api', 'cors'], 'prefix' => 'api/jwt','namespace' => 'Api'], function () {
-    #登陆
+Route::group(['prefix' => 'api/jwt','namespace' => 'Api'], function () {
+    // 登陆
     Route::any('login', 'ApiController@login');
-    #测试jwt生成的方式
+    // 测试jwt生成的方式
     Route::any('test', 'ApiController@test');
     Route::group(['middleware' => 'jwt.auth'], function () {
-        #获取用户详情
-        Route::any('get_user_details', 'ApiController@get_user_details');
+        // 获取用户详情
+        Route::any('getUserDetails', 'ApiController@getUserDetails');
     });
 });
+
 
 // test common jwt(firebase)
 Route::group(['namespace' => 'Home', 'prefix' => 'api'], function () {
     Route::get('index', 'TestJwt@index');
     Route::any('login', 'TestJwt@login');
-});
-Route::group(['middleware' => 'validate-jwt', 'namespace' => 'Home', 'prefix' => 'api'], function () {
-    Route::any('getUserInfo','TestJwt@getUserInfo');
 
+    Route::group(['middleware' => 'validate-jwt'],function(){
+        Route::any('getUserInfo','TestJwt@getUserInfo');
+
+    });
 });
 
 // test es
@@ -116,7 +118,7 @@ Route::group(['prefix' => 'oauth','middleware' => 'oauth-exception'], function (
 //成功授权后的跳转地址
 Route::get('oauth/callback','OAuthController@callback');
 
-//test guzzle
+//测试guzzle http请求
 Route::group(['namespace'=>'Home','prefix'=>'guzzle'],function(){
     Route::get('testGuzzle','IndexController@testGuzzle');
 });

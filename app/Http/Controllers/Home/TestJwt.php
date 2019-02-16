@@ -33,7 +33,7 @@ class TestJwt extends Controller
 
             if ($username == 'demo' && $password == 'demo') { //用户名和密码正确，则签发tokon
                 $nowtime = time();
-                $expLong = 10*60;
+                $expLong = 10;
                 $token = [
                     'iss' => 'http://www.helloweba.net', //签发者
                     'aud' => 'http://www.helloweba.net', //jwt所面向的用户

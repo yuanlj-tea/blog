@@ -47,7 +47,8 @@ return [
     |
     */
 
-    'refresh_ttl' => 20160,
+    // 'refresh_ttl' => 20160,
+    'refresh_ttl' => 480,
 
     /*
     |--------------------------------------------------------------------------
@@ -111,7 +112,8 @@ return [
     |
     */
 
-    'blacklist_enabled' => env('JWT_BLACKLIST_ENABLED', true),
+    // 'blacklist_enabled' => env('JWT_BLACKLIST_ENABLED', true),
+    'blacklist_enabled' => env('JWT_BLACKLIST_ENABLED', false),
 
     /*
     |--------------------------------------------------------------------------
