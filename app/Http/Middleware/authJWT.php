@@ -64,10 +64,10 @@ class authJWT
                 } else {
                     //如果有新token，添加响应头，自动续签token(前端判断响应头有该数据，自动更换local storage里的token)
                     $response = $next($request);
-                    if ($newToken) {
+                    /*if ($newToken) {
                         $response->headers->set('Access-Control-Expose-Headers', 'Authorization');
                         $response->headers->set('Authorization', 'Bearer ' . $newToken);
-                    }
+                    }*/
                     return $response;
                 }
 
