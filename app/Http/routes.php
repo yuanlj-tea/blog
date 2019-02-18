@@ -74,6 +74,8 @@ Route::group(['prefix' => 'api/jwt','namespace' => 'Api'], function () {
     Route::any('login', 'ApiController@login');
     // 测试jwt生成的方式
     Route::any('test', 'ApiController@test');
+    //刷新token
+    Route::any('refreshToken','ApiController@refreshToken');
     Route::group(['middleware' => 'jwt.auth'], function () {
         // 获取用户详情
         Route::any('getUserDetails', 'ApiController@getUserDetails');

@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Model\User;
+use Elasticsearch\Serializers\ArrayToJSONSerializer;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use JWTAuth;
 use JWTFactory;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use AjaxResponse;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 
 class ApiController extends Controller
 {
@@ -46,6 +50,29 @@ class ApiController extends Controller
     {
         $user = JWTAuth::parseToken()->authenticate();
         return AjaxResponse::success($user);
+    }
+
+    public function refreshToken(Request $request)
+    {
+        $cookie = \Cookie::get('bdshare_firstime');p($cookie,1);
+        $token = JWTAuth::getToken();
+        if (empty($token)) {
+            return AjaxResponse::fail('缺少token');
+        }
+        $token = (string)$token;
+
+
+        try {
+            $newToken = JWTAuth::refresh($token);
+            return AjaxResponse::success([
+                'oldToken' => $token,
+                'newToken' => $newToken
+            ]);
+        } catch (TokenBlacklistedException $e) {
+            return AjaxResponse::fail('已换取过一次token，该token已被加入黑名单');
+        } catch (JWTException $e) {
+            return AjaxResponse::fail($e->getMessage());
+        }
     }
 
     /**
@@ -86,7 +113,7 @@ class ApiController extends Controller
         //解析token
         // $res = JWTAuth::parseToken();// and you can continue to chain methods
         $user = JWTAuth::parseToken()->authenticate();
-        p($user,1);
+        p($user, 1);
 
         //获取token
         $token = JWTAuth::getToken();
