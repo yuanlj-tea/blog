@@ -2,7 +2,9 @@
 
 1、参考：https://www.cnblogs.com/ywlaker/p/6113927.html#!comments#undefined
 
-2、登录时序图：https://gitee.com/Alex-e/blog/blob/master/app/Http/Controllers/SSO/%E7%99%BB%E5%BD%95%E6%97%B6%E5%BA%8F%E5%9B%BE.png
+2、
+
+登录时序图：https://gitee.com/Alex-e/blog/blob/master/app/Http/Controllers/SSO/%E7%99%BB%E5%BD%95%E6%97%B6%E5%BA%8F%E5%9B%BE.png
 
 登出时序图：https://gitee.com/Alex-e/blog/blob/master/app/Http/Controllers/SSO/%E9%80%80%E5%87%BA%E7%99%BB%E5%BD%95%E6%97%B6%E5%BA%8F%E5%9B%BE.png
 
@@ -21,7 +23,6 @@
     SITE_DOMAIN=http://sso_client_a.com
 
 3、在blog/app/Http/Controllers/SSO/SsoServer.php的属性subsysterm_logout_url中修改为你的子系统的退出登录的接口地址
-4、然后访问：
-http://sso_client_a.com/sso/site_a/checkIsLogin 
+4、然后访问：http://sso_client_a.com/sso/site_a/checkIsLogin 
 ```
 
