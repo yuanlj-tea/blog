@@ -4,30 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SSO-SERVER</title>
+    <title>SSO-CLIENT</title>
 </head>
 <body>
-用户名：<input type="text" class="form-control" id="username" placeholder="请输入用户名">
-密码： <input type="password" class="form-control" id="password" placeholder="请输入密码">
-<button type="submit" id="sub-btn" class="btn btn-default">登录</button>
-
+当前系统已登录，登录用户：{{ $username }}
+<button type="submit" id="sub-btn" class="btn btn-default">点击退出登录</button>
 
 </body>
 <script src="/public/js/jquery-3.2.1.min.js"></script>
 
 <script type="text/javascript">
     $('#sub-btn').click(function () {
-        var redirect_url = getUrlParam('redirect_url');
-        console.log(redirect_url);
-        var user = $('#username').val();
-        var pass = $('#password').val();
-        $.post("/sso/server/login?redirect_url="+redirect_url, {user: user, pwd: pass},
+
+        $.post("/sso/site_a/browserLogout",
             function (data) {
                 console.log(data);
                 var parsedJson = jQuery.parseJSON(data);
 
-                if(parsedJson.code == 1){
-                    window.location.href = parsedJson.data.redirect_url;
+                if (parsedJson.code == 1) {
+                    window.location.href = parsedJson.data.login_url;
                 }
             });
     });

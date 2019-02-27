@@ -133,6 +133,9 @@ Route::group(['namespace'=>'SSO','prefix'=>'sso'],function(){
         Route::any('/login','SsoServer@login');
         //验证token
         Route::any('/validateToken',['middleware'=>['validate-signature'],'uses'=>'SsoServer@validateToken']);
+        //退出登录
+        Route::any('/logout',['middleware'=>['validate-signature'],'uses'=>'SsoServer@logout']);
+
     });
     //单站点相关
     Route::group(['prefix'=>'site_a'],function(){
@@ -140,7 +143,9 @@ Route::group(['namespace'=>'SSO','prefix'=>'sso'],function(){
         Route::any('/checkIsLogin','SiteA@checkIsLogin');
         //单站点回调地址
         Route::any('/redirectUrl','siteA@redirectUrl');
-        //单站点退出登录
-        Route::any('/logout','siteA@logout');
+        //单点注销登录
+        Route::any('/logout',['middleware'=>['validate-signature'],'uses'=>'siteA@logout']);
+        //单站点，浏览器端点击退出登录调用接口
+        Route::any('/browserLogout','siteA@browserLogout');
     });
 });

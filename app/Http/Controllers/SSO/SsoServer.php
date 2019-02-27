@@ -6,6 +6,8 @@
 
 namespace App\Http\Controllers\SSO;
 
+use App\Libs\Common;
+use App\Libs\CurlRequest;
 use App\Libs\Response;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -19,8 +21,20 @@ class SsoServer extends Controller
     //jwt加密秘钥
     const KEY = '1gHuiop975cdashyex9Ud23ldsvm2Xq';
 
+    //SSO-CLIENT 签名验证APP_ID
+    const APP_ID = 'a7JbDTEWSw';
+
+    //SSO-CLIENT 签名验证APP_KEY
+    const APP_KEY = 's02x44obtm';
+
     //SSO-SERVER存储access_token与session_id对应关系的hash key
     private $hash_key = 'SSO_SERVER_TOKEN';
+
+    //子系统退出登录接口URL
+    private $subsysterm_logout_url = [
+        'http://www.blog.com/sso/site_a/logout'
+    ];
+
 
     /**
      * 登录
@@ -29,7 +43,6 @@ class SsoServer extends Controller
     public function login(Request $request)
     {
         $method = $request->method();
-
         if ($method == 'GET') {
 
             //如果sso中心已经登录，就跳转回单站点回调地址(带上access_token)
@@ -44,7 +57,7 @@ class SsoServer extends Controller
                 //获取session_id对应access_token，跳转到回调地址
                 $session_id = session_id();
                 // $access_token = RedisPHP::hGet($this->hash_key, $session_id);
-                $access_token = RedisPHP::command('hget', [$this->hash_key,$session_id]);
+                $access_token = RedisPHP::command('hget', [$this->hash_key, $session_id]);
 
                 if (!empty($access_token)) {
                     return redirect(sprintf("%s?access_token=%s", $redirect_url, $access_token));
@@ -61,8 +74,8 @@ class SsoServer extends Controller
             $redirect_url = base64_decode($request->input('redirect_url', ''));
 
             if ($user == 'demo' && $pwd == 'demo') {
-                if(empty($redirect_url)){
-                    return Response::fail([],'缺少回调地址');
+                if (empty($redirect_url)) {
+                    return Response::fail([], '缺少回调地址');
                 }
                 //设置session
                 $_SESSION['SSO_SERVER_IS_LOGIN'] = 1;
@@ -82,12 +95,12 @@ class SsoServer extends Controller
                         'username' => $user
                     ]
                 ];
-                setcookie(session_name(),session_id(),$token['exp'],'/');
+                setcookie(session_name(), session_id(), $token['exp'], '/');
                 $access_token = JWT::encode($token, self::KEY);
 
                 //保存access_token和session_id的对应关系
                 // RedisPHP::hset($this->hash_key, $session_id, $access_token);
-                RedisPHP::command('hset',[$this->hash_key,$session_id,$access_token]);
+                RedisPHP::command('hset', [$this->hash_key, $session_id, $access_token]);
 
                 // return redirect(sprintf("%s?access_token=%s", $redirect_url, $access_token));
                 return Response::succ(['redirect_url' => sprintf("%s?access_token=%s", $redirect_url, $access_token)], '登录成功!');
@@ -127,7 +140,7 @@ class SsoServer extends Controller
             $res['msg'] = 'Token验证失败,请重新登录';
         }
         if ($res['result'] == 'fail') {
-            return Response::fail($res,'token验证成功');
+            return Response::fail($res, 'token验证成功');
         } else {
             return Response::succ($res);
         }
@@ -137,8 +150,39 @@ class SsoServer extends Controller
     /**
      * SSO退出登录
      */
-    public function logout()
+    public function logout(Request $request)
     {
+        $access_token = $request->input('access_token', '');
+        if (empty($access_token)) {
+            return Response::fail('缺少access_token');
+        }
 
+        $hashVal = RedisPHP::hgetall($this->hash_key);
+        if (!empty($hashVal)) {
+            if (!empty($session_id = array_search($access_token, $hashVal))) {
+                $sessionDriver = ini_get('session.save_handler');
+
+                //清除SSO-SERVER全局会话&hash数据
+                Common::clearSession($sessionDriver, $session_id);
+                RedisPHP::hdel($this->hash_key, $session_id);
+
+                //循环调用子系统注销接口，清除子系统局部会话session
+                foreach ($this->subsysterm_logout_url as $v) {
+
+                    $p = [];
+                    $p['app_id'] = self::APP_ID;
+                    $p['ts'] = time();
+                    $p['access_token'] = $access_token;
+                    $p['sign'] = generate_sign($p, self::APP_KEY);
+
+                    $curl = CurlRequest::getInstance();
+                    $res = $curl->post($v, $p);
+                }
+
+                return Response::succ('退出登录成功');
+            }
+        } else {
+            return Response::fail('sso server:hash数据为空');
+        }
     }
 }
