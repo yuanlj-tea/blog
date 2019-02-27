@@ -26,6 +26,16 @@ class SiteA extends Controller
     //SSO服务端的APP_KEY
     const APP_KEY = 'a7JbDTEWSw';
 
+    public function __construct()
+    {
+        $sso_domain = env('SSO_DOMAIN','');
+        $site_domain = env('SITE_DOMAIN','');
+
+        //设置SSO_DOMAIN和SITE_DOMAIN为env中配置的域名
+        !empty($sso_domain) && $this->SSO_URL = $sso_domain;
+        !empty($site_domain) && $this->site_domain = $site_domain;
+    }
+
     /**
      * 检测是否登录
      */
