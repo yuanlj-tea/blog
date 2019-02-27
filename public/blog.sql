@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80000
 File Encoding         : 65001
 
-Date: 2018-08-30 16:08:40
+Date: 2019-02-27 20:52:39
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -49,6 +49,32 @@ INSERT INTO `blog_article` VALUES ('10', '曝中国企业与巴萨谈胸前赞�
 INSERT INTO `blog_article` VALUES ('12', '最强大脑挑战围棋速成未果 成人普及迎新希望', '最强大脑,围棋', '4月7日下午，最强大脑挑战速成围棋活动在新浪网演播室结束，四位最强大脑人气选手经过了五天半的围棋特训，最终在挑战环节中，被让九子对阵世界冠军遗憾落败。', 'uploads/20160408102712947.jpg', '<p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; font-size: 14px; line-height: 23px; color: rgb(51, 51, 51); font-family: 宋体; white-space: normal; background-color: rgb(255, 255, 255);\">4月7日下午，最强大脑挑战速成围棋活动在新浪网演播室结束，四位最强大脑人气选手经过了五天半的围棋特训，最终在挑战环节中，被让九子对阵世界冠军遗憾落败，对阵围棋人工智能两盘棋因为直播时间的缘故未能下完，两位最强大脑棋手形势不佳。不过四位最强大脑的棋艺得到了职业棋手的肯定，四人也表示围棋非常有趣，后面还要继续学习。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; font-size: 14px; line-height: 23px; color: rgb(51, 51, 51); font-family: 宋体; white-space: normal; background-color: rgb(255, 255, 255);\">　　围棋变化无穷，博大精深，但围棋的规则其实非常简单。知道“气”和“眼”的概念，就可以下棋了。但更进一步的了解攻防，战斗，子效，棋理等就需要多年的积累和参悟，这也是在围棋普及工作上遇到的最大困难。很多人对围棋感兴趣，但由于时间成本太高，只能知难而退。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; font-size: 14px; line-height: 23px; color: rgb(51, 51, 51); font-family: 宋体; white-space: normal; background-color: rgb(255, 255, 255);\">网名为“真疯叔叔”的围棋教练李振沣发明了一套适用于成年人的教学方法，把围棋的理念与现实生活中的道理类比，让人先明白围棋中的道理，然后在对弈中感悟，实践，与普通的教学方法相比，反其道而行之。</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; font-size: 14px; line-height: 23px; color: rgb(51, 51, 51); font-family: 宋体; white-space: normal; background-color: rgb(255, 255, 255);\">　　围棋速成法一出，真疯叔叔和教学团队就不止一次表态，这套教学方法不适用于少儿培训。举个简单到例子，关于棋子之间的关系、配合，真疯叔叔是用职场之间人与人之间的关系类比的，成年人可以很轻松的明白其中关键，但给孩子解释起来就不知从何说起了……</p><p style=\"margin-top: 15px; margin-bottom: 15px; padding: 0px; font-size: 14px; line-height: 23px; color: rgb(51, 51, 51); font-family: 宋体; white-space: normal; background-color: rgb(255, 255, 255);\">　　这种教学方法在成人普及中取得了非常不错的效果，四位最强大脑虽然只是学习了五天半的围棋，但已经基本能够看懂围棋的攻守争战。虽然在局部计算上肯定还有欠缺，但用他们队长王昱珩的话说：“人机大战的时候我可以得意的告诉别人，我知道李世石和阿尔法在做什么了。”</p><p><br/></p>', '1460082468', '后盾网', '3', '11');
 INSERT INTO `blog_article` VALUES ('13', '考完主持人考普通话 孟非：这碗饭吃得险象环生', '孟非,主持人', '名嘴孟非在网上发文感慨“主持人这碗饭吃得险象环生”，文中称：“刚通过主持人上岗考试还没几天，又接到通知要我参加普通话等级测试。这碗饭吃得越发险象环生了……”', 'uploads/20160408103118110.jpg', '<p style=\"margin-top: 1em; margin-bottom: 1em; padding: 0px; border: 0px; outline: none; list-style: none; font-family: 宋体; line-height: 28.8px; white-space: normal; background-color: rgb(255, 255, 255);\">　今日，名嘴孟非在网上发文感慨“主持人这碗饭吃得险象环生”，文中称：“刚通过主持人上岗考试还没几天，又接到通知要我参加普通话等级测试。这碗饭吃得越发险象环生了……”名嘴也是烦恼颇多。</p><p style=\"margin-top: 1em; margin-bottom: 1em; padding: 0px; border: 0px; outline: none; list-style: none; font-family: 宋体; line-height: 28.8px; white-space: normal; background-color: rgb(255, 255, 255);\">　　有网友表示：“闹半天你这么多年是无证主持～”，也有网友安慰孟非：“你要是上德云社说相声，还得考你贯口和绕口令呢。普通话，小菜一碟!”，更有网友直言：“咱是靠脸吃饭的好吗？”</p><p><br/></p>', '1460082704', '后盾网', '0', '8');
 INSERT INTO `blog_article` VALUES ('14', '苹果7/7 Plus齐曝光:双摄像头 售价提高', '苹果,摄像头', '国外科技媒体BGR指出，Youtube频道「iPhone-Tricks.com」释出一段iPhone 7概念视频。从视频中可以看到该概念iPhone 7采取完全无边框的是设计，搭配OLED屏幕；而Touch ID与屏幕融为一体。', 'uploads/20160408113758707.jpg', '<p style=\"margin-top: 20px; margin-bottom: 0px; padding: 0px; border: 0px; line-height: 32px; color: rgb(36, 36, 36); font-family: &#39;Microsoft YaHei&#39;; white-space: normal; background-color: rgb(255, 255, 255);\">　国外科技媒体BGR指出，Youtube频道「iPhone-Tricks.com」释出一段iPhone 7概念视频。从视频中可以看到该概念iPhone 7采取完全无边框的是设计，搭配OLED屏幕；而Touch ID与屏幕融为一体。此外，Touch ID除了解锁以外，还有更多好用的功能，比如说快速查看信息、拨打电话等。</p><p style=\"margin-top: 20px; margin-bottom: 0px; padding: 0px; border: 0px; line-height: 32px; color: rgb(36, 36, 36); font-family: &#39;Microsoft YaHei&#39;; white-space: normal; background-color: rgb(255, 255, 255);\">　　此外，郭明池还表示，5.5寸版本的iPhone 7 Plus要用双摄像头，这是跟4.7寸版本最明显的区别，当然售价也会提高一些，同时该机的造型可能不会那么惊艳，毕竟大家对新一代iPhone的期望有些过高了。</p><p style=\"margin-top: 20px; margin-bottom: 0px; padding: 0px; border: 0px; line-height: 32px; color: rgb(36, 36, 36); font-family: &#39;Microsoft YaHei&#39;; white-space: normal; background-color: rgb(255, 255, 255);\">　　之前就有消息称，苹果想要iPhone 4.7寸和5.5寸之间的差距更明显，而现在双摄像头的运用，的确是一个不错的办法，而对于国内用户来说，首选应该iPhone 7 Plus了吧，不管外形有多平庸，售价有多贵，是吧？</p><p><br/></p>', '1460082782', '后盾网', '8', '8');
+
+-- ----------------------------
+-- Table structure for blog_auth_clients
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_auth_clients`;
+CREATE TABLE `blog_auth_clients` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `APP_ID` varchar(32) DEFAULT NULL,
+  `APP_KEY` varchar(32) DEFAULT NULL,
+  `SITE_NAME` varchar(45) DEFAULT NULL,
+  `REDIRECT_URI` varchar(2000) DEFAULT NULL,
+  `ICON_URI` varchar(50) DEFAULT NULL,
+  `COLOR` varchar(10) DEFAULT NULL,
+  `ALLOW_IP` varchar(500) DEFAULT NULL COMMENT '允许访问ip,多个用逗号分隔',
+  `ALLOW_ROUTE` text COMMENT '允许的路由 多个逗号隔开',
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `APP_ID_UNIQUE` (`APP_ID`),
+  UNIQUE KEY `SITE_NAME_UNIQUE` (`SITE_NAME`),
+  KEY `AUTH_INDEX` (`APP_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='第三方网站接入认证信息';
+
+-- ----------------------------
+-- Records of blog_auth_clients
+-- ----------------------------
+INSERT INTO `blog_auth_clients` VALUES ('1', 's02x44obtm', 'a7JbDTEWSw', 'SSO-SERVER', null, null, null, null, null);
+INSERT INTO `blog_auth_clients` VALUES ('2', 'a7JbDTEWSw', 's02x44obtm', 'SSO-CLIENT', null, null, null, null, null);
 
 -- ----------------------------
 -- Table structure for blog_category
