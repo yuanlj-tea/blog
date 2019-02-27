@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\ValidateSignature;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -64,6 +65,8 @@ class Kernel extends HttpKernel
         'oauth-exception' => \App\Http\Middleware\OAuthExceptionHandlerMiddleware::class,
 
         // 验证jwt token
-        'validate-jwt' => \App\Http\Middleware\ValidateJwt::class
+        'validate-jwt' => \App\Http\Middleware\ValidateJwt::class,
+        //签名验证
+        'validate-signature' => ValidateSignature::class
     ];
 }

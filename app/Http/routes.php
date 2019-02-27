@@ -124,3 +124,23 @@ Route::get('oauth/callback','OAuthController@callback');
 Route::group(['namespace'=>'Home','prefix'=>'guzzle'],function(){
     Route::get('testGuzzle','IndexController@testGuzzle');
 });
+
+//SSO相关
+Route::group(['namespace'=>'SSO','prefix'=>'sso'],function(){
+    //SSO-SERVER相关
+    Route::group(['prefix'=>'server'],function(){
+        //登录
+        Route::any('/login','SsoServer@login');
+        //验证token
+        Route::any('/validateToken',['middleware'=>['validate-signature'],'uses'=>'SsoServer@validateToken']);
+    });
+    //单站点相关
+    Route::group(['prefix'=>'site_a'],function(){
+        //单站点验证是否已登录
+        Route::any('/checkIsLogin','SiteA@checkIsLogin');
+        //单站点回调地址
+        Route::any('/redirectUrl','siteA@redirectUrl');
+        //单站点退出登录
+        Route::any('/logout','siteA@logout');
+    });
+});

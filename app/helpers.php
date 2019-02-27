@@ -101,3 +101,43 @@ if (!function_exists('xss_decode')) {
         }
     }
 }
+
+if (!function_exists('generate_sign')) {
+    function generate_sign($data, $appkey)
+    {
+        ksort($data);
+        $param = http_build_query($data, '', '&', PHP_QUERY_RFC3986);
+        $sign = hash_hmac('sha256', $param, $appkey);
+        return $sign;
+    }
+}
+
+if (!function_exists('verify_signature')) {
+    /**
+     * 验证签名
+     * @param  string
+     */
+    function verify_signature($clientSign, $serverData, $key)
+    {
+        $srvSign = hash_hmac('sha256', $serverData, $key);
+        if ($srvSign === $clientSign) {
+            return true;
+        }
+        return false;
+    }
+}
+
+if (!function_exists('verify_signature_by_md5')) {
+    /**
+     * 验证签名md5法
+     * @param  string
+     */
+    function verify_signature_by_md5($clientSign, $serverData, $key)
+    {
+        $srvSign = md5($serverData . $key);
+        if ($srvSign === $clientSign) {
+            return true;
+        }
+        return false;
+    }
+}

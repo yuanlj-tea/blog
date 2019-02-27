@@ -154,6 +154,10 @@ die;
         var_dump($sensitiveWordGroup);
     }
 
+    /**
+     * 测试guzzle请求
+     * @param Request $request
+     */
     public function testGuzzle(Request $request)
     {
         $user = DB::table('user1')->get();
