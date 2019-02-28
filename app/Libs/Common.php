@@ -36,9 +36,9 @@ class Common
                 }
                 break;
             case 'redis':
-                $sess_id = 'PHPREDIS_SESSION:'.$session_id;
 
-                RedisPHP::del($sess_id);
+                $sess_id = 'PHPREDIS_SESSION:'.$session_id;
+                $res = RedisPHP::del($sess_id);
 
                 break;
             default:

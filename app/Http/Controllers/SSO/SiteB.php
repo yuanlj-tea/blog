@@ -10,16 +10,16 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use RedisPHP;
 
-class SiteA extends Controller
+class SiteB extends Controller
 {
     //SSO服务端URL
     // private $SSO_URL = 'http://192.168.79.206:8002';
     private $SSO_URL = 'http://local.easyswoole.com:81';
 
-    private $site_domain = 'http://www.blog.com';
+    private $site_domain = 'http://www.siteb.com';
 
     //SSO-CLIENT存储access_token与session_id对应关系的hash key
-    private $hash_key = 'SITE_A_HASH_KEY';
+    private $hash_key = 'SITE_B_HASH_KEY';
 
     //SSO服务端的APP_ID
     const APP_ID = 's02x44obtm';
@@ -29,7 +29,7 @@ class SiteA extends Controller
     public function __construct()
     {
         $sso_domain = env('SSO_DOMAIN','');
-        $site_domain = env('SITEA_DOMAIN','');
+        $site_domain = env('SITEB_DOMAIN','');
 
         //设置SSO_DOMAIN和SITE_DOMAIN为env中配置的域名
         !empty($sso_domain) && $this->SSO_URL = $sso_domain;
@@ -44,9 +44,9 @@ class SiteA extends Controller
         if (isset($_SESSION['SITE_A_IS_LOGIN']) && $_SESSION['SITE_A_IS_LOGIN'] == 1) {
 
             $userName = isset($_SESSION['LOGIN_IN_USER_NAME']) ? $_SESSION['LOGIN_IN_USER_NAME'] : '';
-            return view('sso.client.index', ['username' => $userName]);
+            return view('sso.client.siteb', ['username' => $userName]);
         } else {
-            return redirect(sprintf("%s?redirect_url=%s", $this->SSO_URL . '/sso/server/login', base64_encode($this->site_domain . '/sso/site_a/redirectUrl')));
+            return redirect(sprintf("%s?redirect_url=%s", $this->SSO_URL . '/sso/server/login', base64_encode($this->site_domain . '/sso/site_b/redirectUrl')));
         }
     }
 
@@ -88,7 +88,7 @@ class SiteA extends Controller
             //redis里存access_token和session_id对应关系
             RedisPHP::hset($this->hash_key, $access_token, session_id());
 
-            return redirect($this->site_domain . '/sso/site_a/checkIsLogin');
+            return redirect($this->site_domain . '/sso/site_b/checkIsLogin');
         } else {
             return Response::fail('验证token错误');
         }
@@ -120,7 +120,7 @@ class SiteA extends Controller
 
                 if (!empty($res) && !empty($arr = json_decode($res, 1))) {
                     if ($arr['code'] == 1) {
-                        $redirect_url = sprintf("%s?redirect_url=%s", $this->SSO_URL . '/sso/server/login', base64_encode($this->site_domain . '/sso/site_a/redirectUrl'));
+                        $redirect_url = sprintf("%s?redirect_url=%s", $this->SSO_URL . '/sso/server/login', base64_encode($this->site_domain . '/sso/site_b/redirectUrl'));
                         session_destroy();
                         setcookie(session_name(),null);
                         return Response::succ(['login_url' => $redirect_url], '退出登录成功');

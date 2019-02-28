@@ -32,7 +32,8 @@ class SsoServer extends Controller
 
     //子系统退出登录接口URL
     private $subsysterm_logout_url = [
-        'http://www.blog.com/sso/site_a/logout'
+        'http://www.blog.com'=>'http://www.blog.com/sso/site_a/logout', //单站点A的退出登录接口
+        'http://www.siteb.com'=>'http://www.siteb.com/sso/site_b/logout', //单站点B的退出登录接口
     ];
 
 
@@ -156,6 +157,10 @@ class SsoServer extends Controller
         if (empty($access_token)) {
             return Response::fail('缺少access_token');
         }
+        $subsysterm_domain = $request->input('subsysterm_domain','');
+        if(empty($subsysterm_domain)){
+            return Response::fail('缺少参数：子系统域名');
+        }
 
         $hashVal = RedisPHP::hgetall($this->hash_key);
         if (!empty($hashVal)) {
@@ -166,8 +171,13 @@ class SsoServer extends Controller
                 Common::clearSession($sessionDriver, $session_id);
                 RedisPHP::hdel($this->hash_key, $session_id);
 
-                //循环调用子系统注销接口，清除子系统局部会话session
-                foreach ($this->subsysterm_logout_url as $v) {
+                //循环调用子系统注销接口，清除子系统局部会话session(这个逻辑后续可以异步化)
+                foreach ($this->subsysterm_logout_url as $k=>$v) {
+
+                    //请求退出登录的子站点，SSO不再重复请求退出登录
+                    if($subsysterm_domain == $k){
+                        continue;
+                    }
 
                     $p = [];
                     $p['app_id'] = self::APP_ID;
