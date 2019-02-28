@@ -149,6 +149,8 @@ class SiteA extends Controller
             }
             //清除子系统局部会话数据
             $session_id = RedisPHP::hget($this->hash_key, $access_token);
+            \Log::info("access_token:".$access_token);
+            \Log::info("session_id:".$session_id);
 
             $sessionDriver = ini_get('session.save_handler');
             Common::clearSession($sessionDriver, $session_id);
@@ -158,6 +160,10 @@ class SiteA extends Controller
 
             return Response::succ('子系统注销成功');
         } catch (\Exception $e) {
+            \Log::error(sprintf(
+                "【FILE】:%s【LINE】:%s【MSG】:%s",
+                $e->getFile(),$e->getLine(),$e->getMessage()
+            ));
             return Response::fail($e->getMessage());
         }
 

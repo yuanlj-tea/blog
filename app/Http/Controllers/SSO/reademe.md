@@ -15,14 +15,15 @@
 	1:SSO服务中心的domain，比如：http://sso_server.com
 	2:子系统的domain：比如：http://sso_client_a.com
 2、配置.env:
-	在.env文件中新增如下配置：
-	#SSO配置参数
+在.env文件中新增如下配置：
+    #SSO配置参数
     #SSO-SERVER的domain
     SSO_DOMAIN=http://sso_server.com
     #当前子系统的domain
     SITE_DOMAIN=http://sso_client_a.com
-
-3、在blog/app/Http/Controllers/SSO/SsoServer.php的属性subsysterm_logout_url中修改为你的子系统的退出登录的接口地址
-4、然后访问：http://sso_client_a.com/sso/site_a/checkIsLogin 
+3、数据库：
+   blog\public\blog.sql中的blog_auth_clients表
+4、在blog/app/Http/Controllers/SSO/SsoServer.php的属性subsysterm_logout_url中修改为你的子系统的退出登录的接口地址
+5、然后访问：http://sso_client_a.com/sso/site_a/checkIsLogin 
 ```
 

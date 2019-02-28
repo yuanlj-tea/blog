@@ -177,6 +177,8 @@ class SsoServer extends Controller
 
                     $curl = CurlRequest::getInstance();
                     $res = $curl->post($v, $p);
+                    \Log::info(json_encode($p));
+                    \Log::info($res);
                 }
 
                 return Response::succ('退出登录成功');

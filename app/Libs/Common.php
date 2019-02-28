@@ -30,6 +30,7 @@ class Common
                 $files = self::getFiles($savePath,1);
                 foreach($files as $v){
                     if(strpos($v,$sess_id) !== false){
+                        chmod($v,'0777');
                         unlink($v);
                     }
                 }
