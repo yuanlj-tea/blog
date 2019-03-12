@@ -197,4 +197,26 @@ class SsoServer extends Controller
             return Response::fail('sso server:hash数据为空');
         }
     }
+
+    /**
+     * test saber
+     * @param Request $request
+     * @return false|\Illuminate\Http\JsonResponse|string
+     */
+    public function test(Request $request)
+    {
+        $method = $request->method();
+        if($method == 'GET'){
+            // var_dump($_SESSION);die;
+            if(isset($_SESSION['IS_LOGIN']) && $_SESSION['IS_LOGIN'] == 1){
+                return Response::succ([],'已登录');
+            }else{
+                return Response::fail([],'未登录');
+            }
+        }elseif($method == 'POST'){
+            $_SESSION['IS_LOGIN'] = 1;
+            return Response::succ([],'登录成功');
+
+        }
+    }
 }

@@ -131,6 +131,7 @@ Route::group(['namespace'=>'SSO','prefix'=>'sso'],function(){
     Route::group(['prefix'=>'server'],function(){
         //登录
         Route::any('/login','SsoServer@login');
+        Route::any('/test','SsoServer@test');
         //验证token
         Route::any('/validateToken',['middleware'=>['validate-signature'],'uses'=>'SsoServer@validateToken']);
         //退出登录
