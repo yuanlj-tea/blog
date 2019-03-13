@@ -25,7 +25,9 @@
         "google/protobuf": "^v3.3.0",
         "lustre/php-dfa-sensitive": "^1.2",
         "guzzlehttp/guzzle": "^6.3",
-        "peinhu/aetherupload-laravel": "^1.0"
+        "peinhu/aetherupload-laravel": "^1.0",
+        "spatie/pdf-to-image": "^1.8",
+        "gufy/pdftohtml-php": "~2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

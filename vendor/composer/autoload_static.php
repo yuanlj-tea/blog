@@ -68,6 +68,7 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
             'Symfony\\Component\\ClassLoader\\' => 30,
             'Swagger\\' => 8,
             'SuperClosure\\' => 13,
+            'Spatie\\PdfToImage\\' => 18,
         ),
         'R' => 
         array (
@@ -108,6 +109,7 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
+            'Gufy\\PdfToHtml\\' => 15,
             'Grpc\\' => 5,
             'Google\\Protobuf\\' => 16,
             'GPBMetadata\\Google\\Protobuf\\' => 28,
@@ -256,6 +258,10 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         array (
             0 => __DIR__ . '/..' . '/jeremeamia/SuperClosure/src',
         ),
+        'Spatie\\PdfToImage\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/pdf-to-image/src',
+        ),
         'React\\Promise\\' => 
         array (
             0 => __DIR__ . '/..' . '/react/promise/src',
@@ -331,6 +337,10 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'Gufy\\PdfToHtml\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/gufy/pdftohtml-php/src',
         ),
         'Grpc\\' => 
         array (
@@ -435,6 +445,13 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
     );
 
     public static $prefixesPsr0 = array (
+        's' => 
+        array (
+            'stringEncode' => 
+            array (
+                0 => __DIR__ . '/..' . '/paquettg/string-encode/src',
+            ),
+        ),
         'S' => 
         array (
             'Svg\\' => 
@@ -456,6 +473,10 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
             array (
                 0 => __DIR__ . '/..' . '/phpspec/prophecy/src',
             ),
+            'PHPHtmlParser' => 
+            array (
+                0 => __DIR__ . '/..' . '/paquettg/php-html-parser/src',
+            ),
         ),
         'M' => 
         array (
@@ -473,6 +494,13 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
             'JakubOnderka\\PhpConsoleColor' => 
             array (
                 0 => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src',
+            ),
+        ),
+        'G' => 
+        array (
+            'Gufy' => 
+            array (
+                0 => __DIR__ . '/..' . '/gufy/pdftohtml-php/src',
             ),
         ),
         'D' => 
@@ -540,6 +568,9 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'App\\Http\\Controllers\\Home\\TestJwt' => __DIR__ . '/../..' . '/app/Http/Controllers/Home/TestJwt.php',
         'App\\Http\\Controllers\\Home\\grpctest' => __DIR__ . '/../..' . '/app/Http/Controllers/Home/grpctest.php',
         'App\\Http\\Controllers\\OAuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/OAuthController.php',
+        'App\\Http\\Controllers\\SSO\\SiteA' => __DIR__ . '/../..' . '/app/Http/Controllers/SSO/SiteA.php',
+        'App\\Http\\Controllers\\SSO\\SiteB' => __DIR__ . '/../..' . '/app/Http/Controllers/SSO/SiteB.php',
+        'App\\Http\\Controllers\\SSO\\SsoServer' => __DIR__ . '/../..' . '/app/Http/Controllers/SSO/SsoServer.php',
         'App\\Http\\Controllers\\SwaggerController' => __DIR__ . '/../..' . '/app/Http/Controllers/SwaggerController.php',
         'App\\Http\\Controllers\\VaptchaController' => __DIR__ . '/../..' . '/app/Http/Controllers/VaptchaController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
@@ -549,9 +580,12 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
         'App\\Http\\Middleware\\OAuthExceptionHandlerMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/OAuthExceptionHandlerMiddleware.php',
         'App\\Http\\Middleware\\RedirectIfAuthenticated' => __DIR__ . '/../..' . '/app/Http/Middleware/RedirectIfAuthenticated.php',
+        'App\\Http\\Middleware\\ValidateJwt' => __DIR__ . '/../..' . '/app/Http/Middleware/ValidateJwt.php',
+        'App\\Http\\Middleware\\ValidateSignature' => __DIR__ . '/../..' . '/app/Http/Middleware/ValidateSignature.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
         'App\\Http\\Middleware\\authJWT' => __DIR__ . '/../..' . '/app/Http/Middleware/authJWT.php',
         'App\\Http\\Model\\Article' => __DIR__ . '/../..' . '/app/Http/Model/Article.php',
+        'App\\Http\\Model\\AuthClients' => __DIR__ . '/../..' . '/app/Http/Model/AuthClients.php',
         'App\\Http\\Model\\Category' => __DIR__ . '/../..' . '/app/Http/Model/Category.php',
         'App\\Http\\Model\\Config' => __DIR__ . '/../..' . '/app/Http/Model/Config.php',
         'App\\Http\\Model\\Links' => __DIR__ . '/../..' . '/app/Http/Model/Links.php',
@@ -560,7 +594,11 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'App\\Http\\Requests\\Request' => __DIR__ . '/../..' . '/app/Http/Requests/Request.php',
         'App\\Jobs\\Job' => __DIR__ . '/../..' . '/app/Jobs/Job.php',
         'App\\Jobs\\test' => __DIR__ . '/../..' . '/app/Jobs/test.php',
+        'App\\Libs\\Common' => __DIR__ . '/../..' . '/app/Libs/Common.php',
+        'App\\Libs\\CurlRequest' => __DIR__ . '/../..' . '/app/Libs/CurlRequest.php',
         'App\\Libs\\Es' => __DIR__ . '/../..' . '/app/Libs/Es.php',
+        'App\\Libs\\Guzzle' => __DIR__ . '/../..' . '/app/Libs/Guzzle.php',
+        'App\\Libs\\Response' => __DIR__ . '/../..' . '/app/Libs/Response.php',
         'App\\Providers\\AjaxResponseProvider' => __DIR__ . '/../..' . '/app/Providers/AjaxResponseProvider.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
@@ -1972,6 +2010,10 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'Grpc\\Internal\\InterceptorChannel' => __DIR__ . '/..' . '/grpc/grpc/src/lib/Internal/InterceptorChannel.php',
         'Grpc\\ServerStreamingCall' => __DIR__ . '/..' . '/grpc/grpc/src/lib/ServerStreamingCall.php',
         'Grpc\\UnaryCall' => __DIR__ . '/..' . '/grpc/grpc/src/lib/UnaryCall.php',
+        'Gufy\\PdfToHtml\\Base' => __DIR__ . '/..' . '/gufy/pdftohtml-php/src/Base.php',
+        'Gufy\\PdfToHtml\\Config' => __DIR__ . '/..' . '/gufy/pdftohtml-php/src/Config.php',
+        'Gufy\\PdfToHtml\\Html' => __DIR__ . '/..' . '/gufy/pdftohtml-php/src/Html.php',
+        'Gufy\\PdfToHtml\\Pdf' => __DIR__ . '/..' . '/gufy/pdftohtml-php/src/Pdf.php',
         'GuzzleHttp\\Client' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Client.php',
         'GuzzleHttp\\ClientInterface' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/ClientInterface.php',
         'GuzzleHttp\\Cookie\\CookieJar' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Cookie/CookieJar.php',
@@ -3034,6 +3076,30 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'Namshi\\JOSE\\Signer\\SecLib\\RSA' => __DIR__ . '/..' . '/namshi/jose/src/Namshi/JOSE/Signer/SecLib/RSA.php',
         'Namshi\\JOSE\\Signer\\SignerInterface' => __DIR__ . '/..' . '/namshi/jose/src/Namshi/JOSE/Signer/SignerInterface.php',
         'Namshi\\JOSE\\SimpleJWS' => __DIR__ . '/..' . '/namshi/jose/src/Namshi/JOSE/SimpleJWS.php',
+        'PHPHtmlParser\\Content' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Content.php',
+        'PHPHtmlParser\\Curl' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Curl.php',
+        'PHPHtmlParser\\CurlInterface' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/CurlInterface.php',
+        'PHPHtmlParser\\Dom' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Dom.php',
+        'PHPHtmlParser\\Dom\\AbstractNode' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Dom/AbstractNode.php',
+        'PHPHtmlParser\\Dom\\ArrayNode' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Dom/ArrayNode.php',
+        'PHPHtmlParser\\Dom\\Collection' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Dom/Collection.php',
+        'PHPHtmlParser\\Dom\\HtmlNode' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Dom/HtmlNode.php',
+        'PHPHtmlParser\\Dom\\InnerNode' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Dom/InnerNode.php',
+        'PHPHtmlParser\\Dom\\LeafNode' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Dom/LeafNode.php',
+        'PHPHtmlParser\\Dom\\MockNode' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Dom/MockNode.php',
+        'PHPHtmlParser\\Dom\\Tag' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Dom/Tag.php',
+        'PHPHtmlParser\\Dom\\TextNode' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Dom/TextNode.php',
+        'PHPHtmlParser\\Exceptions\\ChildNotFoundException' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Exceptions/ChildNotFoundException.php',
+        'PHPHtmlParser\\Exceptions\\CircularException' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Exceptions/CircularException.php',
+        'PHPHtmlParser\\Exceptions\\CurlException' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Exceptions/CurlException.php',
+        'PHPHtmlParser\\Exceptions\\EmptyCollectionException' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Exceptions/EmptyCollectionException.php',
+        'PHPHtmlParser\\Exceptions\\NotLoadedException' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Exceptions/NotLoadedException.php',
+        'PHPHtmlParser\\Exceptions\\ParentNotFoundException' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Exceptions/ParentNotFoundException.php',
+        'PHPHtmlParser\\Exceptions\\StrictException' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Exceptions/StrictException.php',
+        'PHPHtmlParser\\Exceptions\\UnknownChildTypeException' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Exceptions/UnknownChildTypeException.php',
+        'PHPHtmlParser\\Options' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Options.php',
+        'PHPHtmlParser\\Selector' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/Selector.php',
+        'PHPHtmlParser\\StaticDom' => __DIR__ . '/..' . '/paquettg/php-html-parser/src/PHPHtmlParser/StaticDom.php',
         'PHPUnit\\Framework\\Assert' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/Assert.php',
         'PHPUnit\\Framework\\AssertionFailedError' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/AssertionFailedError.php',
         'PHPUnit\\Framework\\BaseTestListener' => __DIR__ . '/..' . '/phpunit/phpunit/src/ForwardCompatibility/BaseTestListener.php',
@@ -4216,6 +4282,11 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'SimpleSoftwareIO\\QrCode\\ImageMergeInterface' => __DIR__ . '/..' . '/simplesoftwareio/simple-qrcode/src/SimpleSoftwareIO/QrCode/ImageMergeInterface.php',
         'SimpleSoftwareIO\\QrCode\\QrCodeInterface' => __DIR__ . '/..' . '/simplesoftwareio/simple-qrcode/src/SimpleSoftwareIO/QrCode/QrCodeInterface.php',
         'SimpleSoftwareIO\\QrCode\\QrCodeServiceProvider' => __DIR__ . '/..' . '/simplesoftwareio/simple-qrcode/src/SimpleSoftwareIO/QrCode/QrCodeServiceProvider.php',
+        'Spatie\\PdfToImage\\Exceptions\\InvalidFormat' => __DIR__ . '/..' . '/spatie/pdf-to-image/src/Exceptions/InvalidFormat.php',
+        'Spatie\\PdfToImage\\Exceptions\\InvalidLayerMethod' => __DIR__ . '/..' . '/spatie/pdf-to-image/src/Exceptions/InvalidLayerMethod.php',
+        'Spatie\\PdfToImage\\Exceptions\\PageDoesNotExist' => __DIR__ . '/..' . '/spatie/pdf-to-image/src/Exceptions/PageDoesNotExist.php',
+        'Spatie\\PdfToImage\\Exceptions\\PdfDoesNotExist' => __DIR__ . '/..' . '/spatie/pdf-to-image/src/Exceptions/PdfDoesNotExist.php',
+        'Spatie\\PdfToImage\\Pdf' => __DIR__ . '/..' . '/spatie/pdf-to-image/src/Pdf.php',
         'SuperClosure\\Analyzer\\AstAnalyzer' => __DIR__ . '/..' . '/jeremeamia/SuperClosure/src/Analyzer/AstAnalyzer.php',
         'SuperClosure\\Analyzer\\ClosureAnalyzer' => __DIR__ . '/..' . '/jeremeamia/SuperClosure/src/Analyzer/ClosureAnalyzer.php',
         'SuperClosure\\Analyzer\\Token' => __DIR__ . '/..' . '/jeremeamia/SuperClosure/src/Analyzer/Token.php',
@@ -4977,6 +5048,8 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'setasign\\Fpdi\\PdfReader\\PdfReader' => __DIR__ . '/..' . '/setasign/fpdi/src/PdfReader/PdfReader.php',
         'setasign\\Fpdi\\PdfReader\\PdfReaderException' => __DIR__ . '/..' . '/setasign/fpdi/src/PdfReader/PdfReaderException.php',
         'setasign\\Fpdi\\TcpdfFpdi' => __DIR__ . '/..' . '/setasign/fpdi/src/TcpdfFpdi.php',
+        'stringEncode\\Encode' => __DIR__ . '/..' . '/paquettg/string-encode/src/stringEncode/Encode.php',
+        'stringEncode\\Exception' => __DIR__ . '/..' . '/paquettg/string-encode/src/stringEncode/Exception.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

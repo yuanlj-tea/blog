@@ -125,6 +125,9 @@ Route::group(['namespace'=>'Home','prefix'=>'guzzle'],function(){
     Route::get('testGuzzle','IndexController@testGuzzle');
 });
 
+Route::get('pdfToImg','Home\IndexController@pdfToImg');
+Route::get('pdfToHtml','Home\IndexController@pdfToHtml');
+
 //SSO相关
 Route::group(['namespace'=>'SSO','prefix'=>'sso'],function(){
     //SSO-SERVER相关

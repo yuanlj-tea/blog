@@ -197,4 +197,39 @@ die;
         // $res = Guzzle::get($base_uri,$api,['c'=>'d','a'=>'b'],$headers,$proxy);
         // p($res,1);
     }
+
+    /**
+     * pdf转图片
+     * @throws \Spatie\PdfToImage\Exceptions\PageDoesNotExist
+     * @throws \Spatie\PdfToImage\Exceptions\PdfDoesNotExist
+     */
+    public function pdfToImg()
+    {
+
+        $pathToPdf = '/mnt/hgfs/oa_site/new_src/public/attachment/1471231392.pdf';
+        $pathToWhereImageShouldBeStored = '/tmp/pdfToImg/';
+        $pdf = new \Spatie\PdfToImage\Pdf($pathToPdf);
+        $pages = $pdf->getNumberOfPages();
+
+        for($i=1;$i<=$pages;$i++){
+            $pdf->setPage($i)->setCompressionQuality(100)->saveImage($pathToWhereImageShouldBeStored);
+            echo $i.'==ok<br>';
+        }
+
+    }
+
+    /**
+     * pdf转html
+     */
+    public function pdfToHtml()
+    {
+        $pdf = new \Gufy\PdfToHtml\Pdf('/mnt/hgfs/oa_site/new_src/public/attachment/1471231392.pdf');
+        $pages = $pdf->getPages();
+
+        for($i=1;$i<=6;$i++){
+            $html = $pdf->html($i);
+            echo $html;
+        }
+
+    }
 }
