@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home;
 use App\Http\Model\Article;
 use App\Http\Model\Category;
 use App\Http\Model\Links;
+use App\Libs\Predis;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use PDF;
@@ -14,6 +15,7 @@ use PdfWatermarker\PdfWatermarker;
 use DfaFilter\SensitiveHelper;
 use App\Libs\Guzzle;
 use DB;
+use RedisPHP;
 
 class IndexController extends CommonController
 {
@@ -205,14 +207,16 @@ die;
      */
     public function pdfToImg()
     {
-
-        $pathToPdf = '/mnt/hgfs/oa_site/new_src/public/attachment/1471231392.pdf';
+        ignore_user_abort();
+        ini_set('max_execution_time', '0');
+        $pathToPdf = '/mnt/hgfs/oa_site/new_src/public/attachment/1471230189.pdf';
         $pathToWhereImageShouldBeStored = '/tmp/pdfToImg/';
         $pdf = new \Spatie\PdfToImage\Pdf($pathToPdf);
         $pages = $pdf->getNumberOfPages();
 
+
         for($i=1;$i<=$pages;$i++){
-            $pdf->setPage($i)->setCompressionQuality(100)->saveImage($pathToWhereImageShouldBeStored);
+            $pdf->setPage($i)->setResolution(800)->setCompressionQuality(100)->setColorspace(0)->setOutputFormat('png')->saveImage($pathToWhereImageShouldBeStored);
             echo $i.'==ok<br>';
         }
 
