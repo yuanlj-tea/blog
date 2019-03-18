@@ -216,7 +216,7 @@ die;
 
 
         for($i=1;$i<=$pages;$i++){
-            $pdf->setPage($i)->setResolution(800)->setCompressionQuality(100)->setColorspace(0)->setOutputFormat('png')->saveImage($pathToWhereImageShouldBeStored);
+            $pdf->setPage($i)->setResolution(600)->setCompressionQuality(100)->saveImage($pathToWhereImageShouldBeStored);
             echo $i.'==ok<br>';
         }
 

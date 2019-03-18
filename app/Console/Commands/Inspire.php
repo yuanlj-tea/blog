@@ -29,11 +29,16 @@ class Inspire extends Command
      */
     public function handle()
     {
-        $session_id = '6l70rtmchd7kr3nk4euv8u4140';
-        $sessionDriver = ini_get('session.save_handler');
-        Common::clearSession($sessionDriver, $session_id);
+        $pathToPdf = '/mnt/hgfs/oa_site/new_src/public/attachment/1.pdf';
+        $pathToWhereImageShouldBeStored = '/tmp/pdfToImg/';
+        $pdf = new \Spatie\PdfToImage\Pdf($pathToPdf);
+        $pages = $pdf->getNumberOfPages();
 
-        dd($_SESSION);
+
+        for($i=1;$i<=$pages;$i++){
+            $pdf->setPage($i)->setResolution(600)->setCompressionQuality(100)->saveImage($pathToWhereImageShouldBeStored);
+            echo $i."==ok\n";
+        }
         // $this->comment(PHP_EOL.Inspiring::quote().PHP_EOL);
     }
 }
