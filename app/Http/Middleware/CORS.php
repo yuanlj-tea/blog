@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Str;
 
 class CORS
 {
@@ -15,20 +16,33 @@ class CORS
      */
     public function handle($request, Closure $next)
     {
-        header('Access-Control-Allow-Origin: *');
+        $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+        $all_url = explode(',', env('all_cors_login_url'));
 
-        $headers = [
-            'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, PUT, DELETE',
-            'Access-Control-Allow-Headers' => 'Content-Type, X-Auth-Token, Origin'
+        $path = [
+            'login/yunwei',
+            '/login'
         ];
-        if ($request->getMethod() == "OPTIONS") {
-            return Response::make('OK', 200, $headers);
-        }
+        $allowCorsPath = [
+            'rule/detail'
+        ];
 
+        $requestPath = urldecode($request->path());
         $response = $next($request);
-        foreach ($headers as $key => $value) {
-            $response->header($key, $value);
-        }
+        //if (in_array($requestPath, $path) && in_array($origin, $all_url)) {
+            $response->header('Access-Control-Allow-Origin', $origin);
+            $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, Accept');
+            $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS,X-CSRF-TOKEN');
+            $response->header('Access-Control-Allow-Credentials', 'true');
+            return $response;
+        //} elseif (Str::contains($requestPath, $allowCorsPath) && in_array('header', get_class_methods(get_class($response)))) {
+        //     $response->header('Access-Control-Allow-Origin', '*');
+        //     $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, Accept');
+        //     $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS,X-CSRF-TOKEN');
+        //     $response->header('Access-Control-Allow-Credentials', 'true');
+        //     return $response;
+        // }
+
         return $response;
     }
 }

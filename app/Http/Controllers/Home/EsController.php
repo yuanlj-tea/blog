@@ -76,10 +76,13 @@ class EsController extends Controller
         //];
 
         //select * from blog_article where art_id >1 and art_id < 6;
-        $param['body']['query']['range'] = [
-            'art_id' => ['gt' => 1, 'lt' => 6]
-        ];
+        // $param['body']['query']['range'] = [
+        //     'art_id' => ['gt' => 1, 'lt' => 6]
+        // ];
 
+        // $param['body']['query']['match']['art_title']['query']='苹';
+        // $param['body']['query']['term']['art_tag']='苹果,摄像头';
+        $param['body']['query']['match']['art_title']='果';
 
         //p($param,1);
         $res = Es::getClient()->search($param);
@@ -160,6 +163,17 @@ class EsController extends Controller
         //    ['match' => ['art_title'=>'总局',]],
         //    ['match' => ['art_id'=>'5',]],
         //];
+
+        if(!empty($art_title)){
+            $param['query']['bool']['must'] = [
+                [
+                    'match' => [
+                        'art_title' => $art_title
+                    ]
+                ]
+            ];
+        }
+
 
         //select * from blog_article where art_id >1 and art_id < 6;
         //$param['query']['range'] = [

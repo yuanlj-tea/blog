@@ -29,14 +29,14 @@ class Inspire extends Command
      */
     public function handle()
     {
-        $pathToPdf = '/mnt/hgfs/oa_site/new_src/public/attachment/1.pdf';
+        $pathToPdf = '/mnt/hgfs/oa_site/new_src/public/attachment/Linux高性能服务器编程.pdf';
         $pathToWhereImageShouldBeStored = '/tmp/pdfToImg/';
         $pdf = new \Spatie\PdfToImage\Pdf($pathToPdf);
         $pages = $pdf->getNumberOfPages();
 
 
         for($i=1;$i<=$pages;$i++){
-            $pdf->setPage($i)->setResolution(600)->setCompressionQuality(100)->saveImage($pathToWhereImageShouldBeStored);
+            $pdf->setPage($i)->setResolution(600)->setCompressionQuality(30)->saveImage($pathToWhereImageShouldBeStored);
             echo $i."==ok\n";
         }
         // $this->comment(PHP_EOL.Inspiring::quote().PHP_EOL);
