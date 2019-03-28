@@ -99,6 +99,10 @@ Route::group(['namespace' => 'Home','prefix'=>'es'], function () {
     Route::any('initIndex', 'EsController@initIndex');
     Route::any('search', 'EsController@search');
     Route::any('searchArticle', 'EsController@searchArticle');
+    Route::any('getMapping', 'EsController@getMapping');
+    Route::any('delIndex', 'EsController@delIndex');
+    Route::any('createIndex', 'EsController@createIndex');
+    Route::any('createMapping', 'EsController@createMapping');
 
 });
 

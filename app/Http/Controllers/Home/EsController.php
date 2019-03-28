@@ -27,9 +27,153 @@ class EsController extends Controller
     }
 
     /**
-     * 添加索引
+     * 创建索引
+     * @return false|\Illuminate\Http\JsonResponse|string|void
      */
-    public function addIndex($index, $type, $id, $data)
+    public function createIndex()
+    {
+        $params = [
+            'index' => $this->es_index,
+            /*'body' => [
+                'settings' => [
+                    'number_of_shards' => 5,
+                    'number_of_replicas' => 10
+                ]
+            ]*/
+        ];
+
+        try{
+            $this->esClient->indices()->create($params);
+            return AjaxResponse::success('生成索引:'.$this->es_index.',成功');
+        }catch(\Exception $e){
+            return AjaxResponse::fail($e->getMessage());
+        }
+    }
+
+    /**
+     * 删除索引
+     */
+    public function delIndex()
+    {
+        $params = ['index'=>$this->es_index];
+        $res = $this->esClient->indices()->delete($params);
+        return AjaxResponse::success('删除索引成功');
+    }
+
+    /**
+     * 创建mapping
+     */
+    public function createMapping()
+    {
+        $params = [
+            'index' => $this->es_index,
+            'type' => $this->es_type,
+            'body' => [
+                $this->es_type => [
+                    '_source' => [
+                        'enabled' => true
+                    ],
+                    '_all' => [
+                        'analyzer' => 'ik_max_word',
+                        'search_analyzer' => 'ik_max_word',
+                        'term_vector' => 'no',
+                        'store' => false
+                    ],
+                    'properties' => [
+                        'art_content' => [
+                            'type' => 'text',
+                            //'analyzer' => 'ik_max_word',
+                            'fields' => [
+                                'keyword' => [
+                                    'type' => 'keyword',
+                                    'ignore_above' => 256
+                                ]
+                            ]
+                        ],
+                        'art_description' => [
+                            'type' => 'text',
+                            //'analyzer' => 'ik_max_word',
+                            'fields' => [
+                                'keyword' => [
+                                    'type' => 'keyword',
+                                    'ignore_above' => 256
+                                ]
+                            ]
+                        ],
+                        'art_editor' => [
+                            'type' => 'text',
+                            //'analyzer' => 'ik_max_word',
+                            'fields' => [
+                                'keyword' => [
+                                    'type' => 'keyword',
+                                    'ignore_above' => 256
+                                ]
+                            ]
+                        ],
+                        'art_id' => [
+                            'type' => 'long'
+                        ],
+                        'art_tag' => [
+                            'type' => 'text',
+                            //'analyzer' => 'ik_max_word',
+                            'fields' => [
+                                'keyword' => [
+                                    'type' => 'keyword',
+                                    'ignore_above' => 256
+                                ]
+                            ]
+                        ],
+                        'art_thumb' => [
+                            'type' => 'text',
+                            //'analyzer' => 'ik_max_word',
+                            'fields' => [
+                                'keyword' => [
+                                    'type' => 'keyword',
+                                    'ignore_above' => 256
+                                ]
+                            ]
+                        ],
+                        'art_title' => [
+                            'type' => 'text',
+                            'analyzer' => 'ik_max_word',
+                            'fields' => [
+                                'keyword' => [
+                                    'type' => 'keyword',
+                                    'ignore_above' => 256
+                                ]
+                            ]
+                        ],
+                        'atr_time' => [
+                            'type' => 'long',
+                        ],
+                        'art_view' => [
+                            'type' => 'long'
+                        ],
+                        'cate_id' => [
+                            'type' => 'long'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $res = $this->esClient->indices()->putMapping($params);
+        return AjaxResponse::success('生成mapping成功');
+    }
+
+    /**
+     * 查看mapping
+     * @return false|\Illuminate\Http\JsonResponse|string|void
+     */
+    public function getMapping()
+    {
+        $mapping = $this->esClient->indices()->getMapping();
+        return AjaxResponse::success($mapping);
+    }
+
+    /**
+     * 添加文档
+     */
+    public function addDoc($index, $type, $id, $data)
     {
         $params = [
             'index' => $index,
@@ -40,6 +184,9 @@ class EsController extends Controller
         return $this->esClient->index($params);
     }
 
+    /**
+     * 初始化文档
+     */
     public function initIndex()
     {
         $data = Article::select('*')->get()->toArray();
@@ -49,7 +196,7 @@ class EsController extends Controller
 
         foreach ($data as $k => $v) {
 
-            $this->addIndex($es_index, $es_type, $v['art_id'], $v);
+            $this->addDoc($es_index, $es_type, $v['art_id'], $v);
             echo $v['art_id'] . '----' . $v['art_title'] . "<br>";
         }
 
@@ -81,7 +228,7 @@ class EsController extends Controller
         // ];
 
         // $param['body']['query']['match']['art_title']['query']='苹';
-        // $param['body']['query']['term']['art_tag']='苹果,摄像头';
+        // $param['body']['query']['term']['art_tag']='最强大脑,围棋';
         $param['body']['query']['match']['art_title']='果';
 
         //p($param,1);
@@ -93,6 +240,7 @@ class EsController extends Controller
     {
         $art_id = $request->input('art_id', 0);
         $art_title = $request->input('art_title', '');
+        $art_tag = $request->input('art_tag','');
         $cate_id = $request->input('cate_id', 0);
         $key = $request->input('key', '');
         $perPage = $request->input('perPage', 20);
@@ -108,6 +256,13 @@ class EsController extends Controller
         //select * from blog_article where cate_id = ?;
         if(!empty($cate_id)){
             $filter[]['term']['cate_id'] = $cate_id;
+        }
+
+        if(!empty($art_tag)){
+            //select * from blog_article where art_tag = $art_tag; (中文精确值搜索,字段后要加.keyword)
+            $filter[]['term']['art_tag.keyword'] = $art_tag;
+            // $param['query']['match']['art_tag'] = $art_tag;
+            // $param['query']['constant_score']['filter']['term']['art_tag'] = $art_tag;
         }
 
         //范围cate_id>=6 && cate_id <=11
