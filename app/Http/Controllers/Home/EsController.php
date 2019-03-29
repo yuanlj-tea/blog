@@ -351,4 +351,21 @@ class EsController extends Controller
         }
     }
 
+    /**
+     * 更新远程词库
+     * @param $dic
+     */
+    public function updateRemoteDic(Request $request)
+    {
+        $dic = $request->input('dic','');
+
+        if(!empty($dic)){
+            file_put_contents('/mnt/hgfs/test/Allen.txt',$dic.PHP_EOL,FILE_APPEND);
+        }else{
+            return AjaxResponse::fail('请传递要更新的词库数据');
+        }
+        return AjaxResponse::success('更新词库成功');
+
+    }
+
 }

@@ -103,6 +103,7 @@ Route::group(['namespace' => 'Home','prefix'=>'es'], function () {
     Route::any('delIndex', 'EsController@delIndex');
     Route::any('createIndex', 'EsController@createIndex');
     Route::any('createMapping', 'EsController@createMapping');
+    Route::any('updateRemoteDic', 'EsController@updateRemoteDic');
 
 });
 
