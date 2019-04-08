@@ -4,9 +4,11 @@
 
 2、运行时序图：
 
-登录时序图：![](https://ws2.sinaimg.cn/large/006tNc79ly1g1vjk9vlxzj30kh0pvwgv.jpg)
+登录时序图：
+![](https://ws2.sinaimg.cn/large/006tNc79ly1g1vjk9vlxzj30kh0pvwgv.jpg)
 
-登出时序图：![](https://ws4.sinaimg.cn/large/006tNc79ly1g1vjknvilij30je0dv75i.jpg)
+登出时序图：
+![](https://ws4.sinaimg.cn/large/006tNc79ly1g1vjknvilij30je0dv75i.jpg)
 
 3、sso运行配置：
 
