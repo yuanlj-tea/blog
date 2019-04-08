@@ -2,11 +2,11 @@
 
 1、参考：https://www.cnblogs.com/ywlaker/p/6113927.html#!comments#undefined
 
-2、
+2、运行时序图：
 
-登录时序图：https://gitee.com/Alex-e/blog/blob/master/app/Http/Controllers/SSO/%E7%99%BB%E5%BD%95%E6%97%B6%E5%BA%8F%E5%9B%BE.png
+登录时序图：![](https://ws2.sinaimg.cn/large/006tNc79ly1g1vjk9vlxzj30kh0pvwgv.jpg)
 
-登出时序图：https://gitee.com/Alex-e/blog/blob/master/app/Http/Controllers/SSO/%E9%80%80%E5%87%BA%E7%99%BB%E5%BD%95%E6%97%B6%E5%BA%8F%E5%9B%BE.png
+登出时序图：![](https://ws4.sinaimg.cn/large/006tNc79ly1g1vjknvilij30je0dv75i.jpg)
 
 3、sso运行配置：
 
