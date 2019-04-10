@@ -91,7 +91,9 @@ class CurlRequest
     public function post($url, $params = NULL)
     {
         $this->setOption(CURLOPT_POST, true);
-        $this->setOption(CURLOPT_POSTFIELDS, $params);
+        if(!empty($params)){
+            $this->setOption(CURLOPT_POSTFIELDS, $params);
+        }
         return $this->_exec($url);
     }
 

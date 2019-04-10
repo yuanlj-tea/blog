@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Model\Article;
+use App\Libs\CurlRequest;
 use App\Libs\Es;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -365,6 +366,33 @@ class EsController extends Controller
             return AjaxResponse::fail('请传递要更新的词库数据');
         }
         return AjaxResponse::success('更新词库成功');
+
+    }
+
+    /**
+     * 通过sql插件查询
+     * https://github.com/NLPchina/elasticsearch-sql
+     */
+    public function searchBySql(Request $request)
+    {
+        $art_tag = $request->input('art_tag','苹果');
+
+        // $sql = "select * from blog where art_tag = '{$art_tag}'";
+        $sql = "select * from blog ";
+        $url = 'http://192.168.79.206:9200/_sql';
+
+        $headers = [
+            'Content-Type' => 'application/json',
+        ];
+        $option = [
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_POSTFIELDS => $sql,
+            //CURLOPT_PROXY => '192.168.79.251:8888'
+        ];
+        $curl = CurlRequest::getInstance()->setHeaders($headers)->setOptions($option);
+        $res = $curl->post($url);
+
+        pd(json_decode($res,1));
 
     }
 
