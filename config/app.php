@@ -167,7 +167,8 @@ return [
 
         LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider::class,
         LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class,
-        AetherUpload\AetherUploadServiceProvider::class
+        AetherUpload\AetherUploadServiceProvider::class,
+        Hhxsv5\LaravelS\Illuminate\LaravelSServiceProvider::class,
     ],
 
     /*
