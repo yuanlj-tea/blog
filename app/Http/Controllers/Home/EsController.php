@@ -43,10 +43,10 @@ class EsController extends Controller
             ]*/
         ];
 
-        try{
+        try {
             $this->esClient->indices()->create($params);
-            return AjaxResponse::success('生成索引:'.$this->es_index.',成功');
-        }catch(\Exception $e){
+            return AjaxResponse::success('生成索引:' . $this->es_index . ',成功');
+        } catch (\Exception $e) {
             return AjaxResponse::fail($e->getMessage());
         }
     }
@@ -56,7 +56,7 @@ class EsController extends Controller
      */
     public function delIndex()
     {
-        $params = ['index'=>$this->es_index];
+        $params = ['index' => $this->es_index];
         $res = $this->esClient->indices()->delete($params);
         return AjaxResponse::success('删除索引成功');
     }
@@ -230,7 +230,7 @@ class EsController extends Controller
 
         // $param['body']['query']['match']['art_title']['query']='苹';
         // $param['body']['query']['term']['art_tag']='最强大脑,围棋';
-        $param['body']['query']['match']['art_title']='果';
+        $param['body']['query']['match']['art_title'] = '果';
 
         //p($param,1);
         $res = Es::getClient()->search($param);
@@ -241,11 +241,12 @@ class EsController extends Controller
     {
         $art_id = $request->input('art_id', 0);
         $art_title = $request->input('art_title', '');
-        $art_tag = $request->input('art_tag','');
+        $art_tag = $request->input('art_tag', '');
         $cate_id = $request->input('cate_id', 0);
         $key = $request->input('key', '');
         $perPage = $request->input('perPage', 20);
         $page = $request->input('page', 1);
+        $boost = $request->input('boost', 0);
 
         $filter = [];
 
@@ -255,11 +256,11 @@ class EsController extends Controller
         }
 
         //select * from blog_article where cate_id = ?;
-        if(!empty($cate_id)){
+        if (!empty($cate_id)) {
             $filter[]['term']['cate_id'] = $cate_id;
         }
 
-        if(!empty($art_tag)){
+        if (!empty($art_tag)) {
             //select * from blog_article where art_tag = $art_tag; (中文精确值搜索,字段后要加.keyword)
             $filter[]['term']['art_tag.keyword'] = $art_tag;
             // $param['query']['match']['art_tag'] = $art_tag;
@@ -309,18 +310,18 @@ class EsController extends Controller
         //$param['query']['match']['art_tag'] = '苹果';
 
         //select * from blog_article where art_title like '%总局%' or art_id = 14;
-        //$param['query']['bool']['should'] = [
+        // $param['query']['bool']['should'] = [
         //    ['match' => ['art_title'=>'总局',]],
         //    ['match' => ['art_id'=>'14',]],
-        //];
+        // ];
 
         //select * from blog_article where art_title like '%总局%' and art_id = 5;
-        //$param['query']['bool']['must'] = [
+        // $param['query']['bool']['must'] = [
         //    ['match' => ['art_title'=>'总局',]],
         //    ['match' => ['art_id'=>'5',]],
-        //];
+        // ];
 
-        if(!empty($art_title)){
+        if (!empty($art_title)) {
             $param['query']['bool']['must'] = [
                 [
                     'match' => [
@@ -330,6 +331,27 @@ class EsController extends Controller
             ];
         }
 
+        //对同一个字段按照权重搜索，权重大的在前面(但是sort会影响权重,sort的权重最大,最终以sort的为准)
+        if(!empty($boost)){
+            $param['query']['bool']['should'] = [
+                [
+                    'match' => [
+                        'art_title' => [
+                            'query' => '总局',
+                            'boost' => 2,
+                        ],
+                    ],
+                ],
+                [
+                    'match' => [
+                        'art_title' => [
+                            'query' => '苹果',
+                            'boost' => 1,
+                        ],
+                    ],
+                ]
+            ];
+        }
 
         //select * from blog_article where art_id >1 and art_id < 6;
         //$param['query']['range'] = [
@@ -358,11 +380,11 @@ class EsController extends Controller
      */
     public function updateRemoteDic(Request $request)
     {
-        $dic = $request->input('dic','');
+        $dic = $request->input('dic', '');
 
-        if(!empty($dic)){
-            file_put_contents('/mnt/hgfs/test/Allen.txt',$dic.PHP_EOL,FILE_APPEND);
-        }else{
+        if (!empty($dic)) {
+            file_put_contents('/mnt/hgfs/test/Allen.txt', $dic . PHP_EOL, FILE_APPEND);
+        } else {
             return AjaxResponse::fail('请传递要更新的词库数据');
         }
         return AjaxResponse::success('更新词库成功');
@@ -375,7 +397,7 @@ class EsController extends Controller
      */
     public function searchBySql(Request $request)
     {
-        $art_tag = $request->input('art_tag','苹果');
+        $art_tag = $request->input('art_tag', '苹果');
 
         // $sql = "select * from blog where art_tag = '{$art_tag}'";
         $sql = "select * from blog ";
@@ -392,7 +414,7 @@ class EsController extends Controller
         $curl = CurlRequest::getInstance()->setHeaders($headers)->setOptions($option);
         $res = $curl->post($url);
 
-        pd(json_decode($res,1));
+        pd(json_decode($res, 1));
 
     }
 
