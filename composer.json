@@ -8,7 +8,7 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
         "barryvdh/laravel-debugbar": "^2.2",
-        "barryvdh/laravel-dompdf": "^0.8.1",
+        "barryvdh/laravel-dompdf": "^0.8.2",
         "anhskohbo/no-captcha": "^3.0",
         "predis/predis": "~1.0",
         "zircote/swagger-php": "^2.0",

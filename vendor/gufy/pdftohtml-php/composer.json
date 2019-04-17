@@ -1,0 +1,29 @@
+{
+    "name": "gufy/pdftohtml-php",
+    "description": "PDF to HTML converter with PHP using Poppler-utils",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mochamad Gufron",
+            "email": "mgufronefendi@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "paquettg/php-html-parser": "~1",
+        "illuminate/config": "~5"
+    },
+    "require-dev":{
+        "phpunit/phpunit":"~4",
+        "satooshi/php-coveralls": "^1.0"
+    },
+
+    "autoload": {
+        "psr-0": {
+            "Gufy": "src"
+        },
+        "psr-4": {
+            "Gufy\\PdfToHtml\\": "src/"
+        }
+    }
+}
