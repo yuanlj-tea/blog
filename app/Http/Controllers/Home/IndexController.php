@@ -16,6 +16,7 @@ use DfaFilter\SensitiveHelper;
 use App\Libs\Guzzle;
 use DB;
 use RedisPHP;
+use Zipper;
 
 class IndexController extends CommonController
 {
@@ -236,5 +237,12 @@ class IndexController extends CommonController
             echo $html;
         }
 
+    }
+
+    public function testZip()
+    {
+        $files = glob('/opt/wwwroot/php_learn/abcd/');
+        $res = Zipper::make('/opt/wwwroot/php_learn/abcd/test.zip')->add($files)->close();
+        pd($res);
     }
 }
