@@ -169,6 +169,7 @@ return [
         LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class,
         AetherUpload\AetherUploadServiceProvider::class,
         Hhxsv5\LaravelS\Illuminate\LaravelSServiceProvider::class,
+        Chumper\Zipper\ZipperServiceProvider::class,
     ],
 
     /*
@@ -226,6 +227,7 @@ return [
 
         //OAuth2 Server
         'Authorizer' => LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
+        'Zipper' => Chumper\Zipper\Zipper::class,
 
     ],
 
