@@ -25,7 +25,7 @@ if(!function_exists('oa_http_get')) {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array("Connection: close"));
-        curl_setopt($ch, CURLOPT_PROXY, '192.168.79.251:8888');
+        // curl_setopt($ch, CURLOPT_PROXY, '192.168.79.251:8888');
         //curl_setopt($ch, CURLOPT_USERAGENT, "(kingnet oa web server)");
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         $res=curl_exec($ch);
