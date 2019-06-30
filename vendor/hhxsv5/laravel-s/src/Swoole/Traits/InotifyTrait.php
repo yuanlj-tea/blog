@@ -2,16 +2,14 @@
 
 namespace Hhxsv5\LaravelS\Swoole\Traits;
 
+use Hhxsv5\LaravelS\Console\Portal;
 use Hhxsv5\LaravelS\Swoole\Inotify;
 use Swoole\Http\Server;
 use Swoole\Process;
 
 trait InotifyTrait
 {
-    use ProcessTitleTrait;
-    use LogTrait;
-
-    public function addInotifyProcess(Server $swoole, array $config)
+    public function addInotifyProcess(Server $swoole, array $config, array $laravelConf)
     {
         if (empty($config['enable'])) {
             return;
@@ -28,12 +26,14 @@ trait InotifyTrait
             return;
         }
 
-        $autoReload = function () use ($swoole, $config) {
+        $autoReload = function () use ($config, $laravelConf) {
             $log = !empty($config['log']);
             $this->setProcessTitle(sprintf('%s laravels: inotify process', $config['process_prefix']));
             $inotify = new Inotify($config['watch_path'], IN_CREATE | IN_DELETE | IN_MODIFY | IN_MOVE,
-                function ($event) use ($swoole, $log) {
-                    $swoole->reload();
+                function ($event) use ($log, $laravelConf) {
+                    // $swoole->reload();
+                    $reloadCmd = trim(sprintf('%s -c "%s" %s/bin/laravels reload', PHP_BINARY, php_ini_loaded_file(), $laravelConf['root_path']));
+                    Portal::runCommand($reloadCmd);
                     if ($log) {
                         $action = 'file:';
                         switch ($event['mask']) {
@@ -43,7 +43,7 @@ trait InotifyTrait
                             case IN_DELETE:
                                 $action = 'delete';
                                 break;
-                            case IN_MODIFY :
+                            case IN_MODIFY:
                                 $action = 'modify';
                                 break;
                             case IN_MOVE:
@@ -75,5 +75,4 @@ trait InotifyTrait
             return $inotifyProcess;
         }
     }
-
 }

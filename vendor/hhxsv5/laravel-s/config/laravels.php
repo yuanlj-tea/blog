@@ -24,7 +24,13 @@ return [
         //'handler' => XxxWebSocketHandler::class,
     ],
     'sockets'                  => [],
-    'processes'                => [],
+    'processes'                => [
+        //[
+        //    'class'    => \App\Processes\TestProcess::class,
+        //    'redirect' => false, // Whether redirect stdin/stdout, true or false
+        //    'pipe'     => 0 // The type of pipeline, 0: no pipeline 1: SOCK_STREAM 2: SOCK_DGRAM
+        //],
+    ],
     'timer'                    => [
         'enable'        => false,
         'jobs'          => [
@@ -34,17 +40,22 @@ return [
             // [\App\Jobs\XxxCronJob::class, [1000, true]], // Pass in parameters when registering
             // \App\Jobs\XxxCronJob::class, // Override the corresponding method to return the configuration
         ],
-        'pid_file'      => storage_path('laravels-timer.pid'),
         'max_wait_time' => 5,
     ],
     'events'                   => [],
     'swoole_tables'            => [],
     'register_providers'       => [],
     'cleaners'                 => [
-        //Hhxsv5\LaravelS\Illuminate\Cleaners\SessionCleaner::class, // If you use the session/authentication in your project, please uncomment this line
-        //Hhxsv5\LaravelS\Illuminate\Cleaners\AuthCleaner::class,    // If you use the authentication/passport in your project, please uncomment this line
+        //Hhxsv5\LaravelS\Illuminate\Cleaners\SessionCleaner::class, // If you use the session or authentication in your project, please uncomment this line
+        //Hhxsv5\LaravelS\Illuminate\Cleaners\AuthCleaner::class,    // If you use the authentication or passport in your project, please uncomment this line
         //Hhxsv5\LaravelS\Illuminate\Cleaners\JWTCleaner::class,     // If you use the package "tymon/jwt-auth" in your project, please uncomment this line
         // ...
+    ],
+    'destroy_controllers'      => [
+        'enable'        => false,
+        'excluded_list' => [
+            //\App\Http\Controllers\TestController::class,
+        ],
     ],
     'swoole'                   => [
         'daemonize'          => env('LARAVELS_DAEMONIZE', false),
@@ -69,6 +80,11 @@ return [
         'enable_reuse_port'  => true,
         'enable_coroutine'   => false,
         'http_compression'   => false,
+
+        // Slow log
+        // 'request_slowlog_timeout' => 2,
+        // 'request_slowlog_file'    => storage_path(sprintf('logs/slow-%s.log', date('Y-m'))),
+        // 'trace_event_worker'      => true,
 
         /**
          * More settings of Swoole

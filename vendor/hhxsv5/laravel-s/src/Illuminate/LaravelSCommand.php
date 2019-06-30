@@ -179,13 +179,14 @@ EOS;
         }
 
         $laravelConf = [
-            'root_path'          => $svrConf['laravel_base_path'],
-            'static_path'        => $svrConf['swoole']['document_root'],
-            'cleaners'           => array_unique((array)Arr::get($svrConf, 'cleaners', [])),
-            'register_providers' => array_unique((array)Arr::get($svrConf, 'register_providers', [])),
-            'is_lumen'           => $this->isLumen(),
-            '_SERVER'            => $_SERVER,
-            '_ENV'               => $_ENV,
+            'root_path'           => $svrConf['laravel_base_path'],
+            'static_path'         => $svrConf['swoole']['document_root'],
+            'cleaners'            => array_unique((array)Arr::get($svrConf, 'cleaners', [])),
+            'register_providers'  => array_unique((array)Arr::get($svrConf, 'register_providers', [])),
+            'destroy_controllers' => Arr::get($svrConf, 'destroy_controllers', []),
+            'is_lumen'            => $this->isLumen(),
+            '_SERVER'             => $_SERVER,
+            '_ENV'                => $_ENV,
         ];
 
         $config = ['server' => $svrConf, 'laravel' => $laravelConf];
@@ -219,9 +220,6 @@ EOS;
         }
         if (empty($svrConf['swoole']['pid_file'])) {
             $svrConf['swoole']['pid_file'] = storage_path('laravels.pid');
-        }
-        if (empty($svrConf['timer']['pid_file'])) {
-            $svrConf['timer']['pid_file'] = storage_path('laravels-timer.pid');
         }
         if (empty($svrConf['timer']['max_wait_time'])) {
             $svrConf['timer']['max_wait_time'] = 5;
@@ -268,6 +266,12 @@ EOS;
                 'mode' => 0755,
                 'link' => true,
             ],
+            [
+                'from' => realpath(__DIR__ . '/../../bin/inotify'),
+                'to'   => $basePath . '/bin/inotify',
+                'mode' => 0755,
+                'link' => true,
+            ],
         ];
         if (file_exists($configPath)) {
             $choice = $this->anticipate($configPath . ' already exists, do you want to override it ? Y/N',
@@ -296,7 +300,6 @@ EOS;
                 } else {
                     copy($todo['from'], $todo['to']);
                 }
-
             }
             chmod($todo['to'], $todo['mode']);
             $this->line("<info>{$operation} file</info> <comment>[{$todo['from']}]</comment> <info>To</info> <comment>[{$todo['to']}]</comment>");
