@@ -8,10 +8,6 @@ use Swoole\Process;
 
 trait TimerTrait
 {
-    use ProcessTitleTrait;
-    use LaravelTrait;
-    use LogTrait;
-
     public function addTimerProcess(Server $swoole, array $config, array $laravelConfig)
     {
         if (empty($config['enable']) || empty($config['jobs'])) {
@@ -19,7 +15,8 @@ trait TimerTrait
         }
 
         $startTimer = function (Process $process) use ($swoole, $config, $laravelConfig) {
-            file_put_contents($config['pid_file'], $process->pid);
+            $pidfile = dirname($swoole->setting['pid_file']) . '/laravels-timer-process.pid';
+            file_put_contents($pidfile, $process->pid);
             $this->setProcessTitle(sprintf('%s laravels: timer process', $config['process_prefix']));
             $this->initLaravel($laravelConfig, $swoole);
             $timerIds = [];
@@ -72,5 +69,4 @@ trait TimerTrait
             return $timerProcess;
         }
     }
-
 }

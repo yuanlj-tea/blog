@@ -15,6 +15,7 @@
 [![License](https://poser.pugx.org/hhxsv5/laravel-s/license.svg)](https://github.com/hhxsv5/laravel-s/blob/master/LICENSE)
 [![Build Status](https://scrutinizer-ci.com/g/hhxsv5/laravel-s/badges/build.png?b=master)](https://scrutinizer-ci.com/g/hhxsv5/laravel-s/build-status/master)
 [![Code Intelligence Status](https://scrutinizer-ci.com/g/hhxsv5/laravel-s/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
+[![Total Lines](https://tokei.rs/b1/github/hhxsv5/laravel-s)](https://github.com/hhxsv5/laravel-s)
 <!-- [![Code Coverage](https://scrutinizer-ci.com/g/hhxsv5/laravel-s/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/hhxsv5/laravel-s/?branch=master) -->
 
 **[English Documentation](https://github.com/hhxsv5/laravel-s/blob/master/README.md)**
@@ -91,7 +92,7 @@ Table of Contents
 
 1.通过[Composer](https://getcomposer.org/)安装([packagist](https://packagist.org/packages/hhxsv5/laravel-s))。有可能找不到`3.0`版本，解决方案移步[#81](https://github.com/hhxsv5/laravel-s/issues/81)。
 ```bash
-composer require "hhxsv5/laravel-s:~3.4.0" -vvv
+composer require "hhxsv5/laravel-s:~3.5.0" -vvv
 # 确保你的composer.lock文件是在版本控制中
 ```
 
@@ -123,7 +124,7 @@ php artisan laravels publish
 ## 运行
 > `php bin/laravels {start|stop|restart|reload|info|help}`
 
-`在运行之前，请先仔细阅读：`[注意事项](https://github.com/hhxsv5/laravel-s/blob/master/README-CN.md#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9)。
+`在运行之前，请先仔细阅读：`[注意事项](https://github.com/hhxsv5/laravel-s/blob/master/README-CN.md#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9)(非常重要)。
 
 | 命令 | 说明 |
 | --------- | --------- |
@@ -257,7 +258,7 @@ LoadModule proxy_module /yyypath/modules/mod_deflate.so
 ## 启用WebSocket服务器
 > WebSocket服务器监听的IP和端口与Http服务器相同。
 
-1.创建WebSocket Handler类，并实现接口`WebSocketHandlerInterface`。start时会自动实例化，不需要手动创建示例。
+1.创建WebSocket Handler类，并实现接口`WebSocketHandlerInterface`。start时会自动实例化，不需要手动创建实例。
 
 ```php
 namespace App\Services;
@@ -832,7 +833,7 @@ public function onClose(Server $server, $fd, $reactorId)
     ],
     ```
 
-    - WebSocket
+    - WebSocket：主服务器必须`开启WebSocket`，即需要将`websocket.enable`置为`true`。
     ```php
     'sockets' => [
         [
@@ -853,7 +854,7 @@ public function onClose(Server $server, $fd, $reactorId)
 
 > [Swoole原始文档](https://wiki.swoole.com/wiki/page/749.html)
 
-- 警告：Laravel/Lumen中存在大量单例和静态属性，在协程下是`不安全`的，`不建议`打开协程，但`自定义进程、定时器`中可使用协程。
+- 警告：协程下代码执行顺序是乱序的，请求级的数据应该以协程ID隔离，但Laravel/Lumen中存在很多单例、静态属性，不同请求间的数据会相互影响，这是`不安全`的。比如数据库连接就是单例，同一个数据库连接共享同一个PDO资源，这在同步阻塞模式下是没问题的，但在异步协程下是不行的，每次查询需要创建不同的连接，维护不同的IO状态，这就需要用到连接池。所以`不要`打开协程，仅`自定义进程`中可使用协程。
 
 - 启用协程，默认是关闭的。
     
@@ -901,16 +902,6 @@ public function onClose(Server $server, $fd, $reactorId)
             // 进程名称
             return 'test';
         }
-        public static function isRedirectStdinStdout()
-        {
-            // 是否重定向输入输出
-            return false;
-        }
-        public static function getPipeType()
-        {
-            // 管道类型：0不创建管道，1创建SOCK_STREAM类型管道，2创建SOCK_DGRAM类型管道
-            return 0;
-        }
         public static function callback(Server $swoole, Process $process)
         {
             // 进程运行的代码，不能退出，一旦退出Manager进程会自动再次创建该进程。
@@ -945,7 +936,11 @@ public function onClose(Server $server, $fd, $reactorId)
     // 修改文件 config/laravels.php
     // ...
     'processes' => [
-        \App\Processes\TestProcess::class,
+        [
+            'class'    => \App\Processes\TestProcess::class,
+            'redirect' => false, // 是否重定向输入输出
+            'pipe'     => 0 // 管道类型：0不创建管道，1创建SOCK_STREAM类型管道，2创建SOCK_DGRAM类型管道
+        ],
     ],
     ```
 
@@ -996,6 +991,12 @@ class WorkerStartEvent implements WorkerStartInterface
     - Swoole Server下，所有单例对象会常驻于内存，这个时候单例对象的生命周期与FPM不同，请求开始=>实例化单例=>请求结束=>单例对象依旧保留，需要开发者自己维护单例的状态。
 
     - 如果你的项目中使用到了Session、Authentication、JWT，请根据情况解除`laravels.php`中`cleaners`的注释。
+    
+    - 在 LaravelS 中，所有控制器都是单例，控制器里面设置的属性在请求结束后也会保留下来，在后续请求中都可以获取到之前请求设置的属性，这在大部分情况都不是我们想要的效果。如果想要迁移到 LaravelS，或者找出潜在的问题，可以使用下面的命令。它可以列出你的路由中所有关联的控制器的所有属性：
+    
+    ```bash
+    php artisan laravels:list-properties
+    ```
 
     - 常见的解决方案：
 
@@ -1005,7 +1006,9 @@ class WorkerStartEvent implements WorkerStartInterface
 
         3. 如果是以`ServiceProvider`注册的单例对象，可添加该`ServiceProvider`到`laravels.php`的`register_providers`中，这样每次请求会重新注册该`ServiceProvider`，重新实例化单例对象，[参考](https://github.com/hhxsv5/laravel-s/blob/master/Settings-CN.md)。
 
-- [常见问题](https://github.com/hhxsv5/laravel-s/blob/master/KnownIssues-CN.md)
+- [常见问题](https://github.com/hhxsv5/laravel-s/blob/master/KnownIssues-CN.md)：一揽子的已知问题和解决方案。
+
+- 调试方式：记录日志、[Laravel Dump Server](https://github.com/beyondcode/laravel-dump-server)（Laravel 5.7已默认集成）
 
 - 应通过`Illuminate\Http\Request`对象来获取请求信息，$_ENV是可读取的，$_SERVER是部分可读的，`不能使用`$_GET、$_POST、$_FILES、$_COOKIE、$_REQUEST、$_SESSION、$GLOBALS。
 
@@ -1022,7 +1025,7 @@ class WorkerStartEvent implements WorkerStartInterface
     }
     ```
 
-- 推荐通过返回`Illuminate\Http\Response`对象来响应请求，兼容echo、vardump()、print_r()，`不能使用`函数像 dd()、exit()、die()、header()、setcookie()、http_response_code()。
+- 推荐通过返回`Illuminate\Http\Response`对象来响应请求，兼容echo、vardump()、print_r()，`不能使用`函数 dd()、exit()、die()、header()、setcookie()、http_response_code()。
 
     ```php
     public function json()
@@ -1099,7 +1102,7 @@ class WorkerStartEvent implements WorkerStartInterface
 
 ## 用户与案例
 
-- [KuCoin](https://www.kcs.top/ucenter/signup?rcode=Kyv3hd)
+- [KuCoin](https://www.kcs.top/ucenter/signup?rcode=vHR6yH)
 
 - [医联](https://www.medlinker.com/)：WEB站、M站、APP、小程序的账户体系服务。
     

@@ -2,6 +2,8 @@
 
 namespace Hhxsv5\LaravelS\Swoole;
 
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 class DynamicResponse extends Response
 {
     const CHUNK_LIMIT = 2097152; // 2M
@@ -20,7 +22,13 @@ class DynamicResponse extends Response
 
     public function sendContent()
     {
-        $content = $this->laravelResponse->getContent();
+        if ($this->laravelResponse instanceof StreamedResponse) {
+            ob_start();
+            $this->laravelResponse = $this->laravelResponse->sendContent();
+            $content = ob_get_clean();
+        } else {
+            $content = $this->laravelResponse->getContent();
+        }
 
         $len = strlen($content);
         if ($len === 0) {

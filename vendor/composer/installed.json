@@ -1960,17 +1960,17 @@
     },
     {
         "name": "hhxsv5/laravel-s",
-        "version": "v3.4.4",
-        "version_normalized": "3.4.4.0",
+        "version": "v3.5.6",
+        "version_normalized": "3.5.6.0",
         "source": {
             "type": "git",
             "url": "https://github.com/hhxsv5/laravel-s.git",
-            "reference": "026abbd3a42865473cab04285c411a197837644a"
+            "reference": "8fa9d0ffc4b0e4b392e3c4f1574f407c72520f7c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/hhxsv5/laravel-s/zipball/026abbd3a42865473cab04285c411a197837644a",
-            "reference": "026abbd3a42865473cab04285c411a197837644a",
+            "url": "https://api.github.com/repos/hhxsv5/laravel-s/zipball/8fa9d0ffc4b0e4b392e3c4f1574f407c72520f7c",
+            "reference": "8fa9d0ffc4b0e4b392e3c4f1574f407c72520f7c",
             "shasum": "",
             "mirrors": [
                 {
@@ -1981,14 +1981,16 @@
         },
         "require": {
             "ext-json": "*",
+            "ext-pcntl": "*",
             "php": ">=5.5.9",
+            "swoole/ide-helper": "@dev",
             "symfony/console": ">=2.7.0"
         },
         "suggest": {
             "ext-inotify": "Inotify, used to reload all worker processes when your code is modified.",
             "ext-swoole": "Event-driven asynchronous & concurrent & coroutine networking engine with high performance for PHP, require >= 1.7.19."
         },
-        "time": "2019-04-04T09:15:32+00:00",
+        "time": "2019-06-27T08:37:31+00:00",
         "bin": [
             "bin/fswatch"
         ],
@@ -2016,7 +2018,7 @@
                 "email": "hhxsv5@sina.com"
             }
         ],
-        "description": "🚀LaravelS is a glue that is used to quickly integrate Swoole into Laravel or Lumen and then give them better performance and more possibilities.",
+        "description": "🚀LaravelS is a glue that is used to quickly integrate Swoole into Laravel or Lumen, and then give them better performance and more possibilities.",
         "homepage": "https://github.com/hhxsv5/laravel-s",
         "keywords": [
             "async",
@@ -5339,6 +5341,51 @@
             "mail",
             "mailer"
         ]
+    },
+    {
+        "name": "swoole/ide-helper",
+        "version": "4.3.4",
+        "version_normalized": "4.3.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/swoole/ide-helper.git",
+            "reference": "7035aeb5c6d42c22b44aef1304aac62d6733b5e5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/swoole/ide-helper/zipball/7035aeb5c6d42c22b44aef1304aac62d6733b5e5",
+            "reference": "7035aeb5c6d42c22b44aef1304aac62d6733b5e5",
+            "shasum": "",
+            "mirrors": [
+                {
+                    "url": "https://dl.laravel-china.org/%package%/%reference%.%type%",
+                    "preferred": true
+                }
+            ]
+        },
+        "require-dev": {
+            "squizlabs/php_codesniffer": "~3.4.0",
+            "zendframework/zend-code": "~3.3.0"
+        },
+        "time": "2019-05-22T19:49:35+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Swoole\\IDEHelper\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Team Swoole",
+                "email": "team@swoole.com"
+            }
+        ],
+        "description": "IDE help files for Swoole."
     },
     {
         "name": "symfony/class-loader",

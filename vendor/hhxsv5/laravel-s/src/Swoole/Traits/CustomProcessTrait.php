@@ -9,32 +9,50 @@ use Swoole\Process;
 
 trait CustomProcessTrait
 {
-    use ProcessTitleTrait;
-    use LogTrait;
-
     public function addCustomProcesses(Server $swoole, $processPrefix, array $processes, array $laravelConfig)
     {
-        if (!empty($processes)) {
-            Laravel::autoload($laravelConfig['root_path']);
+        $pidfile = dirname($swoole->setting['pid_file']) . '/laravels-custom-processes.pid';
+        if (file_exists($pidfile)) {
+            unlink($pidfile);
         }
 
         /**@var []CustomProcessInterface $processList */
         $processList = [];
-        foreach ($processes as $process) {
-            if (!isset(class_implements($process)[CustomProcessInterface::class])) {
-                throw new \InvalidArgumentException(sprintf(
-                        '%s must implement the interface %s',
-                        $process,
-                        CustomProcessInterface::class
-                    )
-                );
+        foreach ($processes as $item) {
+            if (is_string($item)) {
+                // Backwards compatible
+                Laravel::autoload($laravelConfig['root_path']);
+                $process = $item;
+                $redirect = $process::isRedirectStdinStdout();
+                $pipe = $process::getPipeType();
+            } else {
+                if (empty($item['class'])) {
+                    throw new \InvalidArgumentException(sprintf(
+                            'process class name must be specified'
+                        )
+                    );
+                }
+                $process = $item['class'];
+                $redirect = isset($item['redirect']) ? $item['redirect'] : false;
+                $pipe = isset($item['pipe']) ? $item['pipe'] : 0;
             }
-            $processHandler = function (Process $worker) use ($swoole, $processPrefix, $process, $laravelConfig) {
+
+            $processHandler = function (Process $worker) use ($pidfile, $swoole, $processPrefix, $process, $laravelConfig) {
+                file_put_contents($pidfile, $worker->pid . "\n", FILE_APPEND | LOCK_EX);
+                $this->initLaravel($laravelConfig, $swoole);
+                if (!isset(class_implements($process)[CustomProcessInterface::class])) {
+                    throw new \InvalidArgumentException(
+                        sprintf(
+                            '%s must implement the interface %s',
+                            $process,
+                            CustomProcessInterface::class
+                        )
+                    );
+                }
                 $name = $process::getName() ?: 'custom';
                 $this->setProcessTitle(sprintf('%s laravels: %s process', $processPrefix, $name));
-                $this->initLaravel($laravelConfig, $swoole);
 
-                Process::signal(SIGUSR1, function ($signo) use ($name, $process, $worker, $swoole) {
+                Process::signal(SIGUSR1, function ($signo) use ($name, $process, $worker, $pidfile, $swoole) {
                     $this->info(sprintf('Reloading the process %s [pid=%d].', $name, $worker->pid));
                     $process::onReload($swoole, $worker);
                 });
@@ -60,12 +78,12 @@ trait CustomProcessTrait
                         )
                     );
                 };
-                $enableCoroutine ? go($runProcess) : $runProcess();;
+                $enableCoroutine ? go($runProcess) : $runProcess();
             };
             $customProcess = new Process(
                 $processHandler,
-                $process::isRedirectStdinStdout(),
-                $process::getPipeType()
+                $redirect,
+                $pipe
             );
             if ($swoole->addProcess($customProcess)) {
                 $processList[] = $customProcess;
@@ -73,5 +91,4 @@ trait CustomProcessTrait
         }
         return $processList;
     }
-
 }

@@ -6,7 +6,7 @@
     "issues": "https://github.com/hhxsv5/laravel-s/issues",
     "source": "https://github.com/hhxsv5/laravel-s"
   },
-  "description": "🚀LaravelS is a glue that is used to quickly integrate Swoole into Laravel or Lumen and then give them better performance and more possibilities.",
+  "description": "🚀LaravelS is a glue that is used to quickly integrate Swoole into Laravel or Lumen, and then give them better performance and more possibilities.",
   "keywords": [
     "laravel-s",
     "swoole",
@@ -35,7 +35,9 @@
   "require": {
     "php": ">=5.5.9",
     "symfony/console": ">=2.7.0",
-    "ext-json": "*"
+    "ext-json": "*",
+    "ext-pcntl": "*",
+    "swoole/ide-helper": "@dev"
   },
   "suggest": {
     "ext-swoole": "Event-driven asynchronous & concurrent & coroutine networking engine with high performance for PHP, require >= 1.7.19.",
@@ -57,5 +59,7 @@
     "bin/fswatch"
   ],
   "prefer-stable": true,
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "require-dev": {
+  }
 }

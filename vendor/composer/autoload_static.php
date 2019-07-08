@@ -67,6 +67,7 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
             'Symfony\\Component\\CssSelector\\' => 30,
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\ClassLoader\\' => 30,
+            'Swoole\\IDEHelper\\' => 17,
             'Swagger\\' => 8,
             'SuperClosure\\' => 13,
             'Spatie\\PdfToImage\\' => 18,
@@ -256,6 +257,10 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'Symfony\\Component\\ClassLoader\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/class-loader',
+        ),
+        'Swoole\\IDEHelper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/swoole/ide-helper/src',
         ),
         'Swagger\\' => 
         array (
@@ -2256,7 +2261,9 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'Hamcrest\\Type\\IsString' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Type/IsString.php',
         'Hamcrest\\Util' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Util.php',
         'Hamcrest\\Xml\\HasXPath' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Xml/HasXPath.php',
+        'Hhxsv5\\LaravelS\\Console\\ListPropertiesCommand' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Console/ListPropertiesCommand.php',
         'Hhxsv5\\LaravelS\\Console\\Portal' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Console/Portal.php',
+        'Hhxsv5\\LaravelS\\Illuminate\\CleanerManager' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Illuminate/CleanerManager.php',
         'Hhxsv5\\LaravelS\\Illuminate\\Cleaners\\AuthCleaner' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Illuminate/Cleaners/AuthCleaner.php',
         'Hhxsv5\\LaravelS\\Illuminate\\Cleaners\\CleanerInterface' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Illuminate/Cleaners/CleanerInterface.php',
         'Hhxsv5\\LaravelS\\Illuminate\\Cleaners\\ConfigCleaner' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Illuminate/Cleaners/ConfigCleaner.php',
@@ -2268,6 +2275,7 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'Hhxsv5\\LaravelS\\Illuminate\\LaravelSCommand' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Illuminate/LaravelSCommand.php',
         'Hhxsv5\\LaravelS\\Illuminate\\LaravelSServiceProvider' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Illuminate/LaravelSServiceProvider.php',
         'Hhxsv5\\LaravelS\\Illuminate\\LaravelScheduleJob' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Illuminate/LaravelScheduleJob.php',
+        'Hhxsv5\\LaravelS\\Illuminate\\ReflectionApp' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Illuminate/ReflectionApp.php',
         'Hhxsv5\\LaravelS\\LaravelS' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/LaravelS.php',
         'Hhxsv5\\LaravelS\\Swoole\\Coroutine\\Context' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Swoole/Coroutine/Context.php',
         'Hhxsv5\\LaravelS\\Swoole\\DynamicResponse' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Swoole/DynamicResponse.php',
@@ -4513,6 +4521,8 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'Swagger\\Serializer' => __DIR__ . '/..' . '/zircote/swagger-php/src/Serializer.php',
         'Swagger\\StaticAnalyser' => __DIR__ . '/..' . '/zircote/swagger-php/src/StaticAnalyser.php',
         'Swagger\\Util' => __DIR__ . '/..' . '/zircote/swagger-php/src/Util.php',
+        'Swoole\\IDEHelper\\Exception' => __DIR__ . '/..' . '/swoole/ide-helper/src/Exception.php',
+        'Swoole\\IDEHelper\\ExtensionDocument' => __DIR__ . '/..' . '/swoole/ide-helper/src/ExtensionDocument.php',
         'Symfony\\Component\\ClassLoader\\ApcClassLoader' => __DIR__ . '/..' . '/symfony/class-loader/ApcClassLoader.php',
         'Symfony\\Component\\ClassLoader\\ClassCollectionLoader' => __DIR__ . '/..' . '/symfony/class-loader/ClassCollectionLoader.php',
         'Symfony\\Component\\ClassLoader\\ClassLoader' => __DIR__ . '/..' . '/symfony/class-loader/ClassLoader.php',

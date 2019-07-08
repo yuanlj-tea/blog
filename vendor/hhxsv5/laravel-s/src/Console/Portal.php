@@ -102,6 +102,11 @@ EOS;
 
     public function start()
     {
+        if (!extension_loaded('swoole')) {
+            $this->error('LaravelS requires swoole extension, try to `pecl install swoole` and `php --ri swoole`.');
+            return 1;
+        }
+
         // Initialize configuration config/laravels.json
         $options = $this->input->getOptions();
         unset($options['env']);
@@ -199,25 +204,45 @@ EOS;
             return;
         }
 
+        // Reload worker processes
         if (self::kill($pid, SIGUSR1)) {
             $this->info("Swoole [PID={$pid}] is reloaded.");
         } else {
             $this->error("Swoole [PID={$pid}] is reloaded failed.");
         }
 
+        // Reload custom processes
+        $pidFile = dirname($pidFile) . '/laravels-custom-processes.pid';
+        if (file_exists($pidFile)) {
+            $pids = (array)explode("\n", trim(file_get_contents($pidFile)));
+            unlink($pidFile);
+            foreach ($pids as $pid) {
+                if (!$pid || !self::kill($pid, 0)) {
+                    $this->error("Custom process[PID={$pid}] does not exist, or permission denied.");
+                    continue;
+                }
+
+                if (self::kill($pid, SIGUSR1)) {
+                    $this->info("Custom process[PID={$pid}] is reloaded.");
+                } else {
+                    $this->error("Custom process[PID={$pid}] is reloaded failed.");
+                }
+            }
+        }
+
         // Reload timer process
         if (!empty($config['server']['timer']['enable'])) {
-            $pidFile = $config['server']['timer']['pid_file'];
+            $pidFile = dirname($pidFile) . '/laravels-timer-process.pid';
             $pid = file_get_contents($pidFile);
             if (!$pid || !self::kill($pid, 0)) {
-                $this->error("Swoole Timer [PID={$pid}] does not exist, or permission denied.");
+                $this->error("Timer process[PID={$pid}] does not exist, or permission denied.");
                 return;
             }
 
             if (self::kill($pid, SIGUSR1)) {
-                $this->info("Timer Process [PID={$pid}] is reloaded.");
+                $this->info("Timer process[PID={$pid}] is reloaded.");
             } else {
-                $this->error("Timer Process [PID={$pid}] is reloaded failed.");
+                $this->error("Timer process[PID={$pid}] is reloaded failed.");
             }
         }
     }
