@@ -13,6 +13,7 @@ return array(
     'Prophecy\\' => array($vendorDir . '/phpspec/prophecy/src'),
     'PHPHtmlParser' => array($vendorDir . '/paquettg/php-html-parser/src'),
     'Mockery' => array($vendorDir . '/mockery/mockery/library'),
+    'Kafka\\' => array($vendorDir . '/nmred/kafka-php/src'),
     'JakubOnderka\\PhpConsoleHighlighter' => array($vendorDir . '/jakub-onderka/php-console-highlighter/src'),
     'JakubOnderka\\PhpConsoleColor' => array($vendorDir . '/jakub-onderka/php-console-color/src'),
     'Gufy' => array($vendorDir . '/gufy/pdftohtml-php/src'),
