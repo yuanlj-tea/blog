@@ -81,15 +81,15 @@ class IndexController extends CommonController
      */
     public function testDownloadPdf()
     {
-//         $watermarker = new PdfWatermarker(
-//             $_SERVER['DOCUMENT_ROOT'].'/public/1471231264.pdf', // input
-//             $_SERVER['DOCUMENT_ROOT'].'/public/output.pdf', // output
-//             $_SERVER['DOCUMENT_ROOT'].'/public/new.png', // watermark file
-//             'center', // watermark position (topleft, topright, bottomleft, bottomright, center)
-//             true // set to true - replace original input file
-//         );
-//         $watermarker->create();
-// die;
+        // $watermarker = new PdfWatermarker(
+        //     $_SERVER['DOCUMENT_ROOT'].'/public/1471231264.pdf', // input
+        //     $_SERVER['DOCUMENT_ROOT'].'/public/output.pdf', // output
+        //     $_SERVER['DOCUMENT_ROOT'].'/public/new.png', // watermark file
+        //     'center', // watermark position (topleft, topright, bottomleft, bottomright, center)
+        //     true // set to true - replace original input file
+        // );
+        // $watermarker->create();
+        // die;
 
         $data = array('name'=>'测试');
         return view('invoice',$data);
@@ -164,21 +164,15 @@ class IndexController extends CommonController
      */
     public function testGuzzle(Request $request)
     {
-        $user = DB::table('user1')->get();
-        // DB::beginTransaction();
-        // DB::table('user1')->insert(['name'=>'李四']);
-        // DB::commit();
-        p($user,1);die;
-
-        $base_uri = 'http://192.168.79.206';
-        $api = '/login?a=b';
+        $base_uri = 'http://192.168.79.206:9666';
+        $api = '/getToken';
         $headers = ['Accept-Encoding' => 'gzip','User-Agent'=>'(kingnet oa web server)'];
-        $proxy = 'http://127.0.0.1:8888';
+        $proxy = 'http://192.168.79.251:8888';
         $cookie = ['PHPSESSID' => 'web2~ri5m4tjbi6gk6eeu72ghg27l61'];
         $domain = '192.168.79.206';
 
-        // $res = Guzzle::get($base_uri,$api,['c'=>'d','a'=>'b'],$headers,$proxy,$cookie,'192.168.79.206');
-        // p($res,1);
+        $res = Guzzle::get($base_uri,$api,['c'=>'d','a'=>'b'],$headers,$proxy);
+        p($res,1);
 
         $postData = ['a'=>'c'];
         $multipartData = [
@@ -244,5 +238,29 @@ class IndexController extends CommonController
         $files = glob('/opt/wwwroot/php_learn/abcd/');
         $res = Zipper::make('/opt/wwwroot/php_learn/abcd/test.zip')->add($files)->close();
         pd($res);
+    }
+
+    public function kafkaProduce()
+    {
+
+        $config = \Kafka\ProducerConfig::getInstance();
+        $config->setMetadataRefreshIntervalMs(10000);
+        $config->setMetadataBrokerList('127.0.0.1:9092');
+        $config->setBrokerVersion('0.10.0.0');
+        $config->setRequiredAck(1);
+        $config->setIsAsyn(false);
+        $config->setProduceInterval(500);
+        $producer = new \Kafka\Producer();
+
+        for ($i = 0; $i < 1; $i++) {
+            $result = $producer->send(array(
+                array(
+                    'topic' => 'test',
+                    'value' => 'test1....message.',
+                    'key' => '',
+                ),
+            ));
+            pp($result);
+        }
     }
 }

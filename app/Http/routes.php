@@ -134,6 +134,7 @@ Route::group(['namespace'=>'Home','prefix'=>'guzzle'],function(){
 
 Route::get('pdfToImg','Home\IndexController@pdfToImg');
 Route::get('pdfToHtml','Home\IndexController@pdfToHtml');
+Route::get('kafkaProduce','Home\IndexController@kafkaProduce');
 
 //SSO相关
 Route::group(['namespace'=>'SSO','prefix'=>'sso'],function(){

@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\Libs\Common;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Inspiring;
+use Monolog\Logger;
+use Monolog\Handler\StdoutHandler;
 
 class Inspire extends Command
 {
@@ -29,16 +31,22 @@ class Inspire extends Command
      */
     public function handle()
     {
-        $pathToPdf = '/mnt/hgfs/oa_site/new_src/public/attachment/Linux高性能服务器编程.pdf';
-        $pathToWhereImageShouldBeStored = '/tmp/pdfToImg/';
-        $pdf = new \Spatie\PdfToImage\Pdf($pathToPdf);
-        $pages = $pdf->getNumberOfPages();
+        // $logger = new Logger('my_logger');
+        // $logger->pushHandler(new StdoutHandler());
 
+        $config = \Kafka\ConsumerConfig::getInstance();
+        $config->setMetadataRefreshIntervalMs(10000);
+        $config->setMetadataBrokerList('127.0.0.1:9092');
+        $config->setGroupId('test-1');
+        $config->setBrokerVersion('0.10.0.0');
+        $config->setTopics(array('test'));
 
-        for($i=1;$i<=$pages;$i++){
-            $pdf->setPage($i)->setResolution(600)->setCompressionQuality(30)->saveImage($pathToWhereImageShouldBeStored);
-            echo $i."==ok\n";
-        }
+        $consumer = new \Kafka\Consumer();
+        // $consumer->setLogger($logger);
+        $consumer->start(function($topic, $part, $message) {
+            print_r($message);
+        });
+
         // $this->comment(PHP_EOL.Inspiring::quote().PHP_EOL);
     }
 }
