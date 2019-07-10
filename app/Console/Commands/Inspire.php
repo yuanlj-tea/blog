@@ -31,8 +31,6 @@ class Inspire extends Command
      */
     public function handle()
     {
-        // $logger = new Logger('my_logger');
-        // $logger->pushHandler(new StdoutHandler());
 
         $config = \Kafka\ConsumerConfig::getInstance();
         $config->setMetadataRefreshIntervalMs(10000);
@@ -42,8 +40,7 @@ class Inspire extends Command
         $config->setTopics(array('test'));
 
         $consumer = new \Kafka\Consumer();
-        // $consumer->setLogger($logger);
-        $consumer->start(function($topic, $part, $message) {
+        $consumer->start(function ($topic, $part, $message) {
             print_r($message);
         });
 
