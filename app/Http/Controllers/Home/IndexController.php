@@ -8,6 +8,8 @@ use App\Http\Model\Links;
 use App\Libs\Predis;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
+use malkusch\lock\mutex\PHPRedisMutex;
+use malkusch\lock\mutex\PredisMutex;
 use PDF;
 use App\Jobs\test;
 use QrCode;
@@ -20,6 +22,8 @@ use Zipper;
 
 class IndexController extends CommonController
 {
+    private $random;
+
     public function index(Request $request)
     {
         //点击量最高的6篇文章（站长推荐）
@@ -37,31 +41,31 @@ class IndexController extends CommonController
     public function cate($cate_id)
     {
         //图文列表4篇（带分页）
-        $data = Article::where('cate_id',$cate_id)->orderBy('art_time','desc')->paginate(4);
+        $data = Article::where('cate_id', $cate_id)->orderBy('art_time', 'desc')->paginate(4);
 
         //查看次数自增
-        Category::where('cate_id',$cate_id)->increment('cate_view');
+        Category::where('cate_id', $cate_id)->increment('cate_view');
 
         //当前分类的子分类
-        $submenu = Category::where('cate_pid',$cate_id)->get();
+        $submenu = Category::where('cate_pid', $cate_id)->get();
 
         $field = Category::find($cate_id);
-        return view('home.list',compact('field','data','submenu'));
+        return view('home.list', compact('field', 'data', 'submenu'));
     }
 
     public function article($art_id)
     {
-        $field = Article::Join('category','article.cate_id','=','category.cate_id')->where('art_id',$art_id)->first();
+        $field = Article::Join('category', 'article.cate_id', '=', 'category.cate_id')->where('art_id', $art_id)->first();
 
         //查看次数自增
-        Article::where('art_id',$art_id)->increment('art_view');
+        Article::where('art_id', $art_id)->increment('art_view');
 
-        $article['pre'] = Article::where('art_id','<',$art_id)->orderBy('art_id','desc')->first();
-        $article['next'] = Article::where('art_id','>',$art_id)->orderBy('art_id','asc')->first();
+        $article['pre'] = Article::where('art_id', '<', $art_id)->orderBy('art_id', 'desc')->first();
+        $article['next'] = Article::where('art_id', '>', $art_id)->orderBy('art_id', 'asc')->first();
 
-        $data = Article::where('cate_id',$field->cate_id)->orderBy('art_id','desc')->take(6)->get();
+        $data = Article::where('cate_id', $field->cate_id)->orderBy('art_id', 'desc')->take(6)->get();
 
-        return view('home.new',compact('field','article','data'));
+        return view('home.new', compact('field', 'article', 'data'));
     }
 
     /**
@@ -91,8 +95,8 @@ class IndexController extends CommonController
         // $watermarker->create();
         // die;
 
-        $data = array('name'=>'测试');
-        return view('invoice',$data);
+        $data = array('name' => '测试');
+        return view('invoice', $data);
         $pdf = PDF::loadView('invoice', $data);
 
         return $pdf->stream('invoice.pdf');
@@ -100,33 +104,35 @@ class IndexController extends CommonController
 
     public function savePic(Request $request)
     {
-        $action=$request->input('action','');
-        if($action=='save'){
+        $action = $request->input('action', '');
+        if ($action == 'save') {
             $picInfo = $request->input('baseimg');
 
-            $streamFileRand = date('YmdHis').rand(1000,9999); //图片名
-            $picType ='.png';//图片后缀
+            $streamFileRand = date('YmdHis') . rand(1000, 9999); //图片名
+            $picType = '.png';//图片后缀
 
-            $streamFilename = "./public/echarts/".$streamFileRand .$picType; //图片保存地址
-            preg_match('/(?<=base64,)[\S|\s]+/',$picInfo,$picInfoW);//处理base64文本
+            $streamFilename = "./public/echarts/" . $streamFileRand . $picType; //图片保存地址
+            preg_match('/(?<=base64,)[\S|\s]+/', $picInfo, $picInfoW);//处理base64文本
             //print_r($picInfoW);die;
-            file_put_contents($streamFilename,base64_decode($picInfoW[0]));//文件写入
+            file_put_contents($streamFilename, base64_decode($picInfoW[0]));//文件写入
 
-            echo json_encode(['code'=>1,'info'=>$streamFileRand .$picType]);
+            echo json_encode(['code' => 1, 'info' => $streamFileRand . $picType]);
         }
     }
 
-    public function test(){
+    public function test()
+    {
         $job = (new test(111))->onQueue('testQueue');
         $this->dispatch($job);
-        echo 123;die;
+        echo 123;
+        die;
     }
 
     public function qrCode()
     {
         return QrCode::encoding('UTF-8')
             ->size(380)
-            ->merge('/public/test.png',.15)
+            ->merge('/public/test.png', .15)
             ->generate('你好，Laravel学院！');
     }
 
@@ -145,7 +151,7 @@ class IndexController extends CommonController
 
 
         $islegal = $handle->islegal($content);
-        var_dump($content,$islegal);
+        var_dump($content, $islegal);
 
         // 敏感词替换为***为例
         $filterContent = $handle->replace($content, '***');
@@ -166,15 +172,15 @@ class IndexController extends CommonController
     {
         $base_uri = 'http://192.168.79.206:9666';
         $api = '/getToken';
-        $headers = ['Accept-Encoding' => 'gzip','User-Agent'=>'(kingnet oa web server)'];
+        $headers = ['Accept-Encoding' => 'gzip', 'User-Agent' => '(kingnet oa web server)'];
         $proxy = 'http://192.168.79.251:8888';
         $cookie = ['PHPSESSID' => 'web2~ri5m4tjbi6gk6eeu72ghg27l61'];
         $domain = '192.168.79.206';
 
-        $res = Guzzle::get($base_uri,$api,['c'=>'d','a'=>'b'],$headers,$proxy);
-        p($res,1);
+        $res = Guzzle::get($base_uri, $api, ['c' => 'd', 'a' => 'b'], $headers, $proxy);
+        p($res, 1);
 
-        $postData = ['a'=>'c'];
+        $postData = ['a' => 'c'];
         $multipartData = [
             [
                 'name' => 'a',
@@ -187,8 +193,8 @@ class IndexController extends CommonController
 
         $base_uri = 'http://127.0.0.1/';
         $api = '/';
-        $query = ['c'=>'d','a'=>'b'];
-        $headers = ['Accept-Encoding' => 'gzip','User-Agent'=>'(kingnet oa web server)'];
+        $query = ['c' => 'd', 'a' => 'b'];
+        $headers = ['Accept-Encoding' => 'gzip', 'User-Agent' => '(kingnet oa web server)'];
         $proxy = 'http://127.0.0.1:8888';
         $cookie = ['PHPSESSID' => 'web2~ri5m4tjbi6gk6eeu72ghg27l61'];
         $domain = '127.0.0.1';
@@ -211,9 +217,9 @@ class IndexController extends CommonController
         $pages = $pdf->getNumberOfPages();
 
 
-        for($i=1;$i<=$pages;$i++){
+        for ($i = 1; $i <= $pages; $i++) {
             $pdf->setPage($i)->setResolution(600)->setCompressionQuality(100)->saveImage($pathToWhereImageShouldBeStored);
-            echo $i.'==ok<br>';
+            echo $i . '==ok<br>';
         }
 
     }
@@ -226,7 +232,7 @@ class IndexController extends CommonController
         $pdf = new \Gufy\PdfToHtml\Pdf('/mnt/hgfs/oa_site/new_src/public/attachment/1471231392.pdf');
         $pages = $pdf->getPages();
 
-        for($i=1;$i<=6;$i++){
+        for ($i = 1; $i <= 6; $i++) {
             $html = $pdf->html($i);
             echo $html;
         }
@@ -261,6 +267,37 @@ class IndexController extends CommonController
                 ),
             ));
             pp($result);
+        }
+    }
+
+    public function testRedisLock()
+    {
+        if($this->lock('test',100)){
+            DB::transaction(function () {
+                $res = DB::table('test')->where('id', 1)
+                    // ->lockForUpdate()
+                    ->first();
+                $num = $res->num - 1;
+                DB::table('test')->where('id', 1)->update(['num' => $num]);
+            });
+            $this->unlock('test');
+            \Log::info('执行完成');
+        }else{
+            \Log::info('未获取到锁，请稍后再试');
+        }
+    }
+
+    public function lock($key,$expire=0,$type='ex')
+    {
+        $this->random = rand(1,4294967295);
+        return RedisPHP::set($key,$this->random,'nx',$type,$expire);
+    }
+
+    public function unlock($key)
+    {
+        $val = RedisPHP::get($key);
+        if($val == $this->random){
+            RedisPHP::del($key);
         }
     }
 }
