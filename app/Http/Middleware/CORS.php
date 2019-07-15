@@ -31,7 +31,7 @@ class CORS
         $response = $next($request);
         //if (in_array($requestPath, $path) && in_array($origin, $all_url)) {
             $response->header('Access-Control-Allow-Origin', $origin);
-            $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, Accept');
+            $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, Accept,Authorization,X-Requested-With');
             $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS,X-CSRF-TOKEN');
             $response->header('Access-Control-Allow-Credentials', 'true');
             return $response;
