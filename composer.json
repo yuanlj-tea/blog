@@ -30,7 +30,8 @@
         "gufy/pdftohtml-php": "~2",
         "hhxsv5/laravel-s": "^3.4",
         "chumper/zipper": "^1.0",
-        "nmred/kafka-php": "v0.2.0.8"
+        "nmred/kafka-php": "v0.2.0.8",
+        "malkusch/lock": "^2.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -79,7 +80,7 @@
     "repositories": {
         "packagist": {
             "type": "composer",
-            "url": "https://packagist.laravel-china.org"
+            "url": "https://mirrors.aliyun.com/composer/"
         }
     }
 }

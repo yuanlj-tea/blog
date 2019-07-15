@@ -35,6 +35,10 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         array (
             'phpDocumentor\\Reflection\\' => 25,
         ),
+        'm' => 
+        array (
+            'malkusch\\lock\\' => 14,
+        ),
         'X' => 
         array (
             'Xuexitest\\' => 10,
@@ -173,6 +177,10 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
             1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+        ),
+        'malkusch\\lock\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/malkusch/lock/classes',
         ),
         'Xuexitest\\' => 
         array (
@@ -5090,6 +5098,29 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'Xuexitest\\TestReply_GetData' => __DIR__ . '/../..' . '/Xuexitest/TestReply_GetData.php',
         'Xuexitest\\TestRequest' => __DIR__ . '/../..' . '/Xuexitest/TestRequest.php',
         'Xuexitest\\XuexitestClient' => __DIR__ . '/../..' . '/Xuexitest/XuexitestClient.php',
+        'malkusch\\lock\\exception\\DeadlineException' => __DIR__ . '/..' . '/malkusch/lock/classes/exception/DeadlineException.php',
+        'malkusch\\lock\\exception\\ExecutionOutsideLockException' => __DIR__ . '/..' . '/malkusch/lock/classes/exception/ExecutionOutsideLockException.php',
+        'malkusch\\lock\\exception\\LockAcquireException' => __DIR__ . '/..' . '/malkusch/lock/classes/exception/LockAcquireException.php',
+        'malkusch\\lock\\exception\\LockReleaseException' => __DIR__ . '/..' . '/malkusch/lock/classes/exception/LockReleaseException.php',
+        'malkusch\\lock\\exception\\MutexException' => __DIR__ . '/..' . '/malkusch/lock/classes/exception/MutexException.php',
+        'malkusch\\lock\\exception\\TimeoutException' => __DIR__ . '/..' . '/malkusch/lock/classes/exception/TimeoutException.php',
+        'malkusch\\lock\\mutex\\CASMutex' => __DIR__ . '/..' . '/malkusch/lock/classes/mutex/CASMutex.php',
+        'malkusch\\lock\\mutex\\FlockMutex' => __DIR__ . '/..' . '/malkusch/lock/classes/mutex/FlockMutex.php',
+        'malkusch\\lock\\mutex\\LockMutex' => __DIR__ . '/..' . '/malkusch/lock/classes/mutex/LockMutex.php',
+        'malkusch\\lock\\mutex\\MemcachedMutex' => __DIR__ . '/..' . '/malkusch/lock/classes/mutex/MemcachedMutex.php',
+        'malkusch\\lock\\mutex\\Mutex' => __DIR__ . '/..' . '/malkusch/lock/classes/mutex/Mutex.php',
+        'malkusch\\lock\\mutex\\MySQLMutex' => __DIR__ . '/..' . '/malkusch/lock/classes/mutex/MySQLMutex.php',
+        'malkusch\\lock\\mutex\\NoMutex' => __DIR__ . '/..' . '/malkusch/lock/classes/mutex/NoMutex.php',
+        'malkusch\\lock\\mutex\\PHPRedisMutex' => __DIR__ . '/..' . '/malkusch/lock/classes/mutex/PHPRedisMutex.php',
+        'malkusch\\lock\\mutex\\PgAdvisoryLockMutex' => __DIR__ . '/..' . '/malkusch/lock/classes/mutex/PgAdvisoryLockMutex.php',
+        'malkusch\\lock\\mutex\\PredisMutex' => __DIR__ . '/..' . '/malkusch/lock/classes/mutex/PredisMutex.php',
+        'malkusch\\lock\\mutex\\RedisMutex' => __DIR__ . '/..' . '/malkusch/lock/classes/mutex/RedisMutex.php',
+        'malkusch\\lock\\mutex\\SemaphoreMutex' => __DIR__ . '/..' . '/malkusch/lock/classes/mutex/SemaphoreMutex.php',
+        'malkusch\\lock\\mutex\\SpinlockMutex' => __DIR__ . '/..' . '/malkusch/lock/classes/mutex/SpinlockMutex.php',
+        'malkusch\\lock\\mutex\\TransactionalMutex' => __DIR__ . '/..' . '/malkusch/lock/classes/mutex/TransactionalMutex.php',
+        'malkusch\\lock\\util\\DoubleCheckedLocking' => __DIR__ . '/..' . '/malkusch/lock/classes/util/DoubleCheckedLocking.php',
+        'malkusch\\lock\\util\\Loop' => __DIR__ . '/..' . '/malkusch/lock/classes/util/Loop.php',
+        'malkusch\\lock\\util\\PcntlTimeout' => __DIR__ . '/..' . '/malkusch/lock/classes/util/PcntlTimeout.php',
         'phpDocumentor\\Reflection\\DocBlock' => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src/DocBlock.php',
         'phpDocumentor\\Reflection\\DocBlockFactory' => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src/DocBlockFactory.php',
         'phpDocumentor\\Reflection\\DocBlockFactoryInterface' => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src/DocBlockFactoryInterface.php',
