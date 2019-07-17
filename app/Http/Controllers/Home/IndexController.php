@@ -19,6 +19,7 @@ use App\Libs\Guzzle;
 use DB;
 use RedisPHP;
 use Zipper;
+use Common;
 
 class IndexController extends CommonController
 {
@@ -26,6 +27,16 @@ class IndexController extends CommonController
 
     public function index(Request $request)
     {
+        $ret = Common::getDate('2019-07-01');
+        pd($ret);
+        // $ret = \App\Http\Model\Test::where('user_id','bbb')->first();
+        // pd($ret);
+        $ret = \App\Http\Model\Test::create([
+            'user_id'=>'dddd',
+            'user_name'=>'yuanlj'
+        ]);
+        pd($ret);
+
         //点击量最高的6篇文章（站长推荐）
         $pics = Article::orderBy('art_view','desc')->take(6)->get();
 

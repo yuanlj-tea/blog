@@ -170,6 +170,7 @@ return [
         AetherUpload\AetherUploadServiceProvider::class,
         Hhxsv5\LaravelS\Illuminate\LaravelSServiceProvider::class,
         Chumper\Zipper\ZipperServiceProvider::class,
+        App\Providers\CommonProvider::class,
     ],
 
     /*
@@ -228,6 +229,7 @@ return [
         //OAuth2 Server
         'Authorizer' => LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
         'Zipper' => Chumper\Zipper\Zipper::class,
+        'Common' => App\Services\Common\Facades\Common::class,
 
     ],
 

@@ -201,3 +201,11 @@ function pd(...$param){
     echo '</pre>';
     die;
 }
+
+/**
+ * @return int
+ */
+function request_time()
+{
+    return $_SERVER['REQUEST_TIME'] ?? $_SERVER['REQUEST_TIME'] = time();
+}

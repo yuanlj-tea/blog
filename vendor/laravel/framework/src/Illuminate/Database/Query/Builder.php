@@ -28,28 +28,28 @@ class Builder
      *
      * @var \Illuminate\Database\Connection
      */
-    protected $connection;
+    public $connection;
 
     /**
      * The database query grammar instance.
      *
      * @var \Illuminate\Database\Query\Grammars\Grammar
      */
-    protected $grammar;
+    public $grammar;
 
     /**
      * The database query post processor instance.
      *
      * @var \Illuminate\Database\Query\Processors\Processor
      */
-    protected $processor;
+    public $processor;
 
     /**
      * The current query value bindings.
      *
      * @var array
      */
-    protected $bindings = [
+    public $bindings = [
         'select' => [],
         'join'   => [],
         'where'  => [],
