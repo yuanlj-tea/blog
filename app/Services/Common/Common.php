@@ -59,9 +59,9 @@ class Common
 
     /**
      * 将数据分页处理
-     * @param type $data 要处理的数组
-     * @param type $showNum 每页显示条数
-     * @param type $page 显示页数
+     * @param array $data 要处理的数组
+     * @param int $showNum 每页显示条数
+     * @param int $page 显示页数
      * @return type
      */
     public function getPage($data = [], $showNum = 10, $page = 1)
@@ -198,6 +198,7 @@ class Common
     }
 
     /**
+     * 根据分表字段获取库id
      * @param string|null $value
      * @return string
      */
@@ -209,12 +210,95 @@ class Common
     }
 
     /**
+     * 根据分表字段获取表id
      * @param string|null $value
      * @return string
      */
     protected function getTableHashId(?string $value): string
     {
         return md5($value)[1];
+    }
+
+    /**
+     * 根据分表字段获取表id
+     * @param string $shardingKey
+     * @return int
+     */
+    protected function getTableId(string $shardingKey) : int
+    {
+        $crcData = sprintf("%u",crc32($shardingKey));
+        return $crcData%5;
+    }
+
+    /**
+     * 获取分表的数据库连接名
+     * @param $shareValue
+     * @param string $connectionPrefix
+     * @return string
+     */
+    public function getConnectionName($shareValue,$connectionPrefix='mysql')
+    {
+        // return sprintf("%s_%s",$connectionPrefix,$this->getConnectionHashId($shareValue));
+        return $connectionPrefix;
+    }
+
+    /**
+     * 获取分表的表名
+     * @param $shareValue
+     * @param $tablePrefix
+     * @return string
+     */
+    public function getTableName($shareValue,$tablePrefix)
+    {
+        return sprintf("%s_%s",$tablePrefix,$this->getTableId($shareValue));
+    }
+
+    public function sepAddData($tablePrefix,$shareKey,$shareVlaue,$data,$connectionPrefix='mysql')
+    {
+        $connectionName = $this->getConnectionName($shareVlaue,$connectionPrefix);
+        $tableName = $this->getTableName($shareVlaue,$connectionPrefix);
+    }
+
+    public function sepEditData($tablePrefix,$shareKey,$shareVlaue,$data,$connectionPrefix='mysql')
+    {
+        $connectionName = $this->getConnectionName($shareVlaue,$connectionPrefix);
+        $tableName = $this->getTableName($shareVlaue,$connectionPrefix);
+
+    }
+
+    public function sepSearchData()
+    {
+        
+    }
+
+    public function sepDelData()
+    {
+        
+    }
+
+    /**
+     * 过滤分表要保存的数据
+     * @param $connctionName
+     * @param $tableName
+     * @param $data
+     */
+    protected function sepFilterfields($connctionName,$tableName,$data)
+    {
+        $allowFields = [];
+        $res = DB::connection($connctionName)->select("show full COLUMNS from `{$tableName}`;");
+        if (empty($res)) {
+            $tableName = strtolower($tableName);
+            $res = DB::connection($connctionName)->select("show full COLUMNS from `{$tableName}`;");
+        }
+        foreach ($res as $k => $v) {
+            $allowFields[] = $v->Field;
+        }
+        foreach ($data as $k => $v) {
+            if (!in_array($k, $allowFields)) {
+                unset($data[$k]);
+            }
+        }
+        return $data;
     }
 
 }

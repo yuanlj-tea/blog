@@ -19,8 +19,9 @@ class Kernel extends HttpKernel
         // \App\Http\Middleware\Cors::class,
 
         //OAuth2 Server
-//        \LucaDegasperi\OAuth2Server\Middleware\OAuthExceptionHandlerMiddleware::class,
-//        \App\Http\Middleware\OAuthExceptionHandlerMiddleware::class,
+        // \LucaDegasperi\OAuth2Server\Middleware\OAuthExceptionHandlerMiddleware::class,
+        // \App\HtaDegasperi\OAuth2Server\Middleware\OAuthExceptionHandlerMiddleware::class,
+        // \App\Http\Middleware\OAuthExceptionHandlerMiddleware::class,
     ];
 
     /**

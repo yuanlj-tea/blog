@@ -52,14 +52,18 @@ Route::group(['middleware' => ['web', 'admin.login'], 'prefix' => 'admin', 'name
 
 });
 
-
+//滑动验证码相关
 Route::get('vaptcha/challenge', 'VaptchaController@getChallenge');
 Route::get('vaptcha/downtime', 'VaptchaController@getDownTime');
 Route::get('vaptcha/vaptchaView', 'VaptchaController@vaptchaView');
 
+//测试laravel queue dispatch
 Route::get('/test', 'Home\IndexController@test');
+//生成二维码
 Route::get('/qrCode', 'Home\IndexController@qrCode');
+//敏感词检测
 Route::get('/check', 'Home\IndexController@check');
+//测试生成zip压缩文件
 Route::get('/testZip', 'Home\IndexController@testZip');
 
 // test swagger
@@ -132,8 +136,11 @@ Route::group(['namespace'=>'Home','prefix'=>'guzzle'],function(){
     Route::get('testGuzzle','IndexController@testGuzzle');
 });
 
+//pdf转img
 Route::get('pdfToImg','Home\IndexController@pdfToImg');
+//pdf转html
 Route::get('pdfToHtml','Home\IndexController@pdfToHtml');
+//kafka生产
 Route::get('kafkaProduce','Home\IndexController@kafkaProduce');
 
 //SSO相关

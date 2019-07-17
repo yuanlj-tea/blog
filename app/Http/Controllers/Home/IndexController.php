@@ -27,8 +27,22 @@ class IndexController extends CommonController
 
     public function index(Request $request)
     {
+        $data = [
+            ['a','b'],
+            ['c','d'],
+            ['c','d'],
+            ['c','d'],
+        ];
+        pd(count($data));
+        $userAccount ='Hello world.';
+        $num =  (crc32($userAccount)%3);
+        $tableName = 'user'.($num+1);
+        echo "{$userAccount}应该存储到{$tableName}表";
+        die;
+
         $ret = Common::getDate('2019-07-01');
         pd($ret);
+
         // $ret = \App\Http\Model\Test::where('user_id','bbb')->first();
         // pd($ret);
         $ret = \App\Http\Model\Test::create([
