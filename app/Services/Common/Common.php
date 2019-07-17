@@ -197,6 +197,25 @@ class Common
         return $arr;
     }
 
+    /**
+     * @param string|null $value
+     * @return string
+     */
+    protected function getConnectionHashId(?string $value): string
+    {
+        $num = hexdec(md5($value)[0]);
+        $r =  $num < 8 ? ($num < 4 ? 0 : 1) : ($num < 12 ? 2 : 3);
+        return $r;
+    }
+
+    /**
+     * @param string|null $value
+     * @return string
+     */
+    protected function getTableHashId(?string $value): string
+    {
+        return md5($value)[1];
+    }
 
 }
 
