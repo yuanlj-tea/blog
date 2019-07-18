@@ -209,3 +209,12 @@ function request_time()
 {
     return $_SERVER['REQUEST_TIME'] ?? $_SERVER['REQUEST_TIME'] = time();
 }
+
+if(!function_exists('gen_uid')){
+    function gen_uid(){
+        do {
+            $uid = str_replace('.', '0', uniqid(rand(0, 999999999), true));
+        } while (strlen($uid) != 32);
+        return $uid;
+    }
+}

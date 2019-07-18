@@ -9,7 +9,7 @@
 namespace App\Libs;
 
 
-class Response
+class ResponseBak
 {
     // Informational 1xx
     const CODE_CONTINUE = 100;
@@ -126,17 +126,15 @@ class Response
      * @param null $msg 输出信息
      * @param $jsonpCallback jsonp回调函数
      */
-    public static function echoAjaxJson($code = 0, $data = null, $jsonpCallback = '', $response = false)
+    public static function echoAjaxJson($code = 0, $data = null, $msg = null, $jsonpCallback = '')
     {
         $out = [
             'code' => $code,
-            'info' => $data,
+            'data' => $data,
+            'msg' => $msg
         ];
         if (!empty($jsonpCallback)) {
             return $jsonpCallback . "(" . json_encode($out, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . ")";
-        }
-        if (!empty($response)) {
-            return response()->json($out);
         }
         return json_encode($out, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
@@ -147,9 +145,9 @@ class Response
      * @param $msg 输出信息
      * @param $jsonpCallback jsonp回调函数
      */
-    public static function succ($data = null, $jsonpCallback = '', $response = true)
+    public static function succ($data = null, $msg = null, $jsonpCallback = '')
     {
-        return self::echoAjaxJson(1, $data, $jsonpCallback, $response);
+        return self::echoAjaxJson(1, $data, $msg, $jsonpCallback);
     }
 
     /**
@@ -158,9 +156,9 @@ class Response
      * @param null $msg
      * @param string $jsonpCallback
      */
-    public static function fail($data = null, $jsonpCallback = '', $response = true)
+    public static function fail($data = null, $msg = null, $jsonpCallback = '')
     {
-        return self::echoAjaxJson(0, $data, $jsonpCallback, $response);
+        return self::echoAjaxJson(0, $data, $msg, $jsonpCallback);
     }
 
     /**
@@ -171,12 +169,12 @@ class Response
      * @param string $jsonpCallback jsonp回调函数
      * @return false|string
      */
-    public static function writeJson($statusCode = 200, $data = null, $jsonpCallback = '', $response = false)
+    public static function writeJson($statusCode = 200, $data = null, $msg = null, $jsonpCallback = '')
     {
         if (!in_array($statusCode, array_flip(self::$phrases))) {
-            return self::fail(self::getReasonPhrase($statusCode), $jsonpCallback, $response);
+            return self::fail($data, self::getReasonPhrase($statusCode), $jsonpCallback);
         }
-        return self::echoAjaxJson($statusCode, $data, $jsonpCallback, $response);
+        return self::echoAjaxJson($statusCode, $data, $msg, $jsonpCallback);
     }
 
     public static function getReasonPhrase($statusCode)

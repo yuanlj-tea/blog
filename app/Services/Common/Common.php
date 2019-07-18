@@ -5,6 +5,7 @@
 
 namespace App\Services\Common;
 
+use App\Libs\Response;
 use DB;
 
 class Common
@@ -205,7 +206,7 @@ class Common
     protected function getConnectionHashId(?string $value): string
     {
         $num = hexdec(md5($value)[0]);
-        $r =  $num < 8 ? ($num < 4 ? 0 : 1) : ($num < 12 ? 2 : 3);
+        $r = $num < 8 ? ($num < 4 ? 0 : 1) : ($num < 12 ? 2 : 3);
         return $r;
     }
 
@@ -224,10 +225,10 @@ class Common
      * @param string $shardingKey
      * @return int
      */
-    protected function getTableId(string $shardingKey) : int
+    protected function getTableId(string $shardingKey): int
     {
-        $crcData = sprintf("%u",crc32($shardingKey));
-        return $crcData%5;
+        $crcData = sprintf("%u", crc32($shardingKey));
+        return $crcData % 2;
     }
 
     /**
@@ -236,7 +237,7 @@ class Common
      * @param string $connectionPrefix
      * @return string
      */
-    public function getConnectionName($shareValue,$connectionPrefix='mysql')
+    public function getConnectionName($shareValue, $connectionPrefix = 'mysql')
     {
         // return sprintf("%s_%s",$connectionPrefix,$this->getConnectionHashId($shareValue));
         return $connectionPrefix;
@@ -248,32 +249,91 @@ class Common
      * @param $tablePrefix
      * @return string
      */
-    public function getTableName($shareValue,$tablePrefix)
+    public function getTableName($shareValue, $tablePrefix)
     {
-        return sprintf("%s_%s",$tablePrefix,$this->getTableId($shareValue));
+        return sprintf("%s_%s", $tablePrefix, $this->getTableId($shareValue));
     }
 
-    public function sepAddData($tablePrefix,$shareKey,$shareVlaue,$data,$connectionPrefix='mysql')
+    /**
+     * 根据UID分表算法
+     *
+     * @param int $uid 用户ID
+     * @param int $bit 表后缀保留几位
+     * @param int $seed 向右移动位数
+     */
+    public function getTable($uid, $tablePrefix, $bit = 2, $seed = 20)
     {
-        $connectionName = $this->getConnectionName($shareVlaue,$connectionPrefix);
-        $tableName = $this->getTableName($shareVlaue,$connectionPrefix);
+        return $tablePrefix . '_' . sprintf("%0{$bit}d", ($uid >> $seed));
     }
 
-    public function sepEditData($tablePrefix,$shareKey,$shareVlaue,$data,$connectionPrefix='mysql')
+    /**
+     * 添加数据
+     * @param $tablePrefix
+     * @param $shareKey
+     * @param $data
+     * @param string $connectionPrefix
+     * @return bool
+     * @throws \Exception
+     */
+    public function sepAddData($tablePrefix, $shareKey, $data, $connectionPrefix = 'mysql')
     {
-        $connectionName = $this->getConnectionName($shareVlaue,$connectionPrefix);
-        $tableName = $this->getTableName($shareVlaue,$connectionPrefix);
+        $this->checkData($shareKey, $data, 'add');
+        list($connectionName, $tableName) = $this->getSepConf($data[$shareKey], $connectionPrefix, $tablePrefix);
+
+        $data = $this->sepFilterfields($connectionName, $tableName, $data);
+        return DB::connection($connectionName)->table($tableName)->insert($data);
+    }
+
+    /**
+     * 修改数据
+     * @param $tablePrefix
+     * @param $shareKey
+     * @param $shareValue
+     * @param $data
+     * @param string $connectionPrefix
+     * @return int
+     * @throws \Exception
+     */
+    public function sepEditData($tablePrefix, $shareKey, $shareValue, $data, $connectionPrefix = 'mysql')
+    {
+        $this->checkData($shareKey, $data, 'edit');
+        if (isset($data[$shareKey])) {
+            unset($data[$shareKey]);
+        }
+        list($connectionName, $tableName) = $this->getSepConf($shareValue, $connectionPrefix, $tablePrefix);
+
+        $data = $this->sepFilterfields($connectionName, $tableName, $data);
+        return DB::connection($connectionName)->table($tableName)->where($shareKey, $shareValue)->update($data);
 
     }
 
-    public function sepSearchData()
+    /**
+     * 查找数据
+     * @param $tablePrefix
+     * @param $shareKey
+     * @param $shareValue
+     * @param string $connectionPrefix
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|mixed|object|null
+     */
+    public function sepSearchData($tablePrefix, $shareKey, $shareValue, $connectionPrefix = 'mysql')
     {
-        
+        list($connectionName, $tableName) = $this->getSepConf($shareValue, $connectionPrefix, $tablePrefix);
+        $ret = DB::connection($connectionName)->table($tableName)->where($shareKey, $shareValue)->first();
+        return $ret;
     }
 
-    public function sepDelData()
+    /**
+     * 删除数据
+     * @param $tablePrefix
+     * @param $shareKey
+     * @param $shareValue
+     * @param string $connectionPrefix
+     * @return int
+     */
+    public function sepDelData($tablePrefix, $shareKey, $shareValue, $connectionPrefix = 'mysql')
     {
-        
+        list($connectionName, $tableName) = $this->getSepConf($shareValue, $connectionPrefix, $tablePrefix);
+        return DB::connection($connectionName)->table($tableName)->where($shareKey, $shareValue)->delete();
     }
 
     /**
@@ -282,7 +342,7 @@ class Common
      * @param $tableName
      * @param $data
      */
-    protected function sepFilterfields($connctionName,$tableName,$data)
+    protected function sepFilterfields($connctionName, $tableName, $data)
     {
         $allowFields = [];
         $res = DB::connection($connctionName)->select("show full COLUMNS from `{$tableName}`;");
@@ -299,6 +359,37 @@ class Common
             }
         }
         return $data;
+    }
+
+    /**
+     * 获取分表配置
+     * @param $shareVlaue
+     * @param $connectionPrefix
+     * @param $tablePrefix
+     * @return array
+     */
+    public function getSepConf($shareVlaue, $connectionPrefix, $tablePrefix)
+    {
+        $connectionName = $this->getConnectionName($shareVlaue, $connectionPrefix);
+        $tableName = $this->getTableName($shareVlaue, $tablePrefix);
+        return [$connectionName, $tableName];
+    }
+
+    public function checkData($shareKey, $data, $type)
+    {
+        if (!is_array($data)) {
+            throw new \Exception('参数错误');
+        }
+        switch ($type) {
+            case 'add':
+                if (!isset($data[$shareKey]) || empty($data[$shareKey])) {
+                    throw new \Exception('缺少shareKey对应值');
+                }
+                break;
+            case 'edit':
+
+                break;
+        }
     }
 
 }

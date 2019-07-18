@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.2.45 on 2019-07-15 10:23:42.
+ * Generated for Laravel 5.2.45 on 2019-07-18 15:17:58.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -11385,6 +11385,219 @@ namespace App\Services\Common\Facades {
         }
          
     }
+
+    class Common {
+        
+        /**
+         * 过滤要保存的字段
+         *
+         * @param $data 要保存的数据
+         * @param $tableName 表名
+         * @static 
+         */ 
+        public static function filterFields($data, $tableName)
+        {
+            return \App\Services\Common\Common::filterFields($data, $tableName);
+        }
+        
+        /**
+         * 新建/编辑数据
+         *
+         * @param $data
+         * @param $tableName 表名
+         * @param $primaryKey 主键字段名
+         * @return mixed 
+         * @static 
+         */ 
+        public static function saveData($data, $tableName, $primaryKey)
+        {
+            return \App\Services\Common\Common::saveData($data, $tableName, $primaryKey);
+        }
+        
+        /**
+         * 将数据分页处理
+         *
+         * @param array $data 要处理的数组
+         * @param int $showNum 每页显示条数
+         * @param int $page 显示页数
+         * @return \App\Services\Common\type 
+         * @static 
+         */ 
+        public static function getPage($data = array(), $showNum = 10, $page = 1)
+        {
+            return \App\Services\Common\Common::getPage($data, $showNum, $page);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getFiles($folderpath, $isClear = 0)
+        {
+            return \App\Services\Common\Common::getFiles($folderpath, $isClear);
+        }
+        
+        /**
+         * 获取指定日期区间内每一天的日期
+         *
+         * @static 
+         */ 
+        public static function getDateFromRange($startdate, $enddate)
+        {
+            return \App\Services\Common\Common::getDateFromRange($startdate, $enddate);
+        }
+        
+        /**
+         * 根据日期区间获取区间内的月份数组
+         *
+         * @param $startDate
+         * @param $endDate
+         * @param string $format
+         * @return array 
+         * @static 
+         */ 
+        public static function getMonthArrFromRange($startDate, $endDate, $format = 'Y-m-01')
+        {
+            return \App\Services\Common\Common::getMonthArrFromRange($startDate, $endDate, $format);
+        }
+        
+        /**
+         * 获取最近6个月的日期
+         *
+         * @param string $date
+         * @static 
+         */ 
+        public static function getRecentMonth($date = '')
+        {
+            return \App\Services\Common\Common::getRecentMonth($date);
+        }
+        
+        /**
+         * 获取所选月份的月初和月末日期
+         *
+         * @param $date
+         * @return array 
+         * @static 
+         */ 
+        public static function getDate($date)
+        {
+            return \App\Services\Common\Common::getDate($date);
+        }
+        
+        /**
+         * 将二维数组按照某个字段进行降序排列
+         *
+         * @param $arr
+         * @param $row
+         * @return mixed 
+         * @static 
+         */ 
+        public static function array_sort($arr, $row)
+        {
+            return \App\Services\Common\Common::array_sort($arr, $row);
+        }
+        
+        /**
+         * 获取分表的数据库连接名
+         *
+         * @param $shareValue
+         * @param string $connectionPrefix
+         * @return string 
+         * @static 
+         */ 
+        public static function getConnectionName($shareValue, $connectionPrefix = 'mysql')
+        {
+            return \App\Services\Common\Common::getConnectionName($shareValue, $connectionPrefix);
+        }
+        
+        /**
+         * 获取分表的表名
+         *
+         * @param $shareValue
+         * @param $tablePrefix
+         * @return string 
+         * @static 
+         */ 
+        public static function getTableName($shareValue, $tablePrefix)
+        {
+            return \App\Services\Common\Common::getTableName($shareValue, $tablePrefix);
+        }
+        
+        /**
+         * 根据UID分表算法
+         *
+         * @param int $uid 用户ID
+         * @param int $bit 表后缀保留几位
+         * @param int $seed 向右移动位数
+         * @static 
+         */ 
+        public static function getTable($uid, $tablePrefix, $bit = 2, $seed = 20)
+        {
+            return \App\Services\Common\Common::getTable($uid, $tablePrefix, $bit, $seed);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function sepAddData($tablePrefix, $shareKey, $data, $connectionPrefix = 'mysql')
+        {
+            return \App\Services\Common\Common::sepAddData($tablePrefix, $shareKey, $data, $connectionPrefix);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function sepEditData($tablePrefix, $shareKey, $shareValue, $data, $connectionPrefix = 'mysql')
+        {
+            return \App\Services\Common\Common::sepEditData($tablePrefix, $shareKey, $shareValue, $data, $connectionPrefix);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function sepSearchData($tablePrefix, $shareKey, $shareValue, $connectionPrefix = 'mysql')
+        {
+            return \App\Services\Common\Common::sepSearchData($tablePrefix, $shareKey, $shareValue, $connectionPrefix);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function sepDelData($tablePrefix, $shareKey, $shareValue, $connectionPrefix = 'mysql')
+        {
+            return \App\Services\Common\Common::sepDelData($tablePrefix, $shareKey, $shareValue, $connectionPrefix);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getSepConf($shareVlaue, $connectionPrefix, $tablePrefix)
+        {
+            return \App\Services\Common\Common::getSepConf($shareVlaue, $connectionPrefix, $tablePrefix);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function checkData($shareKey, $data, $type)
+        {
+            return \App\Services\Common\Common::checkData($shareKey, $data, $type);
+        }
+         
+    }
  
 }
 
@@ -13858,6 +14071,8 @@ namespace  {
     class Authorizer extends \LucaDegasperi\OAuth2Server\Facades\Authorizer {}
 
     class Zipper extends \Chumper\Zipper\Facades\Zipper {}
+
+    class Common extends \App\Services\Common\Facades\Common {}
  
 }
 

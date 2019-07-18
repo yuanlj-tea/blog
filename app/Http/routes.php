@@ -74,13 +74,13 @@ Route::group(['prefix' => 'swagger'], function () {
 });
 
 // jwt token(tymon)
-Route::group(['prefix' => 'api/jwt','namespace' => 'Api'], function () {
+Route::group(['prefix' => 'api/jwt', 'namespace' => 'Api'], function () {
     // 登陆
     Route::any('login', 'ApiController@login');
     // 测试jwt生成的方式
     Route::any('test', 'ApiController@test');
     //刷新token
-    Route::any('refreshToken','ApiController@refreshToken');
+    Route::any('refreshToken', 'ApiController@refreshToken');
     Route::group(['middleware' => 'jwt.auth'], function () {
         // 获取用户详情
         Route::any('getUserDetails', 'ApiController@getUserDetails');
@@ -93,14 +93,14 @@ Route::group(['namespace' => 'Home', 'prefix' => 'api'], function () {
     Route::get('index', 'TestJwt@index');
     Route::any('login', 'TestJwt@login');
 
-    Route::group(['middleware' => 'validate-jwt'],function(){
-        Route::any('getUserInfo','TestJwt@getUserInfo');
+    Route::group(['middleware' => 'validate-jwt'], function () {
+        Route::any('getUserInfo', 'TestJwt@getUserInfo');
 
     });
 });
 
 // test es
-Route::group(['namespace' => 'Home','prefix'=>'es'], function () {
+Route::group(['namespace' => 'Home', 'prefix' => 'es'], function () {
     Route::any('initIndex', 'EsController@initIndex');
     Route::any('search', 'EsController@search');
     Route::any('searchArticle', 'EsController@searchArticle');
@@ -115,12 +115,12 @@ Route::group(['namespace' => 'Home','prefix'=>'es'], function () {
 
 
 //用户授权
-Route::group(['prefix' => 'oauth','middleware' => 'oauth-exception'], function () {
+Route::group(['prefix' => 'oauth', 'middleware' => 'oauth-exception'], function () {
     //grant type: authorization code GET
     Route::get('authorize', ['as' => 'oauth.authorize.get', 'middleware' => ['check-authorization-params'], 'uses' => 'OAuthController@newAuthorize']);
 
     //grant type: authorization code POST
-    Route::post('authorize', ['as' => 'oauth.authorize.post', 'middleware' => [ 'check-authorization-params'], 'uses' => 'OAuthController@newAuthorize']);
+    Route::post('authorize', ['as' => 'oauth.authorize.post', 'middleware' => ['check-authorization-params'], 'uses' => 'OAuthController@newAuthorize']);
 
     //获取 access_token
     Route::any('access_token', ['as' => 'access_token', 'uses' => 'OAuthController@accessToken']);
@@ -129,53 +129,58 @@ Route::group(['prefix' => 'oauth','middleware' => 'oauth-exception'], function (
     Route::get('user_info', ['middleware' => ['oauth'], 'uses' => 'OAuthController@userInfo']);
 });
 //成功授权后的跳转地址
-Route::get('oauth/callback','OAuthController@callback');
+Route::get('oauth/callback', 'OAuthController@callback');
 
 //测试guzzle http请求
-Route::group(['namespace'=>'Home','prefix'=>'guzzle'],function(){
-    Route::get('testGuzzle','IndexController@testGuzzle');
+Route::group(['namespace' => 'Home', 'prefix' => 'guzzle'], function () {
+    Route::get('testGuzzle', 'IndexController@testGuzzle');
 });
 
 //pdf转img
-Route::get('pdfToImg','Home\IndexController@pdfToImg');
+Route::get('pdfToImg', 'Home\IndexController@pdfToImg');
 //pdf转html
-Route::get('pdfToHtml','Home\IndexController@pdfToHtml');
+Route::get('pdfToHtml', 'Home\IndexController@pdfToHtml');
 //kafka生产
-Route::get('kafkaProduce','Home\IndexController@kafkaProduce');
+Route::get('kafkaProduce', 'Home\IndexController@kafkaProduce');
 
 //SSO相关
-Route::group(['namespace'=>'SSO','prefix'=>'sso'],function(){
+Route::group(['namespace' => 'SSO', 'prefix' => 'sso'], function () {
     //SSO-SERVER相关
-    Route::group(['prefix'=>'server'],function(){
+    Route::group(['prefix' => 'server'], function () {
         //登录
-        Route::any('/login','SsoServer@login');
-        Route::any('/test','SsoServer@test');
+        Route::any('/login', 'SsoServer@login');
+        Route::any('/test', 'SsoServer@test');
         //验证token
-        Route::any('/validateToken',['middleware'=>['validate-signature'],'uses'=>'SsoServer@validateToken']);
+        Route::any('/validateToken', ['middleware' => ['validate-signature'], 'uses' => 'SsoServer@validateToken']);
         //退出登录
-        Route::any('/logout',['middleware'=>['validate-signature'],'uses'=>'SsoServer@logout']);
+        Route::any('/logout', ['middleware' => ['validate-signature'], 'uses' => 'SsoServer@logout']);
 
     });
     //单站点A相关
-    Route::group(['prefix'=>'site_a'],function(){
+    Route::group(['prefix' => 'site_a'], function () {
         //单站点验证是否已登录
-        Route::any('/checkIsLogin','SiteA@checkIsLogin');
+        Route::any('/checkIsLogin', 'SiteA@checkIsLogin');
         //单站点回调地址
-        Route::any('/redirectUrl','siteA@redirectUrl');
+        Route::any('/redirectUrl', 'siteA@redirectUrl');
         //单点注销登录
-        Route::any('/logout',['middleware'=>['validate-signature'],'uses'=>'siteA@logout']);
+        Route::any('/logout', ['middleware' => ['validate-signature'], 'uses' => 'siteA@logout']);
         //单站点，浏览器端点击退出登录调用接口
-        Route::any('/browserLogout','siteA@browserLogout');
+        Route::any('/browserLogout', 'siteA@browserLogout');
     });
     //单站点B相关
-    Route::group(['prefix'=>'site_b'],function(){
+    Route::group(['prefix' => 'site_b'], function () {
         //单站点验证是否已登录
-        Route::any('/checkIsLogin','SiteB@checkIsLogin');
+        Route::any('/checkIsLogin', 'SiteB@checkIsLogin');
         //单站点回调地址
-        Route::any('/redirectUrl','siteB@redirectUrl');
+        Route::any('/redirectUrl', 'siteB@redirectUrl');
         //单点注销登录
-        Route::any('/logout',['middleware'=>['validate-signature'],'uses'=>'siteB@logout']);
+        Route::any('/logout', ['middleware' => ['validate-signature'], 'uses' => 'siteB@logout']);
         //单站点，浏览器端点击退出登录调用接口
-        Route::any('/browserLogout','siteB@browserLogout');
+        Route::any('/browserLogout', 'siteB@browserLogout');
     });
+});
+
+//分库分表相关
+Route::group(['prefix' => 'sep_table'], function () {
+    Route::any('/', 'SepTable@index');
 });
