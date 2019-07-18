@@ -11,9 +11,6 @@ class SepTable extends Controller
 {
     public function index()
     {
-        Common::test('foo');
-        pd(111);
-
         //插入数据
         $data = [
             'user_id' => gen_uid(),
