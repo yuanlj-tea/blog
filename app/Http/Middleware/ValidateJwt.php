@@ -73,8 +73,12 @@ class ValidateJwt
                 if (empty($blackListNewJwt)) {
                     RedisPHP::setex($this->tokenBlackList . $jwt, 60, $newJwt);
                 } else {
+                    $response =  $next($request);
+                    if($newJwt){
+                        $response->headers->set('x-token',$newJwt);
+                    }
                     //放行
-                    return $next($request);
+                    return $response;
                 }
             } catch (\Exception $e) {
                 return Response::fail($e->getMessage());

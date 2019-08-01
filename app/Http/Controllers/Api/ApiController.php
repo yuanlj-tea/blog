@@ -54,7 +54,7 @@ class ApiController extends Controller
 
     public function refreshToken(Request $request)
     {
-        $cookie = \Cookie::get('bdshare_firstime');p($cookie,1);
+        $cookie = \Cookie::get('bdshare_firstime');
         $token = JWTAuth::getToken();
         if (empty($token)) {
             return AjaxResponse::fail('缺少token');

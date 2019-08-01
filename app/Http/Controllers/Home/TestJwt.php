@@ -40,7 +40,7 @@ class TestJwt extends Controller
                     'aud' => 'http://www.helloweba.net', //jwt所面向的用户
                     'iat' => $nowtime, //签发时间
                     'nbf' => $nowtime + 0, //在什么时间之后该jwt才可用
-                    'exp' => $nowtime + $expLong, //过期时间:10min
+                    'exp' => $nowtime + $expLong, //过期时间:60秒
                     'exp_long' => $expLong,
                     'data' => [
                         'userid' => 1,

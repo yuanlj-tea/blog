@@ -9,7 +9,7 @@ use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
-use Redis;
+use RedisPHP;
 
 class authJWT
 {
@@ -52,7 +52,7 @@ class authJWT
         } catch (TokenExpiredException $e) {
             try {
                 //token过期，自动续签
-                $blackListNewToken = Redis::get($this->tokenBlackList . $token);
+                $blackListNewToken = RedisPHP::get($this->tokenBlackList . $token);
                 $newToken = !empty($blackListNewToken) ? $blackListNewToken : JWTAuth::refresh($token);
 
                 //更改请求头为新的token
@@ -60,14 +60,14 @@ class authJWT
 
                 //过期的token在黑名单中不存在，则存入redis中；10秒钟有效期，10秒内过期的token的请求是有效的
                 if (empty($blackListNewToken)) {
-                    Redis::setex($this->tokenBlackList . $token, $this->blackExpTime, $newToken);
+                    RedisPHP::setex($this->tokenBlackList . $token, $this->blackExpTime, $newToken);
                 } else {
                     //如果有新token，添加响应头，自动续签token(前端判断响应头有该数据，自动更换local storage里的token)
                     $response = $next($request);
-                    /*if ($newToken) {
+                    if ($newToken) {
                         $response->headers->set('Access-Control-Expose-Headers', 'Authorization');
                         $response->headers->set('Authorization', 'Bearer ' . $newToken);
-                    }*/
+                    }
                     return $response;
                 }
 
