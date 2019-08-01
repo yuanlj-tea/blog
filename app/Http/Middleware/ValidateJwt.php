@@ -6,7 +6,7 @@ use Closure;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use App\Libs\Response;
-use Redis;
+use RedisPHP;
 
 class ValidateJwt
 {
@@ -61,7 +61,7 @@ class ValidateJwt
             try {
                 //token过期，刷新token，自动续签
                 //如果redis token黑名单中存在该token，不刷新token，用黑名单对应的新token
-                $blackListNewJwt = Redis::get($this->tokenBlackList . $jwt);
+                $blackListNewJwt = RedisPHP::get($this->tokenBlackList . $jwt);
                 $newJwt = !empty($blackListNewJwt)
                     ? $blackListNewJwt
                     : Jwt::refreshToken($jwt, self::KEY, ['HS256']);
@@ -71,7 +71,7 @@ class ValidateJwt
 
                 //黑名单中不存在，则将旧token存到redis中；60秒有效期，60秒内的过期的token的请求是有效的
                 if (empty($blackListNewJwt)) {
-                    Redis::setex($this->tokenBlackList . $jwt, 60, $newJwt);
+                    RedisPHP::setex($this->tokenBlackList . $jwt, 60, $newJwt);
                 } else {
                     //放行
                     return $next($request);
