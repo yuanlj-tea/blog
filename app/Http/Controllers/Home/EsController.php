@@ -116,7 +116,8 @@ class EsController extends Controller
                         ],
                         'art_tag' => [
                             'type' => 'text',
-                            //'analyzer' => 'ik_max_word',
+                            // 'analyzer' => 'ik_max_word',
+                            // 'search_analyzer' => 'ik_max_word',
                             'fields' => [
                                 'keyword' => [
                                     'type' => 'keyword',
@@ -262,8 +263,10 @@ class EsController extends Controller
 
         if (!empty($art_tag)) {
             //select * from blog_article where art_tag = $art_tag; (中文精确值搜索,字段后要加.keyword)
-            $filter[]['term']['art_tag.keyword'] = $art_tag;
-            // $param['query']['match']['art_tag'] = $art_tag;
+            // $filter[]['term']['art_tag.keyword'] = $art_tag;
+
+            //select * from blog_article where art_tag like '苹果%';
+            $param['query']['match']['art_tag'] = $art_tag;
             // $param['query']['constant_score']['filter']['term']['art_tag'] = $art_tag;
         }
 
@@ -286,8 +289,8 @@ class EsController extends Controller
             $param['query']['bool']['must']['query_string'] = [
                 'query' => $key,
                 //'fields' => $searchFields,
-                //'analyzer' => "ik_max_word",
-                //'analyzer' => "whitespace",
+                'analyzer' => "ik_max_word",
+                // 'analyzer' => "whitespace",
                 //'split_on_whitespace' => true,
                 //'default_operator' => 'AND',
                 'analyze_wildcard' => true,
@@ -383,7 +386,7 @@ class EsController extends Controller
         $dic = $request->input('dic', '');
 
         if (!empty($dic)) {
-            file_put_contents('/mnt/hgfs/test/Allen.txt', $dic . PHP_EOL, FILE_APPEND);
+            file_put_contents('/mnt/hgfs/wwwroot/test/Allen.txt', $dic . PHP_EOL, FILE_APPEND);
         } else {
             return AjaxResponse::fail('请传递要更新的词库数据');
         }
@@ -401,7 +404,7 @@ class EsController extends Controller
 
         // $sql = "select * from blog where art_tag = '{$art_tag}'";
         $sql = "select * from blog ";
-        $url = 'http://192.168.79.206:9200/_sql';
+        $url = 'http://192.168.90.206:9200/_sql';
 
         $headers = [
             'Content-Type' => 'application/json',
