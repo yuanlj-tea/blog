@@ -171,6 +171,9 @@ return [
         Hhxsv5\LaravelS\Illuminate\LaravelSServiceProvider::class,
         Chumper\Zipper\ZipperServiceProvider::class,
         App\Providers\CommonProvider::class,
+
+        //观察这provider
+        \App\Providers\ObserverProvider::class,
     ],
 
     /*

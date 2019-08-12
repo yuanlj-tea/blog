@@ -27,6 +27,11 @@ class IndexController extends CommonController
 
     public function index(Request $request)
     {
+        //会触发observer
+        $obj = Article::find(14);
+        $obj->art_tag = '苹果1';
+        $obj->save();
+        // Article::where('art_id',14)->update(['art_tag'=>'苹果']);
         //点击量最高的6篇文章（站长推荐）
         $pics = Article::orderBy('art_view','desc')->take(6)->get();
 
