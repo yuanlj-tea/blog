@@ -90,12 +90,10 @@ class Guzzle
 
             $response = $instance->get($api, $data);
             $resCode = $response->getStatusCode();
-
             return $response->getBody()->getContents();
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
-
     }
 
     /**
@@ -113,7 +111,7 @@ class Guzzle
             $instance = self::getGuzzle($base_uri);
             $data = [];
 
-            if(!empty($headers)){
+            if (!empty($headers)) {
                 $data['headers'] = $headers;
             }
             if (!empty($post_data)) {
@@ -144,7 +142,7 @@ class Guzzle
                     ]*/
                     $data['multipart'] = $post_data;
                 } else {
-                    $data['body'] = $post_data;
+                    throw new \Exception('无效的type');
                 }
             }
             if (!empty($proxy)) {
@@ -155,7 +153,6 @@ class Guzzle
                 $cookieJar = $jar->fromArray($cookies, $domain);
                 $data['cookies'] = $cookieJar;
             }
-
 
             $response = $instance->post($api, $data);
             $responseCode = $response->getStatusCode();

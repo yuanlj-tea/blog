@@ -36,15 +36,15 @@ class IndexController extends CommonController
         // Article::where('art_id',14)->update(['art_tag'=>'苹果11']);
 
         //点击量最高的6篇文章（站长推荐）
-        $pics = Article::orderBy('art_view','desc')->take(6)->get();
+        $pics = Article::orderBy('art_view', 'desc')->take(6)->get();
 
         //图文列表5篇（带分页）
-        $data = Article::orderBy('art_time','desc')->paginate(5);
+        $data = Article::orderBy('art_time', 'desc')->paginate(5);
 
         //友情链接
-        $links = Links::orderBy('link_order','asc')->get();
+        $links = Links::orderBy('link_order', 'asc')->get();
 
-        return view('home.index',compact('pics','data','links'));
+        return view('home.index', compact('pics', 'data', 'links'));
     }
 
     public function cate($cate_id)
@@ -179,16 +179,12 @@ class IndexController extends CommonController
      */
     public function testGuzzle(Request $request)
     {
-        $base_uri = 'http://192.168.79.206:9666';
-        $api = '/getToken';
+        $base_uri = 'http://192.168.90.206';
+        $api = '/';
         $headers = ['Accept-Encoding' => 'gzip', 'User-Agent' => '(kingnet oa web server)'];
-        $proxy = 'http://192.168.79.251:8888';
-        $cookie = ['PHPSESSID' => 'web2~ri5m4tjbi6gk6eeu72ghg27l61'];
-        $domain = '192.168.79.206';
-
-        $res = Guzzle::get($base_uri, $api, ['c' => 'd', 'a' => 'b'], $headers, $proxy);
-        p($res, 1);
-
+        $proxy = '';
+        $proxy = 'http://192.168.90.252:8888';
+        $cookie = '';
         $postData = ['a' => 'c'];
         $multipartData = [
             [
@@ -197,8 +193,20 @@ class IndexController extends CommonController
             ]
         ];
         // $postData = http_build_query($postData);
-        // $res = Guzzle::post($base_uri,$api,$multipartData,1,$headers,$proxy,$cookie,'192.168.79.206');
-        // p($res,1);
+        $res = Guzzle::post($base_uri, $api, $multipartData, 3, $headers, $proxy);
+        p($res, 1);
+
+
+        $base_uri = 'http://192.168.90.206';
+        $api = '/';
+        $headers = ['Accept-Encoding' => 'gzip', 'User-Agent' => '(kingnet oa web server)'];
+        $proxy = '';
+        // $proxy = 'http://192.168.90.252:8888';
+        $cookie = ['PHPSESSID' => 'web2~ri5m4tjbi6gk6eeu72ghg27l61'];
+        $domain = '192.168.90.206';
+        $res = Guzzle::get($base_uri, $api, ['c' => 'd', 'a' => 'b'], $headers, $proxy);
+        p($res, 1);
+
 
         $base_uri = 'http://127.0.0.1/';
         $api = '/';
@@ -281,7 +289,7 @@ class IndexController extends CommonController
 
     public function testRedisLock()
     {
-        if($this->lock('test',100)){
+        if ($this->lock('test', 100)) {
             DB::transaction(function () {
                 $res = DB::table('test')->where('id', 1)
                     // ->lockForUpdate()
@@ -291,21 +299,21 @@ class IndexController extends CommonController
             });
             $this->unlock('test');
             \Log::info('执行完成');
-        }else{
+        } else {
             \Log::info('未获取到锁，请稍后再试');
         }
     }
 
-    public function lock($key,$expire=0,$type='ex')
+    public function lock($key, $expire = 0, $type = 'ex')
     {
-        $this->random = rand(1,4294967295);
-        return RedisPHP::set($key,$this->random,'nx',$type,$expire);
+        $this->random = rand(1, 4294967295);
+        return RedisPHP::set($key, $this->random, 'nx', $type, $expire);
     }
 
     public function unlock($key)
     {
         $val = RedisPHP::get($key);
-        if($val == $this->random){
+        if ($val == $this->random) {
             RedisPHP::del($key);
         }
     }

@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Foundation\Inspiring;
 use Monolog\Logger;
 use Monolog\Handler\StdoutHandler;
+use App\Libs\Guzzle;
 
 class Inspire extends Command
 {
@@ -31,7 +32,19 @@ class Inspire extends Command
      */
     public function handle()
     {
-        $config = \Kafka\ConsumerConfig::getInstance();
+
+        $s = microtime(true);
+        for($i=0;$i<30;$i++){
+            $base_uri = 'http://192.168.90.206:8001';
+            $api = '/t2.php';
+
+            $res = Guzzle::get($base_uri, $api, ['c' => 'd', 'a' => 'b']);
+        }
+        $e = microtime(true);
+        pd(round($e - $s, 2));
+
+
+        /*$config = \Kafka\ConsumerConfig::getInstance();
         $config->setMetadataRefreshIntervalMs(10000);
         $config->setMetadataBrokerList('127.0.0.1:9092');
         $config->setGroupId('test-1');
@@ -41,7 +54,7 @@ class Inspire extends Command
         $consumer = new \Kafka\Consumer();
         $consumer->start(function ($topic, $part, $message) {
             print_r($message);
-        });
+        });*/
 
         // $this->comment(PHP_EOL.Inspiring::quote().PHP_EOL);
     }
