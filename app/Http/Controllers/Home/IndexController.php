@@ -6,12 +6,14 @@ use App\Http\Model\Article;
 use App\Http\Model\Category;
 use App\Http\Model\Links;
 use App\Libs\Predis;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use malkusch\lock\mutex\PHPRedisMutex;
 use malkusch\lock\mutex\PredisMutex;
 use PDF;
 use App\Jobs\test;
+use Psr\Http\Message\ResponseInterface;
 use QrCode;
 use PdfWatermarker\PdfWatermarker;
 use DfaFilter\SensitiveHelper;
@@ -20,6 +22,7 @@ use DB;
 use RedisPHP;
 use Zipper;
 use Common;
+use GuzzleHttp\Promise;
 
 class IndexController extends CommonController
 {
@@ -217,6 +220,47 @@ class IndexController extends CommonController
         $domain = '127.0.0.1';
         // $res = Guzzle::get($base_uri,$api,['c'=>'d','a'=>'b'],$headers,$proxy);
         // p($res,1);
+    }
+
+    public function testGuuzle1()
+    {
+        $s = microtime(true);
+        $client = new Client(['base_uri' => 'http://192.168.90.206:8001']);
+        // Initiate each request but do not block
+        $promises = [
+            'a' => $client->getAsync('/t2.php'),
+            'b' => $client->getAsync('/t2.php'),
+            'c' => $client->getAsync('/t2.php'),
+            'd' => $client->getAsync('/t2.php')
+        ];
+
+        // Wait on all of the requests to complete.
+        $results = Promise\unwrap($promises);
+        // You can access each result using the key provided to the unwrap
+        // function.
+        echo $results['a']->getBody()->getContents();
+        echo $results['b']->getBody()->getContents();
+        $e = microtime(true);
+        echo sprintf("%.2f",$e-$s);
+
+        //异步请求
+        return;
+        $client = new Client([
+            'base_uri' => 'http://192.168.90.206',
+            'timeout' => 10.0
+        ]);
+        $promise = $client->requestAsync('GET', 'http://192.168.90.206:8001/t2.php');
+        $promise->then(
+            function (ResponseInterface $res) {
+                pd($res->getBody()->getContents());
+                echo $res->getStatusCode() . "\n";
+            },
+            function (RequestException $e) {
+                echo $e->getMessage() . "\n";
+                echo $e->getRequest()->getMethod();
+            }
+        );
+        $promise->wait();
     }
 
     /**

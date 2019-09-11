@@ -134,6 +134,7 @@ Route::get('oauth/callback', 'OAuthController@callback');
 //测试guzzle http请求
 Route::group(['namespace' => 'Home', 'prefix' => 'guzzle'], function () {
     Route::get('testGuzzle', 'IndexController@testGuzzle');
+    Route::get('testGuuzle1', 'IndexController@testGuuzle1');
 });
 
 //pdf转img
