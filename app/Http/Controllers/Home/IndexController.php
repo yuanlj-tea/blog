@@ -7,6 +7,7 @@ use App\Http\Model\Category;
 use App\Http\Model\Links;
 use App\Libs\Predis;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use malkusch\lock\mutex\PHPRedisMutex;
@@ -224,6 +225,22 @@ class IndexController extends CommonController
 
     public function testGuuzle1()
     {
+        try {
+            $client = new Client([
+                'base_uri' => 'http://192.168.90.206:8001',
+                'timeout' => 10
+            ]);
+            $res = $client->get('/t2.php');
+            pp($res->getStatusCode(), $res->getBody()->getContents(), $res->getReasonPhrase(), $res->getHeaders(), (string)$res->getBody());
+            echo $res->getBody();
+        } catch (ConnectException $e) {
+            pp(sprintf("[FILE] %s || [LINE] %s || [MSG] %s", $e->getFile(), $e->getLine(), $e->getMessage()));
+        } catch (RequestException $e) {
+            pp(sprintf("[FILE] %s || [LINE] %s || [MSG] %s", $e->getFile(), $e->getLine(), $e->getMessage()));
+        }
+        die;
+
+        //guzzle并行异步请求
         $s = microtime(true);
         $client = new Client(['base_uri' => 'http://192.168.90.206:8001']);
         // Initiate each request but do not block
@@ -241,7 +258,7 @@ class IndexController extends CommonController
         echo $results['a']->getBody()->getContents();
         echo $results['b']->getBody()->getContents();
         $e = microtime(true);
-        echo sprintf("%.2f",$e-$s);
+        echo sprintf("%.2f", $e - $s);
 
         //异步请求
         return;
