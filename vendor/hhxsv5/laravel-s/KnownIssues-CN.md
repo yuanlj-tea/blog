@@ -19,11 +19,18 @@
 ```
 
 ## 使用包 [barryvdh/laravel-debugbar](https://github.com/barryvdh/laravel-debugbar)
-> 官方不支持`cli`模式，需手动注释掉此判断，但启用后不排除会有其他问题。
+> 官方不支持`cli`模式，需通过修改环境变量`APP_RUNNING_IN_CONSOLE`为非`cli`，但启用后不排除会有其他问题。
+
+`.env`中增加环境变量`APP_RUNNING_IN_CONSOLE=false`。
+
+## 使用包 [the-control-group/voyager](https://github.com/the-control-group/voyager)
+> `voyager`依赖包[arrilot/laravel-widgets](https://github.com/arrilot/laravel-widgets)，而其中`WidgetGroupCollection`是单例，[追加Widget](https://github.com/arrilot/laravel-widgets/blob/master/src/WidgetGroup.php#L270)会造成它们重复展示，通过重新注册ServiceProvider来重置此单例。
 
 ```php
-// 搜索 runningInConsole()，并注释掉该判断
-$this->enabled = $configEnabled /*&& !$this->app->runningInConsole()*/ && !$this->app->environment('testing');
+// config/laravels.php
+'register_providers' => [
+    Arrilot\Widgets\ServiceProvider::class,
+],
 ```
 
 ## 使用包 [overtrue/wechat](https://github.com/overtrue/wechat)
@@ -50,6 +57,27 @@ public function notify(Request $request)
 
 2.每次请求处理后重新注册`FlashServiceProvider`，配置[register_providers](https://github.com/hhxsv5/laravel-s/blob/master/Settings-CN.md)。
 
+## 使用包 [laravel/telescope](https://github.com/laravel/telescope)
+> 因Swoole运行在`cli`模式，导致`RequestWatcher`不能正常识别忽略的路由。
+
+解决方案：
+
+1.`.env`中增加环境变量`APP_RUNNING_IN_CONSOLE=false`；
+
+2.修改代码。
+
+```php
+// 修改`app/Providers/EventServiceProvider.php`, 添加下面监听代码到boot方法中
+// use Laravel\Telescope\Telescope;
+// use Illuminate\Support\Facades\Event;
+Event::listen('laravels.received_request', function ($request, $app) {
+    $reflection = new \ReflectionClass(Telescope::class);
+    $handlingApprovedRequest = $reflection->getMethod('handlingApprovedRequest');
+    $handlingApprovedRequest->setAccessible(true);
+    $handlingApprovedRequest->invoke(null, $app) ? Telescope::startRecording() : Telescope::stopRecording();
+});
+```
+
 ## 单例控制器
 
 - Laravel 5.3+ 控制器是被绑定在`Router`下的`Route`中，而`Router`是单例，控制器只会被构造`一次`，所以不能在构造方法中初始化`请求级数据`，下面展示`错误的用法`。
@@ -75,6 +103,11 @@ class TestController extends Controller
 
 1.避免在构造函数中初始化`请求级`的数据，应在具体`Action`中读取，这样编码风格更合理，建议这样写。
 
+```bash
+# 列出你的路由中所有关联的控制器的所有属性
+php artisan laravels:list-properties
+```
+
 ```php
 namespace App\Http\Controllers;
 class TestController extends Controller
@@ -94,6 +127,7 @@ class TestController extends Controller
 
 ```php
 // config/laravels.php
+// 将enable置为true、excluded_list置为[]，则表示自动销毁所有控制器
 'destroy_controllers'      => [
     'enable'        => true, // 启用自动销毁控制器
     'excluded_list' => [

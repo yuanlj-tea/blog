@@ -161,7 +161,7 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
-        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         App\Providers\AjaxResponseProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 
@@ -172,7 +172,7 @@ return [
         Chumper\Zipper\ZipperServiceProvider::class,
         App\Providers\CommonProvider::class,
 
-        //观察这provider
+        //观察者provider
         \App\Providers\ObserverProvider::class,
     ],
 

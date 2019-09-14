@@ -47,8 +47,8 @@ class Laravel
         // Merge $_ENV $_SERVER
         $server = isset($this->conf['_SERVER']) ? $this->conf['_SERVER'] : [];
         $env = isset($this->conf['_ENV']) ? $this->conf['_ENV'] : [];
-        $this->rawGlobals['_SERVER'] = array_merge($_SERVER, $server);
-        $this->rawGlobals['_ENV'] = array_merge($_ENV, $env);
+        $this->rawGlobals['_SERVER'] = $_SERVER + $server;
+        $this->rawGlobals['_ENV'] = $_ENV + $env;
     }
 
     public function prepareLaravel()
@@ -173,6 +173,7 @@ class Laravel
         if (isset(self::$staticBlackList[$uri])) {
             return false;
         }
+        $uri = urldecode($uri);
 
         $publicPath = $this->conf['static_path'];
         $requestFile = $publicPath . $uri;

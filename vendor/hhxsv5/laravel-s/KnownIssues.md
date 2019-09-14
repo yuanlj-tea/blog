@@ -19,12 +19,20 @@
 ```
 
 ## Use package [barryvdh/laravel-debugbar](https://github.com/barryvdh/laravel-debugbar)
-> Not support `cli` mode officially, you need to remove the logic of `runningInConsole`, but there may be some other issues.
+> Not support `cli` mode officially, you need to add the environment variable `APP_RUNNING_IN_CONSOLE` to be non-cli`, but there may be some other issues.
+
+Add environment variable `APP_RUNNING_IN_CONSOLE=false` to `.env`.
+
+## Use package [the-control-group/voyager](https://github.com/the-control-group/voyager)
+> `voyager` dependencies [arrilot/laravel-widgets](https://github.com/arrilot/laravel-widgets), where `WidgetGroupCollection` is a singleton, [appending widget](https://github.com/Arrilot/laravel-widgets/blob/master/src/WidgetGroup.php#L270) will cause them to repeat the display, you need to reset the singleton by re-registering the ServiceProvider.
 
 ```php
-// Search runningInConsole(), then annotate it
-$this->enabled = $configEnabled /*&& !$this->app->runningInConsole()*/ && !$this->app->environment('testing');
+// config/laravels.php
+'register_providers' => [
+    Arrilot\Widgets\ServiceProvider::class,
+],
 ```
+
 ## Use package [overtrue/wechat](https://github.com/overtrue/wechat)
 > The asynchronous notification callback will be failing, because `$app['request']` is empty, give it a value.
 
@@ -45,6 +53,27 @@ public function notify(Request $request)
 1.Reset `$messages` by middleware `app('flash')->clear();`.
 
 2.Re-register `FlashServiceProvider` after handling request, Refer [register_providers](https://github.com/hhxsv5/laravel-s/blob/master/Settings.md).
+
+## Use package [laravel/telescope](https://github.com/laravel/telescope)
+> Because Swoole is running in `cli` mode, `RequestWatcher` does not recognize the ignored route properly.
+
+Solution:
+
+1.Add environment variable `APP_RUNNING_IN_CONSOLE=false` to `.env`;
+
+2.Modify code.
+
+```php
+// Edit file `app/Providers/EventServiceProvider.php`, add the following code into method `boot`
+// use Laravel\Telescope\Telescope;
+// use Illuminate\Support\Facades\Event;
+Event::listen('laravels.received_request', function ($request, $app) {
+    $reflection = new \ReflectionClass(Telescope::class);
+    $handlingApprovedRequest = $reflection->getMethod('handlingApprovedRequest');
+    $handlingApprovedRequest->setAccessible(true);
+    $handlingApprovedRequest->invoke(null, $app) ? Telescope::startRecording() : Telescope::stopRecording();
+});
+```
 
 ## Singleton controller
 
@@ -71,6 +100,11 @@ class TestController extends Controller
 
 1.Avoid initializing `request-level` data in the constructor, which should be read in the concrete `Action`. This coding style is more reasonable, it is recommended to do so.
 
+```bash
+# List all properties of all controllers related your routes.
+php artisan laravels:list-properties
+```
+
 ```php
 namespace App\Http\Controllers;
 class TestController extends Controller
@@ -90,6 +124,7 @@ class TestController extends Controller
 
 ```php
 // config/laravels.php
+// Set enable to true and exclude_list to [], which means that all controllers are automatically destroyed.
 'destroy_controllers'      => [
     'enable'        => true, // Enable automatic destruction controller
     'excluded_list' => [
