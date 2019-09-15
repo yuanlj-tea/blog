@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Model\User;
-use Elasticsearch\Serializers\ArrayToJSONSerializer;
+use App\User;
 use Illuminate\Http\Request;
-use App\Http\Requests;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use JWTAuth;
 use JWTFactory;
 use AjaxResponse;
+use Namshi\JOSE\JWT;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -27,7 +25,7 @@ class ApiController extends Controller
         $user = xss_filter($request->input('user', ''));
         $pwd = xss_filter($request->input('pwd', ''));
 
-        $user = User::where('user_name', $user)->first();
+        $user = User::where('user_name', $user)->first(['user_id','user_name','user_pass']);
         if (!isset($user->user_id)) {
             return AjaxResponse::fail('无效的用户名');
         }
@@ -35,11 +33,18 @@ class ApiController extends Controller
             return AjaxResponse::fail('密码错误');
         }
         try {
-            $token = JWTAuth::fromUser($user);
+            $userInfo = User::select('user_id','user_name')->find($user->user_id);
+            $token = JWTAuth::fromUser($userInfo);
             return AjaxResponse::success($token);
         } catch (\Exception $e) {
             return AjaxResponse::fail($e->getMessage());
         }
+    }
+
+    public function logout()
+    {
+        JWTAuth::invalidate();
+        return AjaxResponse::success('退出登录成功');
     }
 
     /**
@@ -54,7 +59,6 @@ class ApiController extends Controller
 
     public function refreshToken(Request $request)
     {
-        $cookie = \Cookie::get('bdshare_firstime');
         $token = JWTAuth::getToken();
         if (empty($token)) {
             return AjaxResponse::fail('缺少token');

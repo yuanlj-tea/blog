@@ -2,10 +2,9 @@
 
 namespace App;
 
-//use Tymon\JWTAuth\Contracts\JWTSubject;
 use Tymon\JWTAuth\Facades\JWTAuth;
-//use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * App\User
@@ -18,13 +17,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUserPass($value)
  * @mixin \Eloquent
  */
-class User extends Authenticatable //implements JWTSubject
+class User extends Authenticatable implements JWTSubject
 {
-    protected $table='user';
+    protected $table = 'user';
 
-    protected $primaryKey='user_id';
+    protected $primaryKey = 'user_id';
 
-    //use Notifiable;
+    protected $hidden = ['user_pass'];
+
 
     // Rest omitted for brevity
 
@@ -45,6 +45,6 @@ class User extends Authenticatable //implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-        return [];
+        return ['user_id', 'user_name'];
     }
 }
