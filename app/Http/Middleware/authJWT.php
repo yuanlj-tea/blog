@@ -52,17 +52,16 @@ class authJWT
         } catch (TokenExpiredException $e) {
             try {
                 //token过期，自动续签
-                // $blackListNewToken = RedisPHP::get($this->tokenBlackList . $token);
-                // $newToken = !empty($blackListNewToken) ? $blackListNewToken : JWTAuth::refresh($token);
+                $blackListNewToken = RedisPHP::get($this->tokenBlackList . $token);
+                $newToken = !empty($blackListNewToken) ? $blackListNewToken : JWTAuth::refresh($token);
 
-                $newToken = JWTAuth::refresh($token);
                 //更改请求头为新的token
                 $request->headers->set('Authorization', 'Bearer ' . $newToken);
 
                 //过期的token在黑名单中不存在，则存入redis中；10秒钟有效期，10秒内过期的token的请求是有效的
-                // if (empty($blackListNewToken)) {
-                //     RedisPHP::setex($this->tokenBlackList . $token, $this->blackExpTime, $newToken);
-                // } else {
+                if (empty($blackListNewToken)) {
+                    RedisPHP::setex($this->tokenBlackList . $token, $this->blackExpTime, $newToken);
+                } else {
                     //如果有新token，添加响应头，自动续签token(前端判断响应头有该数据，自动更换local storage里的token)
                     $response = $next($request);
                     if ($newToken) {
@@ -70,7 +69,7 @@ class authJWT
                         $response->headers->set('Authorization', 'Bearer ' . $newToken);
                     }
                     return $response;
-                // }
+                }
 
             } catch (TokenBlacklistedException $e) {
                 return AjaxResponse::fail('token已被加入黑名单');
@@ -79,12 +78,7 @@ class authJWT
                 return AjaxResponse::fail('登录已过期，请重新登录');
             }
         } catch (\Exception $e) {
-            return AjaxResponse::fail(sprintf(
-                "【FILE】：%s；【LINE】：%s；【MSG】：%s",
-                $e->getFile(),
-                $e->getLine(),
-                $e->getMessage()
-            ));
+            return AjaxResponse::fail(sprintf("[FILE] %s || [LINE] %s || [MSG] %s",$e->getFile(),$e->getLine(),$e->getMessage()));
         }
 
         $response = $next($request);

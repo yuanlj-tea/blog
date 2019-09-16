@@ -25,9 +25,6 @@ class User extends Authenticatable implements JWTSubject
 
     protected $hidden = ['user_pass'];
 
-
-    // Rest omitted for brevity
-
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

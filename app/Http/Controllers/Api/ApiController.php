@@ -9,6 +9,7 @@ use JWTAuth;
 use JWTFactory;
 use AjaxResponse;
 use Namshi\JOSE\JWT;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -25,7 +26,7 @@ class ApiController extends Controller
         $user = xss_filter($request->input('user', ''));
         $pwd = xss_filter($request->input('pwd', ''));
 
-        $user = User::where('user_name', $user)->first(['user_id','user_name','user_pass']);
+        $user = User::where('user_name', $user)->first(['user_id', 'user_name', 'user_pass']);
         if (!isset($user->user_id)) {
             return AjaxResponse::fail('无效的用户名');
         }
@@ -33,7 +34,7 @@ class ApiController extends Controller
             return AjaxResponse::fail('密码错误');
         }
         try {
-            $userInfo = User::select('user_id','user_name')->find($user->user_id);
+            $userInfo = User::select('user_id', 'user_name')->find($user->user_id);
             $token = JWTAuth::fromUser($userInfo);
             return AjaxResponse::success($token);
         } catch (\Exception $e) {
@@ -43,7 +44,7 @@ class ApiController extends Controller
 
     public function logout()
     {
-        JWTAuth::invalidate();
+        JWTAuth::invalidate(JWTAuth::getToken());
         return AjaxResponse::success('退出登录成功');
     }
 
@@ -54,7 +55,14 @@ class ApiController extends Controller
     public function getUserDetails(Request $request)
     {
         $user = JWTAuth::parseToken()->authenticate();
+        // $user = JWTAuth::toUser();
         return AjaxResponse::success($user);
+    }
+
+    public function getPayload()
+    {
+        $data = JWTAuth::getPayload()->toArray();
+        return AjaxResponse::success($data);
     }
 
     public function refreshToken(Request $request)
@@ -65,9 +73,9 @@ class ApiController extends Controller
         }
         $token = (string)$token;
 
-
         try {
-            $newToken = JWTAuth::refresh($token);
+            // $newToken = JWTAuth::refresh($token);
+            $newToken = JWTAuth::parseToken()->refresh();
             return AjaxResponse::success([
                 'oldToken' => $token,
                 'newToken' => $newToken

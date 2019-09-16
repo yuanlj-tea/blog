@@ -79,14 +79,15 @@ Route::group(['prefix' => 'api/jwt', 'namespace' => 'Api'], function () {
     Route::any('login', 'ApiController@login');
     // 测试jwt生成的方式
     Route::any('test', 'ApiController@test');
+    // 刷新token
+    Route::any('refreshToken', 'ApiController@refreshToken');
 
     Route::group(['middleware' => 'my-jwt.auth'], function () {
         // 获取用户详情
         Route::any('getUserDetails', 'ApiController@getUserDetails');
         // 退出登录
         Route::any('logout', 'ApiController@logout');
-        // 刷新token
-        Route::any('refreshToken', 'ApiController@refreshToken');
+        Route::any('getPayload', 'ApiController@getPayload');
     });
 });
 
