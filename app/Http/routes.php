@@ -59,6 +59,7 @@ Route::get('vaptcha/vaptchaView', 'VaptchaController@vaptchaView');
 
 //测试laravel queue dispatch
 Route::get('/test', 'Home\IndexController@test');
+Route::get('/lay', 'Home\IndexController@lay');
 //生成二维码
 Route::get('/qrCode', 'Home\IndexController@qrCode');
 //敏感词检测

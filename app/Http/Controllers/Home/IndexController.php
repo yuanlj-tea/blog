@@ -378,4 +378,9 @@ class IndexController extends CommonController
             RedisPHP::del($key);
         }
     }
+
+    public function lay()
+    {
+        return view('layui');
+    }
 }
