@@ -34,7 +34,8 @@
         "hhxsv5/laravel-s": "^3.4",
         "chumper/zipper": "^1.0",
         "nmred/kafka-php": "v0.2.0.8",
-        "malkusch/lock": "^2.1"
+        "malkusch/lock": "^2.1",
+        "yurunsoft/yurun-lock": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -4,7 +4,8 @@ namespace Hhxsv5\LaravelS;
 
 use Hhxsv5\LaravelS\Illuminate\Laravel;
 use Hhxsv5\LaravelS\Swoole\DynamicResponse;
-use Hhxsv5\LaravelS\Swoole\Events\BeforeStartInterface;
+use Hhxsv5\LaravelS\Swoole\Events\ServerStartInterface;
+use Hhxsv5\LaravelS\Swoole\Events\ServerStopInterface;
 use Hhxsv5\LaravelS\Swoole\Events\WorkerErrorInterface;
 use Hhxsv5\LaravelS\Swoole\Events\WorkerStartInterface;
 use Hhxsv5\LaravelS\Swoole\Events\WorkerStopInterface;
@@ -63,10 +64,10 @@ class LaravelS extends Server
         $processes = isset($this->conf['processes']) ? $this->conf['processes'] : [];
         $this->swoole->customProcesses = $this->addCustomProcesses($this->swoole, $svrConf['process_prefix'], $processes, $this->laravelConf);
 
-        // Fire BeforeStart event
-        if (isset($this->conf['event_handlers']['BeforeStart'])) {
+        // Fire ServerStart event
+        if (isset($this->conf['event_handlers']['ServerStart'])) {
             Laravel::autoload($this->laravelConf['root_path']);
-            $this->fireEvent('BeforeStart', BeforeStartInterface::class, [$this->swoole]);
+            $this->fireEvent('ServerStart', ServerStartInterface::class, [$this->swoole]);
         }
     }
 
@@ -91,6 +92,17 @@ class LaravelS extends Server
                 $this->laravel->saveSession();
                 $this->laravel->clean();
             });
+        }
+    }
+
+    public function onShutdown(HttpServer $server)
+    {
+        parent::onShutdown($server);
+
+        // Fire ServerStop event
+        if (isset($this->conf['event_handlers']['ServerStop'])) {
+            Laravel::autoload($this->laravelConf['root_path']);
+            $this->fireEvent('ServerStop', ServerStopInterface::class, [$server]);
         }
     }
 

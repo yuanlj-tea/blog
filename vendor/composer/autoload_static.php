@@ -41,6 +41,10 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         array (
             'malkusch\\lock\\' => 14,
         ),
+        'Y' => 
+        array (
+            'Yurun\\Until\\Lock\\' => 17,
+        ),
         'X' => 
         array (
             'Xuexitest\\' => 10,
@@ -192,6 +196,10 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'malkusch\\lock\\' => 
         array (
             0 => __DIR__ . '/..' . '/malkusch/lock/classes',
+        ),
+        'Yurun\\Until\\Lock\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yurunsoft/yurun-lock/src',
         ),
         'Xuexitest\\' => 
         array (
@@ -2340,7 +2348,8 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'Hhxsv5\\LaravelS\\LaravelS' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/LaravelS.php',
         'Hhxsv5\\LaravelS\\Swoole\\Coroutine\\Context' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Swoole/Coroutine/Context.php',
         'Hhxsv5\\LaravelS\\Swoole\\DynamicResponse' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Swoole/DynamicResponse.php',
-        'Hhxsv5\\LaravelS\\Swoole\\Events\\BeforeStartInterface' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Swoole/Events/BeforeStartInterface.php',
+        'Hhxsv5\\LaravelS\\Swoole\\Events\\ServerStartInterface' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Swoole/Events/ServerStartInterface.php',
+        'Hhxsv5\\LaravelS\\Swoole\\Events\\ServerStopInterface' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Swoole/Events/ServerStopInterface.php',
         'Hhxsv5\\LaravelS\\Swoole\\Events\\WorkerErrorInterface' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Swoole/Events/WorkerErrorInterface.php',
         'Hhxsv5\\LaravelS\\Swoole\\Events\\WorkerStartInterface' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Swoole/Events/WorkerStartInterface.php',
         'Hhxsv5\\LaravelS\\Swoole\\Events\\WorkerStopInterface' => __DIR__ . '/..' . '/hhxsv5/laravel-s/src/Swoole/Events/WorkerStopInterface.php',
@@ -5227,6 +5236,13 @@ class ComposerStaticInite7c4c6cf85e8a9b5294c3578466e56f8
         'Xuexitest\\TestReply_GetData' => __DIR__ . '/../..' . '/Xuexitest/TestReply_GetData.php',
         'Xuexitest\\TestRequest' => __DIR__ . '/../..' . '/Xuexitest/TestRequest.php',
         'Xuexitest\\XuexitestClient' => __DIR__ . '/../..' . '/Xuexitest/XuexitestClient.php',
+        'Yurun\\Until\\Lock\\Base' => __DIR__ . '/..' . '/yurunsoft/yurun-lock/src/Base.php',
+        'Yurun\\Until\\Lock\\Exception' => __DIR__ . '/..' . '/yurunsoft/yurun-lock/src/Exception.php',
+        'Yurun\\Until\\Lock\\File' => __DIR__ . '/..' . '/yurunsoft/yurun-lock/src/File.php',
+        'Yurun\\Until\\Lock\\LockConst' => __DIR__ . '/..' . '/yurunsoft/yurun-lock/src/LockConst.php',
+        'Yurun\\Until\\Lock\\Memcache' => __DIR__ . '/..' . '/yurunsoft/yurun-lock/src/Memcache.php',
+        'Yurun\\Until\\Lock\\Memcached' => __DIR__ . '/..' . '/yurunsoft/yurun-lock/src/Memcached.php',
+        'Yurun\\Until\\Lock\\Redis' => __DIR__ . '/..' . '/yurunsoft/yurun-lock/src/Redis.php',
         'malkusch\\lock\\exception\\DeadlineException' => __DIR__ . '/..' . '/malkusch/lock/classes/exception/DeadlineException.php',
         'malkusch\\lock\\exception\\ExecutionOutsideLockException' => __DIR__ . '/..' . '/malkusch/lock/classes/exception/ExecutionOutsideLockException.php',
         'malkusch\\lock\\exception\\LockAcquireException' => __DIR__ . '/..' . '/malkusch/lock/classes/exception/LockAcquireException.php',

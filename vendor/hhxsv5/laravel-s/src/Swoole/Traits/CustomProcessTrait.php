@@ -11,7 +11,7 @@ trait CustomProcessTrait
 {
     public function addCustomProcesses(Server $swoole, $processPrefix, array $processes, array $laravelConfig)
     {
-        $pidfile = dirname($swoole->setting['pid_file']) . '/laravels-custom-processes.pid';
+        $pidfile = dirname($swoole->setting['pid_file']) . '/laravels-processes.pid';
         if (file_exists($pidfile)) {
             unlink($pidfile);
         }
@@ -31,6 +31,9 @@ trait CustomProcessTrait
                             'process class name must be specified'
                         )
                     );
+                }
+                if (isset($item['enable']) && !$item['enable']) {
+                    continue;
                 }
                 $process = $item['class'];
                 $redirect = isset($item['redirect']) ? $item['redirect'] : false;

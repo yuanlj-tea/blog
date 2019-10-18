@@ -4,7 +4,7 @@
 #
 # How to use this script:
 #     ./bin/generator.sh       # To generate stubs with latest code from the master branch of Swoole.
-#     ./bin/generator.sh 4.4.3 # To generate stubs for a specific version of Swoole.
+#     ./bin/generator.sh 4.4.7 # To generate stubs for a specific version of Swoole.
 #
 
 set -e
@@ -27,6 +27,7 @@ else
         exit 1
     fi
 fi
+image_tag=${image_tag}-dev
 
 rm -rf ./output
 docker run --rm                      \
@@ -35,6 +36,7 @@ docker run --rm                      \
     -e SWOOLE_EXT_ORM=enabled        \
     -e SWOOLE_EXT_POSTGRESQL=enabled \
     -e SWOOLE_EXT_SERIALIZE=enabled  \
-    -t phpswoole/swoole:${image_tag}    \
-    bash -c "composer install && ./bin/generator.php"
+    -e SWOOLE_EXT_ZOOKEEPER=enabled  \
+    -t phpswoole/swoole:${image_tag} \
+    bash -c "composer install && SWOOLE_SRC_DIR=/usr/src/swoole ./bin/generator.php"
 git add ./output

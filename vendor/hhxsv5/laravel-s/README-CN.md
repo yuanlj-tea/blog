@@ -977,6 +977,7 @@ class WebSocketService implements WebSocketHandlerInterface
             'class'    => \App\Processes\TestProcess::class,
             'redirect' => false, // 是否重定向输入输出
             'pipe'     => 0 // 管道类型：0不创建管道，1创建SOCK_STREAM类型管道，2创建SOCK_DGRAM类型管道
+            'enable'   => true // 是否启用，默认true
         ],
     ],
     ```
@@ -991,18 +992,19 @@ class WebSocketService implements WebSocketHandlerInterface
 
 | 事件 | 需实现的接口 | 发生时机 |
 | -------- | -------- | -------- |
-| BeforeStart | Hhxsv5\LaravelS\Swoole\Events\BeforeStartInterface | 发生在Master进程启动之前，`此事件中不应处理复杂的业务逻辑，只能做一些初始化的简单工作`。|
-| WorkerStart | Hhxsv5\LaravelS\Swoole\Events\WorkerStartInterface | 发生在Worker/Task进程启动时，并且已经完成Laravel初始化 |
-| WorkerStop | Hhxsv5\LaravelS\Swoole\Events\WorkerStopInterface | 发生在Worker/Task进程正常退出时。 |
-| WorkerError | Hhxsv5\LaravelS\Swoole\Events\WorkerErrorInterface | 发生在Worker/Task进程发生异常或致命错误时。 |
+| ServerStart | Hhxsv5\LaravelS\Swoole\Events\ServerStartInterface | 发生在Master进程启动时，`此事件中不应处理复杂的业务逻辑，只能做一些初始化的简单工作` |
+| ServerStop | Hhxsv5\LaravelS\Swoole\Events\ServerStopInterface | 发生在Server正常退出时，`此事件中不能使用异步或协程相关的API` |
+| WorkerStart | Hhxsv5\LaravelS\Swoole\Events\WorkerStartInterface | 发生在Worker/Task进程启动完成后 |
+| WorkerStop | Hhxsv5\LaravelS\Swoole\Events\WorkerStopInterface | 发生在Worker/Task进程正常退出后 |
+| WorkerError | Hhxsv5\LaravelS\Swoole\Events\WorkerErrorInterface | 发生在Worker/Task进程发生异常或致命错误时 |
 
 1.创建事件处理类，实现相应的接口。
 ```php
 namespace App\Events;
-use Hhxsv5\LaravelS\Swoole\Events\BeforeStartInterface;
+use Hhxsv5\LaravelS\Swoole\Events\ServerStartInterface;
 use Swoole\Atomic;
 use Swoole\Http\Server;
-class BeforeStartEvent implements BeforeStartInterface
+class ServerStartEvent implements ServerStartInterface
 {
     public function __construct()
     {
@@ -1037,7 +1039,7 @@ class WorkerStartEvent implements WorkerStartInterface
 ```php
 // 修改文件 config/laravels.php
 'event_handlers' => [
-    'BeforeStart' => \App\Events\BeforeStartEvent::class,
+    'ServerStart' => \App\Events\ServerStartEvent::class,
     'WorkerStart' => \App\Events\WorkerStartEvent::class,
 ],
 ```
@@ -1117,6 +1119,7 @@ class WorkerStartEvent implements WorkerStartInterface
     ```php
     // config/database.php
     'redis' => [
+            'client' => env('REDIS_CLIENT', 'phpredis'), // 推荐使用phpredis，以获得更好的性能
             'default' => [
                 'host'       => env('REDIS_HOST', 'localhost'),
                 'password'   => env('REDIS_PASSWORD', null),
