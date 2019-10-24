@@ -8,6 +8,7 @@ use Illuminate\Foundation\Inspiring;
 use Monolog\Logger;
 use Monolog\Handler\StdoutHandler;
 use App\Libs\Guzzle;
+use RedisPHP;
 
 class Inspire extends Command
 {
@@ -32,8 +33,13 @@ class Inspire extends Command
      */
     public function handle()
     {
+        $redis = RedisPHP::connection('foo');
+        RedisPHP::subscribe(['__keyevent@0__:expired'],function($message)use($redis){
+            pp($message);
+            pp($redis->get($message));
+        });
 
-        $s = microtime(true);
+        /*$s = microtime(true);
         for($i=0;$i<30;$i++){
             $base_uri = 'http://192.168.90.206:8001';
             $api = '/t2.php';
@@ -41,7 +47,7 @@ class Inspire extends Command
             $res = Guzzle::get($base_uri, $api, ['c' => 'd', 'a' => 'b']);
         }
         $e = microtime(true);
-        pd(round($e - $s, 2));
+        pd(round($e - $s, 2));*/
 
 
         /*$config = \Kafka\ConsumerConfig::getInstance();
