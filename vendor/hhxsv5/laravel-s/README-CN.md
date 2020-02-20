@@ -94,7 +94,7 @@ Table of Contents
 
 1.通过[Composer](https://getcomposer.org/)安装([packagist](https://packagist.org/packages/hhxsv5/laravel-s))。有可能找不到`3.0`版本，解决方案移步[#81](https://github.com/hhxsv5/laravel-s/issues/81)。
 ```bash
-composer require "hhxsv5/laravel-s:~3.5.0" -vvv
+composer require "hhxsv5/laravel-s:~3.6.0" -vvv
 # 确保你的composer.lock文件是在版本控制中
 ```
 
@@ -124,32 +124,42 @@ php artisan laravels publish
 4.修改配置`config/laravels.php`：监听的IP、端口等，请参考[配置项](https://github.com/hhxsv5/laravel-s/blob/master/Settings-CN.md)。
 
 ## 运行
-> `php bin/laravels {start|stop|restart|reload|info|help}`
+> `在运行之前，请先仔细阅读：`[注意事项](https://github.com/hhxsv5/laravel-s/blob/master/README-CN.md#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9)(这非常重要)。
 
-`在运行之前，请先仔细阅读：`[注意事项](https://github.com/hhxsv5/laravel-s/blob/master/README-CN.md#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9)(非常重要)。
+- 操作命令：`php bin/laravels {start|stop|restart|reload|info|help}`。
 
 | 命令 | 说明 |
 | --------- | --------- |
-| `start` | 启动LaravelS，展示已启动的进程列表 "*ps -ef&#124;grep laravels*"。支持选项 "*-d&#124;--daemonize*" 以守护进程的方式运行，此选项将覆盖`laravels.php`中`swoole.daemonize`设置；支持选项 "*-e&#124;--env*" 用来指定运行的环境，如`--env=testing`将会优先使用配置文件`.env.testing`，这个特性要求`Laravel 5.2+` |
-| `stop` | 停止LaravelS |
-| `restart` | 重启LaravelS，支持选项 "*-d&#124;--daemonize*" 和 "*-e&#124;--env*" |
-| `reload` | 平滑重启所有Task/Worker/Timer进程(这些进程内包含了你的业务代码)，并触发自定义进程的`onReload`方法，不会重启Master/Manger进程；修改`config/laravels.php`后，你`只能`调用`restart`来实现重启 |
-| `info` | 显示组件的版本信息 |
-| `help` | 显示帮助信息 |
+| start | 启动LaravelS，展示已启动的进程列表 "*ps -ef&#124;grep laravels*"。支持选项 "*-d&#124;--daemonize*" 以守护进程的方式运行，此选项将覆盖`laravels.php`中`swoole.daemonize`设置；支持选项 "*-e&#124;--env*" 用来指定运行的环境，如`--env=testing`将会优先使用配置文件`.env.testing`，这个特性要求`Laravel 5.2+` |
+| stop | 停止LaravelS |
+| restart | 重启LaravelS，支持选项 "*-d&#124;--daemonize*" 和 "*-e&#124;--env*" |
+| reload | 平滑重启所有Task/Worker/Timer进程(这些进程内包含了你的业务代码)，并触发自定义进程的`onReload`方法，不会重启Master/Manger进程；修改`config/laravels.php`后，你`只能`调用`restart`来实现重启 |
+| info | 显示组件的版本信息 |
+| help | 显示帮助信息 |
+
+- `运行时`文件：`start`时会自动执行`artisan laravels config`并生成这些文件，开发者一般不需要关注它们，建议将它们加到`.gitignore`中。
+
+| 文件 | 说明 |
+| --------- | --------- |
+| storage/laravels.json | LaravelS的`运行时`配置文件 |
+| storage/laravels.pid | Master进程的PID文件 |
+| storage/laravels-timer-process.pid | 定时器Timer进程的PID文件 |
+| storage/laravels-custom-processes.pid | 所有自定义进程的PID文件 |
 
 ## 部署
 > 建议通过[Supervisord](http://supervisord.org/)监管主进程，前提是不能加`-d`选项并且设置`swoole.daemonize`为`false`。
 
 ```
 [program:laravel-s-test]
-command=/user/local/bin/php /opt/www/laravel-s-test/bin/laravels start -i
+directory=/var/wwww/laravel-s-test
+command=/usr/local/bin/php bin/laravels start -i
 numprocs=1
 autostart=true
 autorestart=true
 startretries=3
 user=www-data
 redirect_stderr=true
-stdout_logfile=/opt/www/laravel-s-test/storage/logs/supervisord-stdout.log
+stdout_logfile=/var/log/supervisor/%(program_name)s.log
 ```
 
 ## 与Nginx配合使用（推荐）
@@ -414,6 +424,23 @@ server {
     proxy_read_timeout 60s;
     ```
 
+6.在控制器中推送数据
+
+```php
+namespace App\Http\Controllers;
+class TestController extends Controller
+{
+    public function push()
+    {
+        $fd = 1; // Find fd by userId from a map [userId=>fd].
+        /**@var \Swoole\WebSocket\Server $swoole */
+        $swoole = app('swoole');
+        $success = $swoole->push($fd, 'Push data to fd#1 in Controller');
+        var_dump($success);
+    }
+}
+```
+
 ## 监听事件
 
 ### 系统事件
@@ -478,10 +505,8 @@ class TestListener1 extends Listener
         \Log::info(__CLASS__ . ':handle start', [$event->getData()]);
         sleep(2);// 模拟一些慢速的事件处理
         // 监听器中也可以投递Task，但不支持Task的finish()回调。
-        // 注意：
-        // 1.参数2需传true
-        // 2.config/laravels.php中修改配置task_ipc_mode为1或2，参考 https://wiki.swoole.com/wiki/page/296.html
-        $ret = Task::deliver(new TestTask('task data'), true);
+        // 注意：config/laravels.php中修改配置task_ipc_mode为1或2，参考 https://wiki.swoole.com/wiki/page/296.html
+        $ret = Task::deliver(new TestTask('task data'));
         var_dump($ret);
         // throw new \Exception('an exception');// handle时抛出的异常上层会忽略，并记录到Swoole日志，需要开发者try/catch捕获处理
     }
@@ -509,8 +534,11 @@ class TestListener1 extends Listener
 ```php
 // 实例化TestEvent并通过fire触发，此操作是异步的，触发后立即返回，由Task进程继续处理监听器中的handle逻辑
 use Hhxsv5\LaravelS\Swoole\Task\Event;
-$success = Event::fire(new TestEvent('event data'));
-var_dump($success);//判断是否触发成功
+$event = new TestEvent('event data');
+// $event->delay(10); // 延迟10秒触发
+// $event->setTries(3); // 出现异常时，累计尝试3次
+$success = Event::fire($event);
+var_dump($success);// 判断是否触发成功
 ```
 
 ## 异步的任务队列
@@ -551,9 +579,10 @@ class TestTask extends Task
 // 实例化TestTask并通过deliver投递，此操作是异步的，投递后立即返回，由Task进程继续处理TestTask中的handle逻辑
 use Hhxsv5\LaravelS\Swoole\Task\Task;
 $task = new TestTask('task data');
-// $task->delay(3);// 延迟3秒投放任务
+// $task->delay(3); // 延迟3秒投递任务
+// $task->setTries(3); // 出现异常时，累计尝试3次
 $ret = Task::deliver($task);
-var_dump($ret);//判断是否投递成功
+var_dump($ret);// 判断是否投递成功
 ```
 
 ## 毫秒级定时任务
@@ -593,10 +622,8 @@ class TestCronJob extends CronJob
             \Log::info(__METHOD__, ['stop', $this->i, microtime(true)]);
             $this->stop(); // 终止此任务
             // CronJob中也可以投递Task，但不支持Task的finish()回调。
-            // 注意：
-            // 1.参数2需传true
-            // 2.config/laravels.php中修改配置task_ipc_mode为1或2，参考 https://wiki.swoole.com/wiki/page/296.html
-            $ret = Task::deliver(new TestTask('task data'), true);
+            // 注意：修改config/laravels.php，配置task_ipc_mode为1或2，参考 https://wiki.swoole.com/wiki/page/296.html
+            $ret = Task::deliver(new TestTask('task data'));
             var_dump($ret);
         }
         // throw new \Exception('an exception');// 此时抛出的异常上层会忽略，并记录到Swoole日志，需要开发者try/catch捕获处理
@@ -635,7 +662,7 @@ class TestCronJob extends CronJob
 
     1.安装[inotify](http://pecl.php.net/package/inotify)扩展。
 
-    2.开启[配置项](https://github.com/hhxsv5/laravel-s/blob/master/Settings.md)。
+    2.开启[配置项](https://github.com/hhxsv5/laravel-s/blob/master/Settings-CN.md#inotify_reloadenable)。
 
     3.注意：`inotify`只有在`Linux`内修改文件才能收到文件变更事件，建议使用最新版Docker，[Vagrant解决方案](https://github.com/mhallin/vagrant-notify-forwarder)。
 
@@ -664,6 +691,8 @@ class TestCronJob extends CronJob
     # 监听app目录
     ./bin/inotify ./app
     ```
+
+- 当以上方法都不行时，终极解决方案：配置`max_request=1,worker_num=1`，这样`Worker`进程处理完一个请求就会重启，这种方法的性能非常差，`故仅限在开发环境使用`。
 
 ## 在你的项目中使用`SwooleServer`实例
 
@@ -934,26 +963,23 @@ class WebSocketService implements WebSocketHandlerInterface
     use Swoole\Process;
     class TestProcess implements CustomProcessInterface
     {
-        public static function getName()
-        {
-            // 进程名称
-            return 'test';
-        }
+        /**
+         * @var bool 退出标记，用于Reload更新
+         */
+        private static $quit = false;
+
         public static function callback(Server $swoole, Process $process)
         {
             // 进程运行的代码，不能退出，一旦退出Manager进程会自动再次创建该进程。
-            \Log::info(__METHOD__, [posix_getpid(), $swoole->stats()]);
-            while (true) {
-                \Log::info('Do something');
+            while (!self::$quit) {
+                \Log::info('Test process: running');
                 // sleep(1); // Swoole < 2.1
-                Coroutine::sleep(1); // Swoole>=2.1 callback()方法已自动创建了协程。
+                Coroutine::sleep(1); // Swoole>=2.1 已自动为callback()方法创建了协程并启用了协程Runtime。
                 // 自定义进程中也可以投递Task，但不支持Task的finish()回调。
-                // 注意：
-                // 1.参数2需传true
-                // 2.config/laravels.php中修改配置task_ipc_mode为1或2，参考 https://wiki.swoole.com/wiki/page/296.html
-                $ret = Task::deliver(new TestTask('task data'), true);
+                // 注意：修改config/laravels.php，配置task_ipc_mode为1或2，参考 https://wiki.swoole.com/wiki/page/296.html
+                $ret = Task::deliver(new TestTask('task data'));
                 var_dump($ret);
-                // 上层会捕获callback中抛出的异常，并记录到Swoole日志，如果异常数达到10次，此进程会退出，Manager进程会重新创建进程，所以建议开发者自行try/catch捕获，避免创建进程过于频繁。
+                // 上层会捕获callback中抛出的异常，并记录到Swoole日志，然后此进程会退出，3秒后Manager进程会重新创建进程，所以需要开发者自行try/catch捕获异常，避免频繁创建进程。
                 // throw new \Exception('an exception');
             }
         }
@@ -962,7 +988,9 @@ class WebSocketService implements WebSocketHandlerInterface
         {
             // Stop the process...
             // Then end process
-            $process->exit(0);
+            \Log::info('Test process: reloading');
+            self::$quit = true;
+            // $process->exit(0); // 强制退出进程
         }
     }
     ```
@@ -973,16 +1001,56 @@ class WebSocketService implements WebSocketHandlerInterface
     // 修改文件 config/laravels.php
     // ...
     'processes' => [
-        [
+        'test' => [ // Key为进程名
             'class'    => \App\Processes\TestProcess::class,
             'redirect' => false, // 是否重定向输入输出
-            'pipe'     => 0 // 管道类型：0不创建管道，1创建SOCK_STREAM类型管道，2创建SOCK_DGRAM类型管道
-            'enable'   => true // 是否启用，默认true
+            'pipe'     => 0,     // 管道类型：0不创建管道，1创建SOCK_STREAM类型管道，2创建SOCK_DGRAM类型管道
+            'enable'   => true,  // 是否启用，默认true
+            //'queue'    => [ // 启用消息队列作为进程间通信，配置空数组表示使用默认参数
+            //    'msg_key'  => 0,    // 消息队列的KEY，默认会使用ftok(__FILE__, 1)
+            //    'mode'     => 2,    // 通信模式，默认为2，表示争抢模式
+            //    'capacity' => 8192, // 单个消息长度，长度受限于操作系统内核参数的限制，默认为8192，最大不超过65536
+            //],
         ],
     ],
     ```
 
-3. 注意：TestProcess::callback()方法不能退出，如果退出次数达到10次，Manager进程将会重新创建进程。
+3. 注意：callback()方法不能退出，如果退出，Manager进程将会重新创建进程。
+
+4. 示例：向自定义进程中写数据。
+
+    ```php
+    // config/laravels.php
+    'processes' => [
+        'test' => [
+            'class'    => \App\Processes\TestProcess::class,
+            'redirect' => false,
+            'pipe'     => 1,
+        ],
+    ],
+    ```
+
+    ```php
+    // app/Processes/TestProcess.php
+    public static function callback(Server $swoole, Process $process)
+    {
+        while ($data = $process->read()) {
+            \Log::info('TestProcess: read data', [$data]);
+            $process->write('TestProcess: ' . $data);
+        }
+    }
+    ```
+
+    ```php
+    // app/Http/Controllers/TestController.php
+    public function testProcessWrite()
+    {
+        /**@var \Swoole\Process $process */
+        $process = app('swoole')->customProcesses['test'];
+        $process->write('TestController: write data' . time());
+        var_dump($pushProcess->read());
+    }
+    ```
 
 ## 其他特性
 
@@ -1053,13 +1121,13 @@ class WorkerStartEvent implements WorkerStartInterface
     
     - 常见的解决方案：
 
-        1. 写一个`XxxCleaner`类来清理单例对象状态，此类需实现接口`Hhxsv5\LaravelS\Illuminate\Cleaners\CleanerInterface`，然后注册到`laravels.php`的`cleaners`中。
+        1. 写一个`XxxCleaner`清理器类来清理单例对象状态，此类需实现接口`Hhxsv5\LaravelS\Illuminate\Cleaners\CleanerInterface`，然后注册到`laravels.php`的`cleaners`中。
         
         2. 用一个`中间件`来`重置`单例对象的状态。
 
-        3. 如果是以`ServiceProvider`注册的单例对象，可添加该`ServiceProvider`到`laravels.php`的`register_providers`中，这样每次请求会重新注册该`ServiceProvider`，重新实例化单例对象，[参考](https://github.com/hhxsv5/laravel-s/blob/master/Settings-CN.md)。
+        3. 如果是以`ServiceProvider`注册的单例对象，可添加该`ServiceProvider`到`laravels.php`的`register_providers`中，这样每次请求会重新注册该`ServiceProvider`，重新实例化单例对象，[参考](https://github.com/hhxsv5/laravel-s/blob/master/Settings-CN.md#register_providers)。
 
-    - LaravelS 已经内置了一些[Cleaner](https://github.com/hhxsv5/laravel-s/blob/master/Settings-CN.md)。
+    - LaravelS 已经内置了一些[清理器](https://github.com/hhxsv5/laravel-s/blob/master/Settings-CN.md#cleaners)。
 
 - [常见问题](https://github.com/hhxsv5/laravel-s/blob/master/KnownIssues-CN.md)：一揽子的已知问题和解决方案。
 
@@ -1229,6 +1297,8 @@ class WorkerStartEvent implements WorkerStartInterface
 | Anthony | 18.88 |
 | *官龙 | 100 |
 | 0o飞舞o0木木 *科 | 288 |
+| *勇 | 66.66 |
+| ibrandshjchen *浩 | 188 |
 
 ## License
 

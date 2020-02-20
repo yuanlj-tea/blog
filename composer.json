@@ -35,7 +35,8 @@
         "chumper/zipper": "^1.0",
         "nmred/kafka-php": "v0.2.0.8",
         "malkusch/lock": "^2.1",
-        "yurunsoft/yurun-lock": "dev-master"
+        "yurunsoft/yurun-lock": "dev-master",
+        "yuanlj/kibana-logger" : "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -84,7 +85,11 @@
     "repositories": {
         "packagist": {
             "type": "composer",
-            "url": "https://mirrors.aliyun.com/composer/"
+            "url": "https://repo.huaweicloud.com/repository/php/"
+        },
+        "kibana-log": {
+            "type": "git",
+            "url": "git@gitlab.ops.kingnet.com:oa_web_dev/kibana-logger.git"
         }
     }
 }

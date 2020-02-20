@@ -2,8 +2,8 @@
 
 namespace Hhxsv5\LaravelS\Console;
 
+use Hhxsv5\LaravelS\Illuminate\LogTrait;
 use Hhxsv5\LaravelS\LaravelS;
-use Hhxsv5\LaravelS\Swoole\Traits\LogTrait;
 use Swoole\Process;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -164,8 +164,16 @@ EOS;
                     sleep(1);
                     $time++;
                 }
-                if (file_exists($pidFile)) {
-                    unlink($pidFile);
+                $basePath = dirname($pidFile);
+                $deleteFiles = [
+                    $pidFile,
+                    $basePath . '/laravels-custom-processes.pid',
+                    $basePath . '/laravels-timer-process.pid',
+                ];
+                foreach ($deleteFiles as $deleteFile) {
+                    if (file_exists($deleteFile)) {
+                        unlink($deleteFile);
+                    }
                 }
                 $this->info("Swoole [PID={$pid}] is stopped.");
                 return 0;
@@ -197,14 +205,12 @@ EOS;
             return;
         }
 
-        // Reload worker process
+        // Reload worker processes
         $pid = file_get_contents($pidFile);
         if (!$pid || !self::kill($pid, 0)) {
             $this->error("Swoole [PID={$pid}] does not exist, or permission denied.");
             return;
         }
-
-        // Reload worker processes
         if (self::kill($pid, SIGUSR1)) {
             $this->info("Swoole [PID={$pid}] is reloaded.");
         } else {
@@ -289,7 +295,7 @@ EOS;
     public static function kill($pid, $sig)
     {
         try {
-            return Process::kill($pid, $sig);
+            return Process::kill((int)$pid, $sig);
         } catch (\Exception $e) {
             return false;
         }

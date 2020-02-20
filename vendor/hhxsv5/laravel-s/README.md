@@ -89,7 +89,7 @@ Table of Contents
 
 1.Require package via [Composer](https://getcomposer.org/)([packagist](https://packagist.org/packages/hhxsv5/laravel-s)).
 ```bash
-composer require "hhxsv5/laravel-s:~3.5.0" -vvv
+composer require "hhxsv5/laravel-s:~3.6.0" -vvv
 # Make sure that your composer.lock file is under the VCS
 ```
 
@@ -119,32 +119,43 @@ php artisan laravels publish
 4.Change `config/laravels.php`: listen_ip, listen_port, refer [Settings](https://github.com/hhxsv5/laravel-s/blob/master/Settings.md).
 
 ## Run
-> `php bin/laravels {start|stop|restart|reload|info|help}`
+> `Please read the notices carefully before running`, [Important notices](https://github.com/hhxsv5/laravel-s#important-notices)(IMPORTANT).
 
-`Please read the notices carefully before running`, [Important notices](https://github.com/hhxsv5/laravel-s#important-notices)(IMPORTANT).
+- Commands: `php bin/laravels {start|stop|restart|reload|info|help}`.
 
 | Command | Description |
 | --------- | --------- |
-| `start` | Start LaravelS, list the processes by "*ps -ef&#124;grep laravels*". Support the option "*-d&#124;--daemonize*" to run as a daemon; Support the option "*-e&#124;--env*" to specify the environment to run, such as `--env=testing` will use the configuration file `.env.testing` firstly, this feature requires `Laravel 5.2+` |
-| `stop` | Stop LaravelS |
-| `restart` | Restart LaravelS, support the options "*-d&#124;--daemonize*" and "*-e&#124;--env*" |
-| `reload` | Reload all Task/Worker/Timer processes which contain your business codes, and trigger the method `onReload` of Custom process, CANNOT reload Master/Manger processes. After modifying `config/laravels.php`, you can `only` call `restart` to restart |
-| `info` | Display component version information |
-| `help` | Display help information |
+| start | Start LaravelS, list the processes by "*ps -ef&#124;grep laravels*". Support the option "*-d&#124;--daemonize*" to run as a daemon; Support the option "*-e&#124;--env*" to specify the environment to run, such as `--env=testing` will use the configuration file `.env.testing` firstly, this feature requires `Laravel 5.2+` |
+| stop | Stop LaravelS |
+| restart | Restart LaravelS, support the options "*-d&#124;--daemonize*" and "*-e&#124;--env*" |
+| reload | Reload all Task/Worker/Timer processes which contain your business codes, and trigger the method `onReload` of Custom process, CANNOT reload Master/Manger processes. After modifying `config/laravels.php`, you can `only` call `restart` to restart |
+| info | Display component version information |
+| help | Display help information |
+
+
+- `Runtime` files: `start` will automatically execute `artisan laravels config` and generate these files, developers generally don't need to pay attention to them, it's recommended to add them to `.gitignore`.
+
+| File | Description |
+| --------- | --------- |
+| storage/laravels.json | LaravelS's `runtime` configuration file |
+| storage/laravels.pid | PID file of Master process |
+| storage/laravels-timer-process.pid | PID file of the Timer process |
+| storage/laravels-custom-processes.pid | PID file of all custom processes |
 
 ## Deploy
 > It is recommended to supervise the main process through [Supervisord](http://supervisord.org/), the premise is without option `-d` and to set `swoole.daemonize` to `false`.
 
 ```
 [program:laravel-s-test]
-command=/user/local/bin/php /opt/www/laravel-s-test/bin/laravels start -i
+directory=/var/wwww/laravel-s-test
+command=/usr/local/bin/php bin/laravels start -i
 numprocs=1
 autostart=true
 autorestart=true
 startretries=3
 user=www-data
 redirect_stderr=true
-stdout_logfile=/opt/www/laravel-s-test/storage/logs/supervisord-stdout.log
+stdout_logfile=/var/log/supervisor/%(program_name)s.log
 ```
 
 ## Cooperate with Nginx (Recommended)
@@ -226,8 +237,8 @@ LoadModule proxy_module /yyypath/modules/mod_deflate.so
 
     LoadModule proxy_module /yyypath/modules/mod_proxy.so
     LoadModule proxy_module /yyypath/modules/mod_proxy_balancer.so
-    LoadModule proxy_module /yyypath/modules/mod_lbmethod_byrequests.so.so
-    LoadModule proxy_module /yyypath/modules/mod_proxy_http.so.so
+    LoadModule proxy_module /yyypath/modules/mod_lbmethod_byrequests.so
+    LoadModule proxy_module /yyypath/modules/mod_proxy_http.so
     LoadModule proxy_module /yyypath/modules/mod_slotmem_shm.so
     LoadModule proxy_module /yyypath/modules/mod_rewrite.so
 
@@ -407,6 +418,23 @@ server {
     proxy_read_timeout 60s;
     ```
 
+6.Push data in controller
+
+```php
+namespace App\Http\Controllers;
+class TestController extends Controller
+{
+    public function push()
+    {
+        $fd = 1; // Find fd by userId from a map [userId=>fd].
+        /**@var \Swoole\WebSocket\Server $swoole */
+        $swoole = app('swoole');
+        $success = $swoole->push($fd, 'Push data to fd#1 in Controller');
+        var_dump($success);
+    }
+}
+```
+
 ## Listen events
 
 ### System events
@@ -469,10 +497,8 @@ class TestListener1 extends Listener
         \Log::info(__CLASS__ . ':handle start', [$event->getData()]);
         sleep(2);// Simulate the slow codes
         // Deliver task in CronJob, but NOT support callback finish() of task.
-        // Note:
-        // 1.Set parameter 2 to true
-        // 2.Modify task_ipc_mode to 1 or 2 in config/laravels.php, see https://www.swoole.co.uk/docs/modules/swoole-server/configuration
-        $ret = Task::deliver(new TestTask('task data'), true);
+        // Note: Modify task_ipc_mode to 1 or 2 in config/laravels.php, see https://www.swoole.co.uk/docs/modules/swoole-server/configuration
+        $ret = Task::deliver(new TestTask('task data'));
         var_dump($ret);
         // throw new \Exception('an exception');// all exceptions will be ignored, then record them into Swoole log, you need to try/catch them
     }
@@ -498,7 +524,10 @@ class TestListener1 extends Listener
 ```php
 // Create instance of event and fire it, "fire" is asynchronous.
 use Hhxsv5\LaravelS\Swoole\Task\Event;
-$success = Event::fire(new TestEvent('event data'));
+$event = new TestEvent('event data');
+// $event->delay(10); // Delay 10 seconds to fire event
+// $event->setTries(3); // When an error occurs, try 3 times in total
+$success = Event::fire($event);
 var_dump($success);// Return true if sucess, otherwise false
 ```
 
@@ -539,6 +568,7 @@ class TestTask extends Task
 use Hhxsv5\LaravelS\Swoole\Task\Task;
 $task = new TestTask('task data');
 // $task->delay(3);// delay 3 seconds to deliver task
+// $task->setTries(3); // When an error occurs, try 3 times in total
 $ret = Task::deliver($task);
 var_dump($ret);// Return true if sucess, otherwise false
 ```
@@ -580,10 +610,8 @@ class TestCronJob extends CronJob
             \Log::info(__METHOD__, ['stop', $this->i, microtime(true)]);
             $this->stop(); // Stop this cron job
             // Deliver task in CronJob, but NOT support callback finish() of task.
-            // Note:
-            // 1.Set parameter 2 to true
-            // 2.Modify task_ipc_mode to 1 or 2 in config/laravels.php, see https://www.swoole.co.uk/docs/modules/swoole-server/configuration
-            $ret = Task::deliver(new TestTask('task data'), true);
+            // Note: Modify task_ipc_mode to 1 or 2 in config/laravels.php, see https://www.swoole.co.uk/docs/modules/swoole-server/configuration
+            $ret = Task::deliver(new TestTask('task data'));
             var_dump($ret);
         }
         // throw new \Exception('an exception');// all exceptions will be ignored, then record them into Swoole log, you need to try/catch them
@@ -621,7 +649,7 @@ class TestCronJob extends CronJob
 
     1.Install [inotify](http://pecl.php.net/package/inotify) extension.
 
-    2.Turn on the switch in [Settings](https://github.com/hhxsv5/laravel-s/blob/master/Settings.md).
+    2.Turn on the switch in [Settings](https://github.com/hhxsv5/laravel-s/blob/master/Settings.md#inotify_reloadenable).
 
     3.Notice: Modify the file only in `Linux` to receive the file change events. It's recommended to use the latest Docker. [Vagrant Solution](https://github.com/mhallin/vagrant-notify-forwarder).
 
@@ -651,6 +679,7 @@ class TestCronJob extends CronJob
     ./bin/inotify ./app
     ```
 
+- When the above methods does not work, the ultimate solution: set `max_request=1,worker_num=1`, so that `Worker` process will restart after processing a request. The performance of this method is very poor, `so only development environment use`.
 
 ## Get the instance of `SwooleServer` in your project
 
@@ -674,7 +703,7 @@ var_dump($swoole->stats());// Singleton
     // ...
     'swoole_tables'  => [
         // Scene：bind UserId & FD in WebSocket
-        'ws' => [// The Key is table name, will add suffix "Table" to avoid naming conficts. Here defined a table named "wsTable"
+        'ws' => [// The Key is table name, will add suffix "Table" to avoid naming conflicts. Here defined a table named "wsTable"
             'size'   => 102400,// The max size
             'column' => [// Define the columns
                 ['name' => 'value', 'type' => \Swoole\Table::TYPE_INT, 'size' => 8],
@@ -922,26 +951,23 @@ To make our main server support more protocols not just Http and WebSocket, we b
     use Swoole\Process;
     class TestProcess implements CustomProcessInterface
     {
-        public static function getName()
-        {
-            // The name of process
-            return 'test';
-        }
+        /**
+         * @var bool Quit tag for Reload updates
+         */
+        private static $quit = false;
+
         public static function callback(Server $swoole, Process $process)
         {
             // The callback method cannot exit. Once exited, Manager process will automatically create the process 
-            \Log::info(__METHOD__, [posix_getpid(), $swoole->stats()]);
-            while (true) {
-                \Log::info('Do something');
+            while (!self::$quit) {
+                \Log::info('Test process: running');
                 // sleep(1); // Swoole < 2.1
-                Coroutine::sleep(1); // Swoole>=2.1 Coroutine will be automatically created for callback().
+                Coroutine::sleep(1); // Swoole>=2.1: Coroutine & Runtime will be automatically enabled for callback().
                  // Deliver task in custom process, but NOT support callback finish() of task.
-                // Note:
-                // 1.Set parameter 2 to true
-                // 2.Modify task_ipc_mode to 1 or 2 in config/laravels.php, see https://www.swoole.co.uk/docs/modules/swoole-server/configuration
-                $ret = Task::deliver(new TestTask('task data'), true);
+                // Note: Modify task_ipc_mode to 1 or 2 in config/laravels.php, see https://www.swoole.co.uk/docs/modules/swoole-server/configuration
+                $ret = Task::deliver(new TestTask('task data'));
                 var_dump($ret);
-                // The upper layer will capture the exception thrown in the callback and record it to the Swoole log. If the number of exceptions reaches 10, the process will exit and the Manager process will re-create the process. Therefore, developers are encouraged to try/catch to avoid creating the process too frequently.
+                // The upper layer will catch the exception thrown in the callback and record it in the Swoole log, and then this process will exit. The Manager process will re-create the process after 3 seconds, so developers need to try / catch to catch the exception by themselves to avoid frequent process creation.
                 // throw new \Exception('an exception');
             }
         }
@@ -950,7 +976,9 @@ To make our main server support more protocols not just Http and WebSocket, we b
         {
             // Stop the process...
             // Then end process
-            $process->exit(0);
+            \Log::info('Test process: reloading');
+            self::$quit = true;
+            // $process->exit(0); // Force exit process
         }
     }
     ```
@@ -961,16 +989,56 @@ To make our main server support more protocols not just Http and WebSocket, we b
     // Edit `config/laravels.php`
     // ...
     'processes' => [
-        [
+        'test' => [ // Key name is process name
             'class'    => \App\Processes\TestProcess::class,
             'redirect' => false, // Whether redirect stdin/stdout, true or false
-            'pipe'     => 0 // The type of pipeline, 0: no pipeline 1: SOCK_STREAM 2: SOCK_DGRAM
-            'enable'   => true // Whether to enable, default true
+            'pipe'     => 0,     // The type of pipeline, 0: no pipeline 1: SOCK_STREAM 2: SOCK_DGRAM
+            'enable'   => true,  // Whether to enable, default true
+            //'queue'    => [ // Enable message queue as inter-process communication, configure empty array means use default parameters
+            //    'msg_key'  => 0,    // The key of the message queue. Default: ftok(__FILE__, 1).
+            //    'mode'     => 2,    // Communication mode, default is 2, which means contention mode
+            //    'capacity' => 8192, // The length of a single message, is limited by the operating system kernel parameters. The default is 8192, and the maximum is 65536
+            //],
         ],
     ],
     ```
 
-3. Note: The TestProcess::callback() method cannot quit. If the number of quit reaches 10, the Manager process will re-create the process.
+3. Note: The callback() cannot quit. If quit, the Manager process will re-create the process.
+
+4. Example: Write data to a custom process.
+
+    ```php
+    // config/laravels.php
+    'processes' => [
+        'test' => [
+            'class'    => \App\Processes\TestProcess::class,
+            'redirect' => false,
+            'pipe'     => 1,
+        ],
+    ],
+    ```
+
+    ```php
+    // app/Processes/TestProcess.php
+    public static function callback(Server $swoole, Process $process)
+    {
+        while ($data = $process->read()) {
+            \Log::info('TestProcess: read data', [$data]);
+            $process->write('TestProcess: ' . $data);
+        }
+    }
+    ```
+
+    ```php
+    // app/Http/Controllers/TestController.php
+    public function testProcessWrite()
+    {
+        /**@var \Swoole\Process $process */
+        $process = app('swoole')->customProcesses['test'];
+        $process->write('TestController: write data' . time());
+        var_dump($pushProcess->read());
+    }
+    ```
 
 ## Other features
 
@@ -1046,9 +1114,9 @@ class WorkerStartEvent implements WorkerStartInterface
 
         2. `Reset` status of singleton instances by `Middleware`.
 
-        1. Re-register `ServiceProvider`, add `XxxServiceProvider` into `register_providers` of file `laravels.php`. So that reinitialize singleton instances in every request [Refer](https://github.com/hhxsv5/laravel-s/blob/master/Settings.md).
+        1. Re-register `ServiceProvider`, add `XxxServiceProvider` into `register_providers` of file `laravels.php`. So that reinitialize singleton instances in every request [Refer](https://github.com/hhxsv5/laravel-s/blob/master/Settings.md#register_providers).
     
-    - LaravelS has built in some [Cleaners](https://github.com/hhxsv5/laravel-s/blob/master/Settings.md).
+    - LaravelS has built in some [cleaners](https://github.com/hhxsv5/laravel-s/blob/master/Settings.md#cleaners).
 
 - [Known issues](https://github.com/hhxsv5/laravel-s/blob/master/KnownIssues.md): a package of known issues and solutions.
 

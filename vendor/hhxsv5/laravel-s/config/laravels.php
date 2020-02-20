@@ -33,7 +33,7 @@ return [
         //],
     ],
     'timer'                    => [
-        'enable'        => false,
+        'enable'        => env('LARAVELS_TIMER', false),
         'jobs'          => [
             // Enable LaravelScheduleJob to run `php artisan schedule:run` every 1 minute, replace Linux Crontab
             //\Hhxsv5\LaravelS\Illuminate\LaravelScheduleJob::class,
@@ -47,18 +47,7 @@ return [
     'swoole_tables'            => [],
     'register_providers'       => [],
     'cleaners'                 => [
-        // If you use the session/authentication/passport in your project
-        // Hhxsv5\LaravelS\Illuminate\Cleaners\SessionCleaner::class,
-        // Hhxsv5\LaravelS\Illuminate\Cleaners\AuthCleaner::class,
-
-        // If you use the package "tymon/jwt-auth" in your project
-        // Hhxsv5\LaravelS\Illuminate\Cleaners\SessionCleaner::class,
-        // Hhxsv5\LaravelS\Illuminate\Cleaners\AuthCleaner::class,
-        // Hhxsv5\LaravelS\Illuminate\Cleaners\JWTCleaner::class,
-
-        // If you use the package "spatie/laravel-menu" in your project
-        // Hhxsv5\LaravelS\Illuminate\Cleaners\MenuCleaner::class,
-        // ...
+        // See LaravelS's built-in cleaners: https://github.com/hhxsv5/laravel-s/blob/master/Settings.md#cleaners
     ],
     'destroy_controllers'      => [
         'enable'        => false,
@@ -69,13 +58,13 @@ return [
     'swoole'                   => [
         'daemonize'          => env('LARAVELS_DAEMONIZE', false),
         'dispatch_mode'      => 2,
-        'reactor_num'        => function_exists('swoole_cpu_num') ? swoole_cpu_num() * 2 : 4,
-        'worker_num'         => function_exists('swoole_cpu_num') ? swoole_cpu_num() * 2 : 8,
-        //'task_worker_num'    => function_exists('swoole_cpu_num') ? swoole_cpu_num() * 2 : 8,
+        'reactor_num'        => env('LARAVELS_REACTOR_NUM', function_exists('swoole_cpu_num') ? swoole_cpu_num() * 2 : 4),
+        'worker_num'         => env('LARAVELS_WORKER_NUM', function_exists('swoole_cpu_num') ? swoole_cpu_num() * 2 : 8),
+        //'task_worker_num'    => env('LARAVELS_TASK_WORKER_NUM', function_exists('swoole_cpu_num') ? swoole_cpu_num() * 2 : 8),
         'task_ipc_mode'      => 1,
-        'task_max_request'   => 8000,
+        'task_max_request'   => env('LARAVELS_TASK_MAX_REQUEST', 8000),
         'task_tmpdir'        => @is_writable('/dev/shm/') ? '/dev/shm' : '/tmp',
-        'max_request'        => 8000,
+        'max_request'        => env('LARAVELS_MAX_REQUEST', 8000),
         'open_tcp_nodelay'   => true,
         'pid_file'           => storage_path('laravels.pid'),
         'log_file'           => storage_path(sprintf('logs/swoole-%s.log', date('Y-m'))),

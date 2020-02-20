@@ -2,12 +2,13 @@
 
 namespace Hhxsv5\LaravelS\Swoole;
 
+use Hhxsv5\LaravelS\Illuminate\LogTrait;
+use Hhxsv5\LaravelS\Swoole\Process\ProcessTitleTrait;
 use Hhxsv5\LaravelS\Swoole\Socket\PortInterface;
+use Hhxsv5\LaravelS\Swoole\Task\BaseTask;
 use Hhxsv5\LaravelS\Swoole\Task\Event;
 use Hhxsv5\LaravelS\Swoole\Task\Listener;
 use Hhxsv5\LaravelS\Swoole\Task\Task;
-use Hhxsv5\LaravelS\Swoole\Traits\LogTrait;
-use Hhxsv5\LaravelS\Swoole\Traits\ProcessTitleTrait;
 use Swoole\Http\Request as SwooleRequest;
 use Swoole\Http\Response as SwooleResponse;
 use Swoole\Http\Server as HttpServer;
@@ -111,7 +112,7 @@ class Server
                 $eventHandler('onMessage', func_get_args());
             });
 
-            $this->swoole->on('Close', function (\swoole_websocket_server $server, $fd, $reactorId) use ($eventHandler) {
+            $this->swoole->on('Close', function (WebSocketServer $server, $fd, $reactorId) use ($eventHandler) {
                 $clientInfo = $server->getClientInfo($fd);
                 if (isset($clientInfo['websocket_status']) && $clientInfo['websocket_status'] === \WEBSOCKET_STATUS_FRAME) {
                     $eventHandler('onClose', func_get_args());
@@ -266,8 +267,8 @@ class Server
 
     public function onPipeMessage(HttpServer $server, $srcWorkerId, $message)
     {
-        if ($message instanceof Task) {
-            $this->onTask($server, uniqid('', true), $srcWorkerId, $message);
+        if ($message instanceof BaseTask) {
+            $this->onTask($server, null, $srcWorkerId, $message);
         }
     }
 
@@ -297,25 +298,21 @@ class Server
     {
         $eventClass = get_class($event);
         if (!isset($this->conf['events'][$eventClass])) {
-            return;
+            return false;
         }
 
-        $listenerClasses = $this->conf['events'][$eventClass];
-        if (!is_array($listenerClasses)) {
-            $listenerClasses = (array)$listenerClasses;
-        }
+        $listenerClasses = (array)$this->conf['events'][$eventClass];
         foreach ($listenerClasses as $listenerClass) {
-            /**
-             * @var Listener $listener
-             */
+            /**@var Listener $listener */
             $listener = new $listenerClass();
             if (!($listener instanceof Listener)) {
                 throw new \InvalidArgumentException(sprintf('%s must extend the abstract class %s', $listenerClass, Listener::class));
             }
             $this->callWithCatchException(function () use ($listener, $event) {
                 $listener->handle($event);
-            });
+            }, [], $event->getTries());
         }
+        return true;
     }
 
     protected function handleTask(Task $task)
@@ -323,7 +320,7 @@ class Server
         return $this->callWithCatchException(function () use ($task) {
             $task->handle();
             return true;
-        });
+        }, [], $task->getTries());
     }
 
     protected function fireEvent($event, $interface, array $arguments)

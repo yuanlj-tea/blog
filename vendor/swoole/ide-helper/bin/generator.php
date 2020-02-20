@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+
 /**
  * To generate IDE help files of Swoole.
  */
@@ -27,5 +28,5 @@ $generators = [
 ];
 foreach ($generators as $generator) {
     $generator->export();
-    echo "IDE help files for {$generator->getExtension()} {$generator->getVersion()} are generated successfully.\n";
+    echo "IDE help files for {$generator->getExtension()} {$generator->getVersion()} generated successfully.\n";
 }
