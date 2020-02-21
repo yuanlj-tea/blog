@@ -36,7 +36,7 @@
         "nmred/kafka-php": "v0.2.0.8",
         "malkusch/lock": "^2.1",
         "yurunsoft/yurun-lock": "dev-master",
-        "yuanlj/kibana-logger" : "dev-master"
+        "yuanlj/kibana-logger" : "v1.0.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

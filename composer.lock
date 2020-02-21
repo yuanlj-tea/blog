@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1e18948ec00a75f9ef69569613b8d73c",
+    "content-hash": "26f8b99a679f2dcfcf842a8c267c2a39",
     "packages": [
         {
             "name": "amphp/amp",
@@ -988,17 +988,17 @@
         },
         {
             "name": "dompdf/dompdf",
-            "version": "v0.8.4",
+            "version": "v0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "8f49b3b01693f51037dd50da81090beba1b5c005"
+                "reference": "6782abfc090b132134cd6cea0ec6d76f0fce2c56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://repo.huaweicloud.com/repository/php/dist/dompdf/dompdf/dompdf-dompdf-v0.8.4-8f49b3b0.zip",
-                "reference": "8f49b3b01693f51037dd50da81090beba1b5c005",
-                "shasum": "c26445a6c255927c2c04e10fb8dc6d4ee61fa2d4"
+                "url": "https://repo.huaweicloud.com/repository/php/dist/dompdf/dompdf/dompdf-dompdf-v0.8.5-6782abfc.zip",
+                "reference": "6782abfc090b132134cd6cea0ec6d76f0fce2c56",
+                "shasum": "8aee37f83d4f33e1749cdcd7ef8b6259d115f289"
             },
             "require": {
                 "ext-dom": "*",
@@ -1049,7 +1049,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2020-01-20T17:00:46+00:00"
+            "time": "2020-02-20T03:52:51+00:00"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -4808,7 +4808,7 @@
         },
         {
             "name": "yuanlj/kibana-logger",
-            "version": "dev-master",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.ops.kingnet.com:oa_web_dev/kibana-logger.git",
@@ -6308,8 +6308,7 @@
     "stability-flags": {
         "tymon/jwt-auth": 5,
         "h2akim/pdfwatermarker": 20,
-        "yurunsoft/yurun-lock": 20,
-        "yuanlj/kibana-logger": 20
+        "yurunsoft/yurun-lock": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
