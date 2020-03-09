@@ -16,7 +16,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
-        // \App\Http\Middleware\Cors::class,
+        \App\Http\Middleware\Cors::class, //由于laravel对options请求做了特殊处理(统一返回200状态码,不添加cors响应头),在此全局中间件处添加统一cors中间件,添加响应头
 
         //OAuth2 Server
         // \LucaDegasperi\OAuth2Server\Middleware\OAuthExceptionHandlerMiddleware::class,
