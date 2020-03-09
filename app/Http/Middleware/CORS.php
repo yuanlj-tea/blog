@@ -10,8 +10,8 @@ class CORS
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -21,27 +21,30 @@ class CORS
 
         $path = [
             'login/yunwei',
-            '/login'
+            '/login',
+            'api/jwt/login'
         ];
         $allowCorsPath = [
-            'rule/detail'
+            'api/jwt/login'
         ];
 
         $requestPath = urldecode($request->path());
         $response = $next($request);
-        //if (in_array($requestPath, $path) && in_array($origin, $all_url)) {
-            $response->header('Access-Control-Allow-Origin', $origin);
-            $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, Accept,Authorization,X-Requested-With');
+        // if (in_array($requestPath, $path) && in_array($origin, $all_url)) {
+        $response->header('Access-Control-Allow-Origin', '*');
+        $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, Accept,Authorization,X-Requested-With,foo');
+        $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT , X-CSRF-TOKEN');
+        $response->header('Access-Control-Allow-Credentials', 'true');
+        $response->header('Access-Control-Max-Age',1728000);
+
+        return $response;
+        /*} elseif (Str::contains($requestPath, $allowCorsPath) && in_array('header', get_class_methods(get_class($response)))) {
+            $response->header('Access-Control-Allow-Origin', '*');
+            $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, Accept');
             $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS,X-CSRF-TOKEN');
             $response->header('Access-Control-Allow-Credentials', 'true');
             return $response;
-        //} elseif (Str::contains($requestPath, $allowCorsPath) && in_array('header', get_class_methods(get_class($response)))) {
-        //     $response->header('Access-Control-Allow-Origin', '*');
-        //     $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, Accept');
-        //     $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS,X-CSRF-TOKEN');
-        //     $response->header('Access-Control-Allow-Credentials', 'true');
-        //     return $response;
-        // }
+        }*/
 
         return $response;
     }
