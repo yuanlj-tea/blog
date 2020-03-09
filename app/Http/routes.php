@@ -75,7 +75,7 @@ Route::group(['prefix' => 'swagger'], function () {
 });
 
 // jwt token(tymon)
-Route::group(['prefix' => 'api/jwt', 'namespace' => 'Api','middleware'=>['cors']], function () {
+Route::group(['prefix' => 'api/jwt', 'namespace' => 'Api','middleware'=>['web']], function () {
     // 登陆
     Route::any('login', 'ApiController@login');
     // 测试jwt生成的方式

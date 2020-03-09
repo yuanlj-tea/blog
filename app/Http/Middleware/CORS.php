@@ -29,7 +29,7 @@ class CORS
         if (in_array($requestPath, $allowCorsPath) && in_array($origin, $allow_url)) {
             $response->header('Access-Control-Allow-Origin', $origin);
             $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, Accept,Authorization,X-Requested-With,foo');
-            $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT , X-CSRF-TOKEN');
+            $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT , OPTIONS');
             $response->header('Access-Control-Allow-Credentials', 'true');
             $response->header('Access-Control-Max-Age', 1728000);
             if($request->isMethod('options')){
@@ -40,8 +40,8 @@ class CORS
             return $response;
         } elseif (Str::contains($requestPath, $allowCorsPath) && in_array('header', get_class_methods(get_class($response)))) {
             $response->header('Access-Control-Allow-Origin', '*');
-            $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, Accept');
-            $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS,X-CSRF-TOKEN');
+            $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, Accept,Authorization,X-Requested-With,foo');
+            $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS');
             $response->header('Access-Control-Allow-Credentials', 'true');
             return $response;
         }

@@ -45,6 +45,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if($e instanceof \Illuminate\Session\TokenMismatchException){
+            return response(json_encode(['code'=>0,'info'=>'缺少csrf_token']),200)->header('Access-Control-Allow-Origin','*')
+                ->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, Accept,Authorization,X-Requested-With,foo')
+                ->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT , X-CSRF-TOKEN,OPTIONS')
+                ->header('Access-Control-Allow-Credentials', 'true');
+        }
         return parent::render($request, $e);
     }
 }
