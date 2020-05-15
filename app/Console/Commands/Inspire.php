@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Http\Model\Article;
+use App\Libs\BloomFilter\FilteRepeatedComments;
 use App\Libs\Common;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Inspiring;
@@ -35,8 +36,35 @@ class Inspire extends Command
      */
     public function handle()
     {
+        /*$this->info('begin');
+        $s = microtime(true);
+        $this->info($s);
+
+        $redis = RedisPHP::connection();
+        $range = range(1, 10000000);
+        foreach ($range as $v) {
+            $redis->setbit('test',$v , 1);
+        }
+        $e = microtime(true);
+        $this->info(sprintf("%.2f", ($e - $s)));
+        pd('end');*/
+
+
+        ini_set('memory_limit', '4096M');
+        $sm = memory_get_usage();
+
+        $range = range(1, 10000000);
+
+        $em = memory_get_usage();
+        pd(($em-$sm) / 1024 / 1024);
+
+
+
+
+
+
         // DB::connection()->disableQueryLog();
-        ini_set('memory_limit','4096M');
+        ini_set('memory_limit', '4096M');
         $s = microtime(true);
 
         //time:7.64s;memory:1240.304688 mb
@@ -73,15 +101,15 @@ class Inspire extends Command
         // }
 
         //time:0.41s;memory:29.054688 mb
-        foreach(DB::table('test')->where('id','<=',100000)->cursor() as $v){
+        foreach (DB::table('test')->where('id', '<=', 100000)->cursor() as $v) {
             // pp($v->num);
         }
 
         $e = microtime(true);
-        $time = sprintf("%.2f",($e-$s));
+        $time = sprintf("%.2f", ($e - $s));
         $memory = memory_get_peak_usage(true) / 1024 / 1024;
 
-        $this->info(sprintf("time:%ss;memory:%f mb",$time,$memory));
+        $this->info(sprintf("time:%ss;memory:%f mb", $time, $memory));
         // Article::get();
         // foreach(Article::cursor() as $v){
         //     pp($v->art_title);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Libs\BloomFilter\BloomFilterHash;
 use App\Libs\BloomFilter\FilteRepeatedComments;
 use AjaxResponse;
 use Illuminate\Http\Request;
@@ -20,7 +21,12 @@ class BloomFiler extends Controller
 
     public function addValue()
     {
-        $range = range('a', 'z');
+        $hash = new BloomFilterHash();
+        $res = $hash->JSHash('test');
+        pd($res);
+
+
+        $range = range(1, 1000000);
         foreach ($range as $k => $v) {
             $this->bloom->add($v);
         }
@@ -29,7 +35,7 @@ class BloomFiler extends Controller
 
     public function exists(Request $request)
     {
-        $str = $request->input('str', 'z');
+        $str = $request->input('str', 1);
         $res = $this->bloom->exists($str);
         return AjaxResponse::success($res);
     }
