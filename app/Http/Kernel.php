@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CustomThrottleRequests;
 use App\Http\Middleware\ValidateSignature;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -42,6 +43,9 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
         ],
+        'api_v1' => [
+            'throttle.custom:2,1'
+        ],
     ];
 
     /**
@@ -56,6 +60,7 @@ class Kernel extends HttpKernel
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'throttle.custom' => CustomThrottleRequests::class,
         'admin.login' => \App\Http\Middleware\AdminLogin::class,
         'cors' => \App\Http\Middleware\CORS::class,
         'my-jwt.auth' => \App\Http\Middleware\authJWT::class,

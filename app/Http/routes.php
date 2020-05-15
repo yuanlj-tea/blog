@@ -192,7 +192,7 @@ Route::group(['prefix' => 'sep_table'], function () {
 });
 
 //布隆过滤器
-Route::group(['prefix' => 'bloom', 'namespace' => 'Home'], function () {
+Route::group(['prefix' => 'bloom', 'namespace' => 'Home','middleware' => 'api_v1'], function () {
     Route::get('addValue','BloomFiler@addValue');
     Route::get('exists','BloomFiler@exists');
 });
