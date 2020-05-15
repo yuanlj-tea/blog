@@ -75,7 +75,7 @@ Route::group(['prefix' => 'swagger'], function () {
 });
 
 // jwt token(tymon)
-Route::group(['prefix' => 'api/jwt', 'namespace' => 'Api','middleware'=>['web']], function () {
+Route::group(['prefix' => 'api/jwt', 'namespace' => 'Api', 'middleware' => ['web']], function () {
     // 登陆
     Route::any('login', 'ApiController@login');
     // 测试jwt生成的方式
@@ -189,4 +189,10 @@ Route::group(['namespace' => 'SSO', 'prefix' => 'sso'], function () {
 //分库分表相关
 Route::group(['prefix' => 'sep_table'], function () {
     Route::any('/', 'SepTable@index');
+});
+
+//布隆过滤器
+Route::group(['prefix' => 'bloom', 'namespace' => 'Home'], function () {
+    Route::get('addValue','BloomFiler@addValue');
+    Route::get('exists','BloomFiler@exists');
 });
