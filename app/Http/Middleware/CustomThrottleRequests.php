@@ -6,6 +6,11 @@ use Closure;
 use Illuminate\Cache\RateLimiter;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * 自定义throttle限流
+ * Class CustomThrottleRequests
+ * @package App\Http\Middleware
+ */
 class CustomThrottleRequests
 {
     /**
@@ -36,7 +41,10 @@ class CustomThrottleRequests
      */
     public function handle($request, Closure $next, $maxAttempts = 60, $decayMinutes = 1)
     {
+        //限流key增加用户id
+        $user_id = $request->input('id', 1);
         $key = $this->resolveRequestSignature($request);
+        $key = $key . "_" . $user_id;
 
         if ($this->limiter->tooManyAttempts($key, $maxAttempts, $decayMinutes)) {
             return $this->buildResponse($key, $maxAttempts);
@@ -72,16 +80,15 @@ class CustomThrottleRequests
      */
     protected function buildResponse($key, $maxAttempts)
     {
+        $retryAfter = $this->limiter->availableIn($key);
+
         $message = json_encode([
-            'error' => [
-                'message' => 'Too many attempts, please slow down the request.' //may comes from lang file
-            ],
-            'status_code' => 4029 //your custom code
+            'code' => 0,
+            'info' => sprintf("请求频率过高，请%d秒后再访问", $retryAfter)
         ]);
 
-        $response = new Response($message, 429);
+        $response = new Response($message, 200);
 
-        $retryAfter = $this->limiter->availableIn($key);
 
         return $this->addHeaders(
             $response, $maxAttempts,

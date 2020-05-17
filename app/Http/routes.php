@@ -192,7 +192,13 @@ Route::group(['prefix' => 'sep_table'], function () {
 });
 
 //布隆过滤器
-Route::group(['prefix' => 'bloom', 'namespace' => 'Home','middleware' => 'api_v1'], function () {
-    Route::get('addValue','BloomFiler@addValue');
-    Route::get('exists','BloomFiler@exists');
+Route::group(['prefix' => 'bloom', 'namespace' => 'Home', 'middleware' => 'token_bucket_rate_limit'], function () {
+    Route::get('addValue', 'BloomFiler@addValue');
+    Route::get('exists', 'BloomFiler@exists');
+});
+//分布式锁
+Route::group(['prefix' => 'lock', 'namespace' => 'Home'], function () {
+    Route::get('lock','LockTest@lock');
+    Route::get('testLockCallback','LockTest@testLockCallback');
+    Route::get('testBlock','LockTest@testBlock');
 });

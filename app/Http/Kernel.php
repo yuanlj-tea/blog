@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\CustomThrottleRequests;
+use App\Http\Middleware\TokenBucketRatelimit;
 use App\Http\Middleware\ValidateSignature;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -75,6 +76,8 @@ class Kernel extends HttpKernel
         // 验证jwt token
         'validate-jwt' => \App\Http\Middleware\ValidateJwt::class,
         //签名验证
-        'validate-signature' => ValidateSignature::class
+        'validate-signature' => ValidateSignature::class,
+        //自定义基于redis实现的令牌桶限流
+        'token_bucket_rate_limit' => TokenBucketRatelimit::class
     ];
 }

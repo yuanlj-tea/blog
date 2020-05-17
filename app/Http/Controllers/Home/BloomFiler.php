@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home;
 use App\Libs\BloomFilter\BloomFilterHash;
 use App\Libs\BloomFilter\FilteRepeatedComments;
 use AjaxResponse;
+use RedisPHP;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
