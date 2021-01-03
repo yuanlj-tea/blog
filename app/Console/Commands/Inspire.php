@@ -36,6 +36,22 @@ class Inspire extends Command
      */
     public function handle()
     {
+        $data = [];
+        $j = 0;
+        for($i = 0;$i<100000;$i++){
+            $j++;
+            $data[$i]['num'] = $i;
+            if($j == 5000){
+                $this->info('插入'.$j*5000);
+                DB::table('test')->insert($data);
+                $j = 0;
+                $data = [];
+            }
+        }
+        DB::table('test')->insert($data);
+        $this->info('插入'.count($data));
+        die;
+
         /*$this->info('begin');
         $s = microtime(true);
         $this->info($s);
