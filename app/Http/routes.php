@@ -198,7 +198,7 @@ Route::group(['prefix' => 'bloom', 'namespace' => 'Home', 'middleware' => 'token
 });
 //分布式锁
 Route::group(['prefix' => 'lock', 'namespace' => 'Home'], function () {
-    Route::get('lock','LockTest@lock');
+    Route::get('lock','LockTest@lock')->middleware(['throttle.custom:3,1']);
     Route::get('testLockCallback','LockTest@testLockCallback');
     Route::get('testBlock','LockTest@testBlock');
 });
