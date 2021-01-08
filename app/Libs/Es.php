@@ -13,12 +13,12 @@ class Es extends Controller
      * 获取es客户端
      * @return \Elasticsearch\Client
      */
-    public static function getClient()
+    public static function getClient($esHost = '', $esPort = '')
     {
         $hosts = [
             [
-                'host' => env('ES_HOST', '192.168.79.206'),
-                'port' => env('ES_PORT', '9200'),
+                'host' => !empty($esHost) ? $esHost : env('ES_HOST', '192.168.79.206'),
+                'port' => !empty($esPort) ? $esPort : env('ES_PORT', '9200'),
             ]
         ];
 
@@ -156,7 +156,6 @@ class Es extends Controller
 
                         }
                     }
-
 
 
                     $res['data'][] = $value['_source'];

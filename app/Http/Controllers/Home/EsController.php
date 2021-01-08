@@ -210,30 +210,31 @@ class EsController extends Controller
         $param['type'] = $this->es_type;
 
         //select * from blog_article where art_tag like "%苹果%";
-        //$param['body']['query']['match']['art_tag'] = '苹果';
+//        $param['body']['query']['match']['art_tag'] = '苹果';
 
         //select * from blog_article where art_title like '%总局%' and art_id = 5;
-        //$param['body']['query']['bool']['must'] = [
-        //    ['match' => ['art_title'=>'总局']],
-        //    ['match' => ['art_id'=>5]]
-        //];
+//        $param['body']['query']['bool']['must'] = [
+//            ['match' => ['art_title'=>'总局']],
+//            ['match' => ['art_id'=>5]]
+//        ];
 
         //select * from blog_article where art_title like '%总局%' or art_id = 14;
-        //$param['body']['query']['bool']['should'] = [
-        //    ['match' => ['art_title'=>'总局']],
-        //    ['match' => ['art_id'=>14]]
-        //];
+//        $param['body']['query']['bool']['should'] = [
+//            ['match' => ['art_title'=>'总局']],
+//            ['match' => ['art_id'=>14]]
+//        ];
 
         //select * from blog_article where art_id >1 and art_id < 6;
-        // $param['body']['query']['range'] = [
-        //     'art_id' => ['gt' => 1, 'lt' => 6]
-        // ];
+//         $param['body']['query']['range'] = [
+//             'art_id' => ['gt' => 1, 'lt' => 6]
+//         ];
 
         // $param['body']['query']['match']['art_title']['query']='苹';
         // $param['body']['query']['term']['art_tag']='最强大脑,围棋';
-        $param['body']['query']['match']['art_title'] = '果';
+//        $param['body']['query']['match']['art_title'] = '果';
 
-        //p($param,1);
+//        p($param,1);
+//        pd($param);
         $res = Es::getClient()->search($param);
         return AjaxResponse::success($res);
     }
