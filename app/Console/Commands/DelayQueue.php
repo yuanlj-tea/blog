@@ -38,6 +38,14 @@ class DelayQueue extends Command
      */
     public function handle()
     {
+        RedisPHP::pipeline(function ($pipe) {
+            for ($i = 0; $i < 10; $i++) {
+                sleep(1);
+                $pipe->setex("key:$i", 60, $i);
+            }
+        });
+        die;
+
         $script = <<<LUA
     local delayQueue   = KEYS[1]
     local min          = KEYS[2]
