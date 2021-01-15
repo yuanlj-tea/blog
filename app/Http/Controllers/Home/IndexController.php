@@ -31,6 +31,7 @@ class IndexController extends CommonController
 
     public function index(Request $request)
     {
+
         //会触发observer
         $obj = Article::find(14);
         $obj->art_tag = '苹果';
