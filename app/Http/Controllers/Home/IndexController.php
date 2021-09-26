@@ -136,6 +136,9 @@ class IndexController extends CommonController
 
     public function test()
     {
+        \Log::info('test');
+        sleep(3);
+        pd(11);
         $job = (new test(111))->onQueue('testQueue');
         $this->dispatch($job);
         echo 123;
