@@ -230,3 +230,11 @@ if(!function_exists('gen_uid')){
         return $uid;
     }
 }
+
+if (!function_exists('is_json_str')) {
+    function is_json_str($string)
+    {
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
+    }
+}
