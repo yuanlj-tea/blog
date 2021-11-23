@@ -58,7 +58,7 @@ Route::get('vaptcha/downtime', 'VaptchaController@getDownTime');
 Route::get('vaptcha/vaptchaView', 'VaptchaController@vaptchaView');
 
 //测试laravel queue dispatch
-Route::get('/test', 'Home\IndexController@test');
+Route::any('/test', 'Home\IndexController@test');
 Route::get('/lay', 'Home\IndexController@lay');
 //生成二维码
 Route::get('/qrCode', 'Home\IndexController@qrCode');
