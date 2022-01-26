@@ -2,14 +2,18 @@
 
 namespace Hhxsv5\LaravelS\Illuminate;
 
+use Hhxsv5\LaravelS\Components\Prometheus\CollectorProcess;
+use Hhxsv5\LaravelS\Components\Prometheus\TimerProcessMetricsCronJob;
+use Hhxsv5\LaravelS\Swoole\Timer\PrometheusTimerProcessMetricsCronJob;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 
 class LaravelSCommand extends Command
 {
     protected $signature = 'laravels {action? : publish|config|info}
-    {--d|daemonize : Whether run as a daemon for "start & restart"}
-    {--i|ignore : Whether ignore checking process pid for "start & restart"}';
+    {--d|daemonize : Run as a daemon}
+    {--i|ignore : Ignore checking PID file of Master process}
+    {--x=|x-version= : The version(branch) of the current project, stored in $_ENV/$_SERVER}';
 
     protected $description = 'LaravelS console tool';
 
@@ -26,8 +30,8 @@ class LaravelSCommand extends Command
                 $this->publish();
                 break;
             case 'config':
-                $this->prepareConfig();
             case 'info':
+                $this->prepareConfig();
                 $this->showInfo();
                 break;
             default:
@@ -84,7 +88,8 @@ EOS;
     {
         $this->comment('>>> Components');
         $laravelSVersion = '-';
-        $cfg = (array)json_decode(file_get_contents(base_path('composer.lock')), true);
+        $lockFile = base_path('composer.lock');
+        $cfg = file_exists($lockFile) ? json_decode(file_get_contents($lockFile), true) : [];
         if (isset($cfg['packages'])) {
             $packages = array_merge($cfg['packages'], Arr::get($cfg, 'packages-dev', []));
             foreach ($packages as $package) {
@@ -97,11 +102,11 @@ EOS;
         $this->table(['Component', 'Version'], [
             [
                 'PHP',
-                phpversion(),
+                PHP_VERSION,
             ],
             [
-                'Swoole',
-                swoole_version(),
+                extension_loaded('openswoole') ? 'Open Swoole' : 'Swoole',
+                SWOOLE_VERSION,
             ],
             [
                 'LaravelS',
@@ -118,7 +123,8 @@ EOS;
     {
         $this->comment('>>> Protocols');
 
-        $config = (array)json_decode(file_get_contents(base_path('storage/laravels.json')), true);
+        $config = unserialize((string)file_get_contents($this->getConfigPath()));
+        $ssl = isset($config['server']['swoole']['ssl_key_file'], $config['server']['swoole']['ssl_cert_file']);
         $socketType = isset($config['server']['socket_type']) ? $config['server']['socket_type'] : SWOOLE_SOCK_TCP;
         if (in_array($socketType, [SWOOLE_SOCK_UNIX_DGRAM, SWOOLE_SOCK_UNIX_STREAM])) {
             $listenAt = $config['server']['listen_ip'];
@@ -131,7 +137,7 @@ EOS;
                 'Main HTTP',
                 '<info>On</info>',
                 $this->getApplication()->getName(),
-                $listenAt,
+                sprintf('%s://%s', $ssl ? 'https' : 'http', $listenAt),
             ],
         ];
         if (!empty($config['server']['websocket']['enable'])) {
@@ -139,7 +145,7 @@ EOS;
                 'Main WebSocket',
                 '<info>On</info>',
                 $config['server']['websocket']['handler'],
-                $listenAt,
+                sprintf('%s://%s', $ssl ? 'wss' : 'ws', $listenAt),
             ];
         }
 
@@ -153,6 +159,10 @@ EOS;
         ];
         $sockets = isset($config['server']['sockets']) ? $config['server']['sockets'] : [];
         foreach ($sockets as $key => $socket) {
+            if (isset($socket['enable']) && !$socket['enable']) {
+                continue;
+            }
+
             $name = 'Port#' . $key . ' ';
             $name .= isset($socketTypeNames[$socket['type']]) ? $socketTypeNames[$socket['type']] : 'Unknown socket';
             $tableRows [] = [
@@ -178,6 +188,11 @@ EOS;
             return $ret;
         }
 
+        // Fixed $_ENV['APP_ENV']
+        if (isset($_SERVER['APP_ENV'])) {
+            $_ENV['APP_ENV'] = $_SERVER['APP_ENV'];
+        }
+
         $laravelConf = [
             'root_path'           => $svrConf['laravel_base_path'],
             'static_path'         => $svrConf['swoole']['document_root'],
@@ -190,8 +205,12 @@ EOS;
         ];
 
         $config = ['server' => $svrConf, 'laravel' => $laravelConf];
-        $jsonConfig = json_encode($config, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        return file_put_contents(base_path('storage/laravels.json'), $jsonConfig) > 0 ? 0 : 1;
+        return file_put_contents($this->getConfigPath(), serialize($config)) > 0 ? 0 : 1;
+    }
+
+    protected function getConfigPath()
+    {
+        return storage_path('laravels.conf');
     }
 
     protected function preSet(array &$svrConf)
@@ -224,12 +243,28 @@ EOS;
         if (empty($svrConf['timer']['max_wait_time'])) {
             $svrConf['timer']['max_wait_time'] = 5;
         }
+
+        // Configure PrometheusTimerProcessMetricsCronJob automatically
+        if (isset($svrConf['processes']) && !empty($svrConf['timer']['enable'])) {
+            foreach ($svrConf['processes'] as $process) {
+                if ($process['class'] === CollectorProcess::class && (!isset($process['enable']) || $process['enable'])) {
+                    $svrConf['timer']['jobs'][] = TimerProcessMetricsCronJob::class;
+                    break;
+                }
+            }
+        }
+
+        // Set X-Version
+        $xVersion = (string)$this->option('x-version');
+        if ($xVersion !== '') {
+            $_SERVER['X_VERSION'] = $_ENV['X_VERSION'] = $xVersion;
+        }
         return 0;
     }
 
     protected function preCheck(array $svrConf)
     {
-        if (!empty($svrConf['enable_gzip']) && version_compare(swoole_version(), '4.1.0', '>=')) {
+        if (!empty($svrConf['enable_gzip']) && version_compare(SWOOLE_VERSION, '4.1.0', '>=')) {
             $this->error('enable_gzip is DEPRECATED since Swoole 4.1.0, set http_compression of Swoole instead, http_compression is disabled by default.');
             $this->info('If there is a proxy server like Nginx, suggest that enable gzip in Nginx and disable gzip in Swoole, to avoid the repeated gzip compression for response.');
             return 1;
@@ -285,8 +320,8 @@ EOS;
 
         foreach ($todoList as $todo) {
             $toDir = dirname($todo['to']);
-            if (!is_dir($toDir)) {
-                mkdir($toDir, 0755, true);
+            if (!is_dir($toDir) && !mkdir($toDir, 0755, true) && !is_dir($toDir)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $toDir));
             }
             if (file_exists($todo['to'])) {
                 unlink($todo['to']);
@@ -294,12 +329,10 @@ EOS;
             $operation = 'Copied';
             if (empty($todo['link'])) {
                 copy($todo['from'], $todo['to']);
+            } elseif (@link($todo['from'], $todo['to'])) {
+                $operation = 'Linked';
             } else {
-                if (@link($todo['from'], $todo['to'])) {
-                    $operation = 'Linked';
-                } else {
-                    copy($todo['from'], $todo['to']);
-                }
+                copy($todo['from'], $todo['to']);
             }
             chmod($todo['to'], $todo['mode']);
             $this->line("<info>{$operation} file</info> <comment>[{$todo['from']}]</comment> <info>To</info> <comment>[{$todo['to']}]</comment>");

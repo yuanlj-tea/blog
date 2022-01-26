@@ -1,0 +1,26 @@
+{
+    "name": "yuanlj-tea/trace",
+    "description": "trace component",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "php",
+        "open-tracing",
+        "jaeger"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Trace\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "yuanlj",
+            "email": "1107806823@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "jonahgeorge/jaeger-client-php": "^1.3"
+    }
+}

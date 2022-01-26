@@ -29,6 +29,7 @@ class Request
         $server = isset($this->swooleRequest->server) ? $this->swooleRequest->server : [];
         $headers = isset($this->swooleRequest->header) ? $this->swooleRequest->header : [];
         $__FILES = isset($this->swooleRequest->files) ? $this->swooleRequest->files : [];
+        $__CONTENT = empty($__FILES) ? $this->swooleRequest->rawContent() : ''; // Cannot call rawContent() to avoid double the file memory when uploading a file.
         $_REQUEST = [];
         $_SESSION = [];
 
@@ -62,7 +63,7 @@ class Request
         // Fix REQUEST_URI with QUERY_STRING
         if (strpos($_SERVER['REQUEST_URI'], '?') === false
             && isset($_SERVER['QUERY_STRING'])
-            && strlen($_SERVER['QUERY_STRING']) > 0
+            && $_SERVER['QUERY_STRING'] !== ''
         ) {
             $_SERVER['REQUEST_URI'] .= '?' . $_SERVER['QUERY_STRING'];
         }
@@ -75,7 +76,7 @@ class Request
 
         // Initialize laravel request
         IlluminateRequest::enableHttpMethodParameterOverride();
-        $request = IlluminateRequest::createFromBase(new \Symfony\Component\HttpFoundation\Request($__GET, $__POST, [], $__COOKIE, $__FILES, $_SERVER, $this->swooleRequest->rawContent()));
+        $request = IlluminateRequest::createFromBase(new \Symfony\Component\HttpFoundation\Request($__GET, $__POST, [], $__COOKIE, $__FILES, $_SERVER, $__CONTENT));
 
         if (0 === strpos($request->headers->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
             && in_array(strtoupper($request->server->get('REQUEST_METHOD', 'GET')), ['PUT', 'DELETE', 'PATCH'])

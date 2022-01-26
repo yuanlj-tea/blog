@@ -6,8 +6,9 @@
     "issues": "https://github.com/hhxsv5/laravel-s/issues",
     "source": "https://github.com/hhxsv5/laravel-s"
   },
-  "description": "🚀LaravelS is like a glue that is used to quickly integrate Swoole into Laravel or Lumen, and then give them better performance and more possibilities.",
+  "description": "🚀 LaravelS is an out-of-the-box adapter between Swoole and Laravel/Lumen.",
   "keywords": [
+    "laravels",
     "laravel-s",
     "swoole",
     "laravel",
@@ -34,14 +35,15 @@
   ],
   "require": {
     "php": ">=5.5.9",
-    "symfony/console": ">=2.7.0",
+    "ext-curl": "*",
     "ext-json": "*",
     "ext-pcntl": "*",
-    "swoole/ide-helper": "@dev"
+    "swoole/ide-helper": "@dev",
+    "symfony/console": ">=2.7.0"
   },
   "suggest": {
-    "ext-swoole": "Event-driven asynchronous & concurrent & coroutine networking engine with high performance for PHP, require >= 1.7.19.",
-    "ext-inotify": "Inotify, used to reload all worker processes when your code is modified."
+    "ext-swoole": "Coroutine-based concurrency library for PHP, require >= 1.7.19.",
+    "ext-inotify": "Inotify, used to real-time reload."
   },
   "autoload": {
     "psr-4": {
@@ -61,5 +63,14 @@
   "prefer-stable": true,
   "minimum-stability": "dev",
   "require-dev": {
+    "phpunit/phpunit": ">=4.8.36"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Hhxsv5\\LaravelS\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "./vendor/bin/phpunit -c phpunit.xml"
   }
 }

@@ -9,9 +9,6 @@
 ## socket_type
 > 默认`SWOOLE_SOCK_TCP`。通常情况下，无需关心这个配置。若需Nginx代理至`UnixSocket Stream`文件，则需修改为`SWOOLE_SOCK_UNIX_STREAM`，此时`listen_ip`则是`UnixSocket Stream`文件的路径。
 
-## enable_coroutine_runtime
-> `bool` 是否启用[运行时协程](https://wiki.swoole.com/wiki/page/965.html)，需`Swoole>=4.1.0`，默认`false`。
-
 ## server
 > `string` 当通过LaravelS响应数据时，设置HTTP头部`Server`的值，若为空则不设置，默认 `LaravelS`。
 
@@ -54,17 +51,14 @@
 ## timer
 > `array` 配置毫秒定时器，参考[示例](https://github.com/hhxsv5/laravel-s/blob/master/README-CN.md#%E6%AF%AB%E7%A7%92%E7%BA%A7%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1)。
 
-## events
-> `array` 自定义的异步事件和监听的绑定列表，参考[示例](https://github.com/hhxsv5/laravel-s/blob/master/README-CN.md#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E5%BC%82%E6%AD%A5%E4%BA%8B%E4%BB%B6)。
-
 ## swoole_tables
 > `array` 定义的`swoole_table`列表，参考[示例](https://github.com/hhxsv5/laravel-s/blob/master/README-CN.md#%E4%BD%BF%E7%94%A8swoole_table)。
 
 ## cleaners
-> `array` `每次请求`的清理器列表，用于清理一些残留的全局变量、单例对象、静态属性，避免多次请求间数据污染。这些清理器类必须实现接口`Hhxsv5\LaravelS\Illuminate\Cleaners\CleanerInterface`。清理的顺序与数组的顺序保持一致。[这些清理器](https://github.com/hhxsv5/laravel-s/blob/master/src/Illuminate/CleanerManager.php#L22)默认已启用。
+> `array` `每次请求`的清理器列表，用于清理一些残留的全局变量、单例对象、静态属性，避免多次请求间数据污染。这些清理器类必须实现接口`Hhxsv5\LaravelS\Illuminate\Cleaners\CleanerInterface`。清理的顺序与数组的顺序保持一致。[这些清理器](https://github.com/hhxsv5/laravel-s/blob/master/src/Illuminate/CleanerManager.php#L31)默认已启用，无需再配置。
 
 ```php
-// 如果你的项目中使用到了Session、Authentication、Passport
+// 如果你的项目中使用到了Session、Authentication、Passport，需配置如下清理器
 'cleaners' => [
     Hhxsv5\LaravelS\Illuminate\Cleaners\SessionCleaner::class,
     Hhxsv5\LaravelS\Illuminate\Cleaners\AuthCleaner::class,
@@ -72,7 +66,7 @@
 ```
 
 ```php
-// 如果你的项目中使用到了包"tymon/jwt-auth"
+// 如果你的项目中使用到了包"tymon/jwt-auth"，需配置如下清理器
 'cleaners' => [
     Hhxsv5\LaravelS\Illuminate\Cleaners\SessionCleaner::class,
     Hhxsv5\LaravelS\Illuminate\Cleaners\AuthCleaner::class,
@@ -81,16 +75,34 @@
 ```
 
 ```php
-// 如果你的项目中使用到了包"spatie/laravel-menu"
+// 如果你的项目中使用到了包"spatie/laravel-menu"，需配置如下清理器
 'cleaners' => [
     Hhxsv5\LaravelS\Illuminate\Cleaners\MenuCleaner::class,
 ],
 ```
 
 ```php
-// 如果你的项目中使用到了包"encore/laravel-admin"
+// 如果你的项目中使用到了包"encore/laravel-admin"，需配置如下清理器
 'cleaners' => [
+    Hhxsv5\LaravelS\Illuminate\Cleaners\SessionCleaner::class,
+    Hhxsv5\LaravelS\Illuminate\Cleaners\AuthCleaner::class,
     Hhxsv5\LaravelS\Illuminate\Cleaners\LaravelAdminCleaner::class,
+],
+```
+
+```php
+// 如果你的项目中使用到了包"jqhph/dcat-admin"
+'cleaners' => [
+    Hhxsv5\LaravelS\Illuminate\Cleaners\SessionCleaner::class,
+    Hhxsv5\LaravelS\Illuminate\Cleaners\AuthCleaner::class,
+    Hhxsv5\LaravelS\Illuminate\Cleaners\DcatAdminCleaner::class,
+],
+```
+
+```php
+// 如果你的项目中使用到了包"tightenco/ziggy"，解决"Ziggy is not defined"
+'cleaners' => [
+    Hhxsv5\LaravelS\Illuminate\Cleaners\ZiggyCleaner::class,
 ],
 ```
 
@@ -109,4 +121,4 @@
 > `array` 每次请求后自动销毁控制器，解决单例控制器的问题，参考[示例](https://github.com/hhxsv5/laravel-s/blob/master/KnownIssues-CN.md#%E5%8D%95%E4%BE%8B%E6%8E%A7%E5%88%B6%E5%99%A8)。
 
 ## swoole
-> `array` Swoole的`原始`配置项，请参考[Swoole配置项](https://wiki.swoole.com/wiki/page/274.html)。
+> `array` Swoole的`原始`配置项，请参考[Swoole服务器配置项](https://wiki.swoole.com/#/server/setting)。

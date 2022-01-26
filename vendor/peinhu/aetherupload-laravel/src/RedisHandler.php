@@ -15,16 +15,13 @@ class RedisHandler
     {
         $result = false;
 
-        if(config('aetherupload.OPEN_REDIS_UPLOAD')){
-            if ( class_exists('\Predis\Connection\ConnectionException') ) {
-                try {
-                    $result = Redis::hexists(config('aetherupload.REDIS_KEY'), $fileHash);
-                } catch ( ConnectionException $e ) {
+        if ( class_exists('\Predis\Connection\ConnectionException') ) {
+            try {
+                $result = Redis::hexists(config('aetherupload.REDIS_KEY'), $fileHash);
+            } catch ( ConnectionException $e ) {
 
-                }
             }
         }
-
 
         return $result;
     }

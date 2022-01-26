@@ -14,19 +14,19 @@ declare(strict_types=1);
 namespace phpDocumentor\Reflection\DocBlock;
 
 use phpDocumentor\Reflection\Types\Context as TypeContext;
-use Webmozart\Assert\Assert;
-use const PREG_SPLIT_DELIM_CAPTURE;
+use phpDocumentor\Reflection\Utils;
+
 use function count;
-use function explode;
 use function implode;
 use function ltrim;
 use function min;
-use function preg_split;
 use function str_replace;
 use function strlen;
 use function strpos;
 use function substr;
 use function trim;
+
+use const PREG_SPLIT_DELIM_CAPTURE;
 
 /**
  * Creates a new Description object given a body of text.
@@ -61,7 +61,7 @@ class DescriptionFactory
     /**
      * Returns the parsed text of this description.
      */
-    public function create(string $contents, ?TypeContext $context = null) : Description
+    public function create(string $contents, ?TypeContext $context = null): Description
     {
         $tokens   = $this->lex($contents);
         $count    = count($tokens);
@@ -89,7 +89,7 @@ class DescriptionFactory
      *
      * @return string[] A series of tokens of which the description text is composed.
      */
-    private function lex(string $contents) : array
+    private function lex(string $contents): array
     {
         $contents = $this->removeSuperfluousStartingWhitespace($contents);
 
@@ -98,7 +98,7 @@ class DescriptionFactory
             return [$contents];
         }
 
-        $parts =  preg_split(
+        return Utils::pregSplit(
             '/\{
                 # "{@}" is not a valid inline tag. This ensures that we do not treat it as one, but treat it literally.
                 (?!@\})
@@ -127,8 +127,6 @@ class DescriptionFactory
             0,
             PREG_SPLIT_DELIM_CAPTURE
         );
-        Assert::isArray($parts);
-        return $parts;
     }
 
     /**
@@ -145,9 +143,9 @@ class DescriptionFactory
      * If we do not normalize the indentation then we have superfluous whitespace on the second and subsequent
      * lines and this may cause rendering issues when, for example, using a Markdown converter.
      */
-    private function removeSuperfluousStartingWhitespace(string $contents) : string
+    private function removeSuperfluousStartingWhitespace(string $contents): string
     {
-        $lines = explode("\n", $contents);
+        $lines = Utils::pregSplit("/\r\n?|\n/", $contents);
 
         // if there is only one line then we don't have lines with superfluous whitespace and
         // can use the contents as-is
@@ -157,9 +155,9 @@ class DescriptionFactory
 
         // determine how many whitespace characters need to be stripped
         $startingSpaceCount = 9999999;
-        for ($i = 1; $i < count($lines); ++$i) {
+        for ($i = 1, $iMax = count($lines); $i < $iMax; ++$i) {
             // lines with a no length do not count as they are not indented at all
-            if (strlen(trim($lines[$i])) === 0) {
+            if (trim($lines[$i]) === '') {
                 continue;
             }
 
@@ -170,7 +168,7 @@ class DescriptionFactory
 
         // strip the number of spaces from each line
         if ($startingSpaceCount > 0) {
-            for ($i = 1; $i < count($lines); ++$i) {
+            for ($i = 1, $iMax = count($lines); $i < $iMax; ++$i) {
                 $lines[$i] = substr($lines[$i], $startingSpaceCount);
             }
         }
