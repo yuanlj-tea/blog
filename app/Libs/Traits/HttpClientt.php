@@ -2,27 +2,30 @@
 
 namespace App\Libs\Traits;
 
+use App\Libs\Facade\SpanFacade;
+use common\helper\UtilHelper;
 use GuzzleHttp\Promise\Utils;
 use Log;
 use GuzzleHttp\Client;
 use App\Libs\Exception\RequestException;
+use OpenTracing\Span;
 use Psr\Http\Message\ResponseInterface;
 
 trait HttpClientt
 {
-    private $baseOptions = [
-        'base_uri' => '',
-        'timeout' => 5.0,
-        // 'proxy' => 'http://127.0.0.1:8888',
-    ];
 
     /**
-     * return base guzzle options
+     * Return base Guzzle options.
+     *
      * @return array
      */
-    protected function getBaseOptions(): array
+    protected function getBaseOptions()
     {
-        $options = method_exists($this, 'getBaseOptions') ? $this->getBaseOptions() : $this->baseOptions;
+        $options = [
+            'base_uri' => method_exists($this, 'getBaseUri') ? $this->getBaseUri() : '',
+            'timeout' => method_exists($this, 'getTimeout') ? $this->getTimeout() : 5.0, // 默认超时 10 秒钟
+            // 'proxy' => 'http://127.0.0.1:8888',
+        ];
 
         return $options;
     }
@@ -69,9 +72,13 @@ trait HttpClientt
     protected function request($method, $endpoint, $options = [], $additionalOptions = [])
     {
         $call = strstr($endpoint, '?', true) ?: $endpoint;
+        $span = SpanFacade::appendGuzzleToSpan($endpoint, $method, $options);
         try {
-            $ret = $this->unwrapResponse($this->getHttpClient($this->getBaseOptions())->{$method}($endpoint, $options));
+            /*** @var $response ResponseInterface */
+            $response = $this->getHttpClient($this->getBaseOptions())->{$method}($endpoint, $options);
+            $ret = $this->unwrapResponse($response);
 
+            $responseCode = $response->getStatusCode();
             $resLog = isset($additionalOptions['ignoreResponse']) ? 'success' : $ret;
 
             Log::info('web_client', [
@@ -82,6 +89,11 @@ trait HttpClientt
                 ],
                 'response' => $resLog,
             ]);
+
+            if ($span instanceof Span) {
+                $span->setTag('response.code', (string)$responseCode);
+                $span->setTag('response.body', cjson_encode($resLog));
+            }
 
             return $ret;
         } catch (\Throwable $t) {
@@ -99,7 +111,17 @@ trait HttpClientt
                 ],
             ]);
 
+            if ($span instanceof Span) {
+                $span->setTag('response.exception', 'true');
+                $span->setTag('response.code', '500');
+                $span->setTag('response.body', cjson_encode($t->getMessage()));
+            }
+
             throw new RequestException($t->getMessage());
+        } finally {
+            if ($span instanceof Span) {
+                $span->finish();
+            }
         }
     }
 

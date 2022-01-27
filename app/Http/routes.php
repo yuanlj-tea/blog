@@ -58,7 +58,9 @@ Route::get('vaptcha/downtime', 'VaptchaController@getDownTime');
 Route::get('vaptcha/vaptchaView', 'VaptchaController@vaptchaView');
 
 //测试laravel queue dispatch
-Route::any('/test', 'Home\IndexController@test');
+Route::group(['middleware' => ['trace']], function () {
+    Route::any('/test', 'Home\IndexController@test');
+});
 Route::get('/lay', 'Home\IndexController@lay');
 //生成二维码
 Route::get('/qrCode', 'Home\IndexController@qrCode');
@@ -198,7 +200,7 @@ Route::group(['prefix' => 'bloom', 'namespace' => 'Home', 'middleware' => 'token
 });
 //分布式锁
 Route::group(['prefix' => 'lock', 'namespace' => 'Home'], function () {
-    Route::get('lock','LockTest@lock')->middleware(['throttle.custom:3,1']);
-    Route::get('testLockCallback','LockTest@testLockCallback');
-    Route::get('testBlock','LockTest@testBlock');
+    Route::get('lock', 'LockTest@lock')->middleware(['throttle.custom:3,1']);
+    Route::get('testLockCallback', 'LockTest@testLockCallback');
+    Route::get('testBlock', 'LockTest@testBlock');
 });

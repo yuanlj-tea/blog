@@ -6,6 +6,8 @@ use App\Http\Model\Article;
 use App\Http\Model\Category;
 use App\Http\Model\Links;
 use App\Libs\Predis;
+use App\Libs\Response;
+use App\Libs\Traits\HttpClientt;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
@@ -27,6 +29,8 @@ use GuzzleHttp\Promise;
 
 class IndexController extends CommonController
 {
+    use HttpClientt;
+
     private $random;
 
     public function index(Request $request)
@@ -136,9 +140,9 @@ class IndexController extends CommonController
 
     public function test()
     {
-        \Log::info('test');
-        sleep(3);
-        pd(11);
+        $this->postJson('http://test.com/t2.php');
+        return Response::succ(['a' => 'b']);
+
         $job = (new test(111))->onQueue('testQueue');
         $this->dispatch($job);
         echo 123;

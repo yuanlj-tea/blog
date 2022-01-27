@@ -11,33 +11,33 @@ if (!function_exists('p')) {
     }
 }
 
-if(!function_exists('oa_http_get')) {
+if (!function_exists('oa_http_get')) {
     /**
      * http get 请求
-     * @param  string
+     * @param string
      */
-    function oa_http_get($url){
+    function oa_http_get($url)
+    {
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array("Connection: close"));
         // curl_setopt($ch, CURLOPT_PROXY, '192.168.79.251:8888');
         //curl_setopt($ch, CURLOPT_USERAGENT, "(kingnet oa web server)");
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        $res=curl_exec($ch);
-        if(curl_errno($ch) || empty($res))
-        {
-            $str = date('Y-m-d H:i:s').':'.
-                $url.'--'.
-                curl_errno($ch).'--'.
-                json_encode($res).'--get--'.
-                curl_error($ch).'--'.
+        $res = curl_exec($ch);
+        if (curl_errno($ch) || empty($res)) {
+            $str = date('Y-m-d H:i:s') . ':' .
+                $url . '--' .
+                curl_errno($ch) . '--' .
+                json_encode($res) . '--get--' .
+                curl_error($ch) . '--' .
                 json_encode(curl_getinfo($ch));
-            file_put_contents('/tmp/curl_error.log',  $str. PHP_EOL, FILE_APPEND);
+            file_put_contents('/tmp/curl_error.log', $str . PHP_EOL, FILE_APPEND);
         }
         curl_close($ch);
 
@@ -47,7 +47,7 @@ if(!function_exists('oa_http_get')) {
 
 /**
  * xss过滤
- * @param  array $input 需要过滤的数组
+ * @param array $input 需要过滤的数组
  * @return array
  */
 function xss_filter($input)
@@ -72,7 +72,7 @@ function xss_filter($input)
 if (!function_exists('xss_decode')) {
     /**
      * xss反转义
-     * @param  array $input 需要反转义的数组
+     * @param array $input 需要反转义的数组
      * @return array
      */
     function xss_decode($input)
@@ -84,9 +84,9 @@ if (!function_exists('xss_decode')) {
                         $input[$key] = xss_decode($value);
                     } else {
                         if (!empty($value)) {
-                            if(is_string($value)){
+                            if (is_string($value)) {
                                 $input[$key] = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
-                            }else{
+                            } else {
                                 $input[$key] = $value;
                             }
                         }
@@ -95,9 +95,9 @@ if (!function_exists('xss_decode')) {
             }
             return $input;
         }
-        if(is_string($input)){
-            return html_entity_decode($input,ENT_QUOTES,'UTF-8');
-        }else{
+        if (is_string($input)) {
+            return html_entity_decode($input, ENT_QUOTES, 'UTF-8');
+        } else {
             return $input;
         }
     }
@@ -116,7 +116,7 @@ if (!function_exists('generate_sign')) {
 if (!function_exists('verify_signature')) {
     /**
      * 验证签名
-     * @param  string
+     * @param string
      */
     function verify_signature($clientSign, $serverData, $key)
     {
@@ -131,7 +131,7 @@ if (!function_exists('verify_signature')) {
 if (!function_exists('verify_signature_by_md5')) {
     /**
      * 验证签名md5法
-     * @param  string
+     * @param string
      */
     function verify_signature_by_md5($clientSign, $serverData, $key)
     {
@@ -143,7 +143,7 @@ if (!function_exists('verify_signature_by_md5')) {
     }
 }
 
-if(!function_exists('is_cli')){
+if (!function_exists('is_cli')) {
     /*
     判断当前的运行环境是否是cli模式
     */
@@ -155,29 +155,30 @@ if(!function_exists('is_cli')){
 
 /**
  * 变量友好化打印输出
- * @param variable  $param  可变参数
- * @example dump($a,$b,$c,$e,[.1]) 支持多变量，使用英文逗号符号分隔，默认方式 print_r，查看数据类型传入 .1
- * @version php>=5.6
+ * @param variable $param 可变参数
  * @return void
+ * @version php>=5.6
+ * @example dump($a,$b,$c,$e,[.1]) 支持多变量，使用英文逗号符号分隔，默认方式 print_r，查看数据类型传入 .1
  */
-function pd(...$param){
+function pd(...$param)
+{
 
     $tag = is_cli() ? "\n" : "<pre>";
     echo $tag;
-    if(end($param) === .1){
+    if (end($param) === .1) {
         array_splice($param, -1, 1);
 
-        foreach($param as $k => $v){
-            echo $k>0 ? $tag : '';
+        foreach ($param as $k => $v) {
+            echo $k > 0 ? $tag : '';
 
             ob_start();
             var_dump($v);
 
             echo preg_replace('/]=>\s+/', '] => <label>', ob_get_clean());
         }
-    }else{
-        foreach($param as $k => $v){
-            echo $k>0 ? $tag : '', print_r($v, true); // echo 逗号速度快 https://segmentfault.com/a/1190000004679782
+    } else {
+        foreach ($param as $k => $v) {
+            echo $k > 0 ? $tag : '', print_r($v, true); // echo 逗号速度快 https://segmentfault.com/a/1190000004679782
         }
     }
     echo is_cli() ? "\n" : '</pre>';
@@ -186,29 +187,30 @@ function pd(...$param){
 
 /**
  * 变量友好化打印输出
- * @param variable  $param  可变参数
- * @example dump($a,$b,$c,$e,[.1]) 支持多变量，使用英文逗号符号分隔，默认方式 print_r，查看数据类型传入 .1
- * @version php>=5.6
+ * @param variable $param 可变参数
  * @return void
+ * @version php>=5.6
+ * @example dump($a,$b,$c,$e,[.1]) 支持多变量，使用英文逗号符号分隔，默认方式 print_r，查看数据类型传入 .1
  */
-function pp(...$param){
+function pp(...$param)
+{
 
     $tag = is_cli() ? "\n" : "<pre>";
     echo $tag;
-    if(end($param) === .1){
+    if (end($param) === .1) {
         array_splice($param, -1, 1);
 
-        foreach($param as $k => $v){
-            echo $k>0 ? $tag : '';
+        foreach ($param as $k => $v) {
+            echo $k > 0 ? $tag : '';
 
             ob_start();
             var_dump($v);
 
             echo preg_replace('/]=>\s+/', '] => <label>', ob_get_clean());
         }
-    }else{
-        foreach($param as $k => $v){
-            echo $k>0 ? $tag : '', print_r($v, true); // echo 逗号速度快 https://segmentfault.com/a/1190000004679782
+    } else {
+        foreach ($param as $k => $v) {
+            echo $k > 0 ? $tag : '', print_r($v, true); // echo 逗号速度快 https://segmentfault.com/a/1190000004679782
         }
     }
     echo is_cli() ? "\n" : '</pre>';
@@ -222,8 +224,9 @@ function request_time()
     return $_SERVER['REQUEST_TIME'] ?? $_SERVER['REQUEST_TIME'] = time();
 }
 
-if(!function_exists('gen_uid')){
-    function gen_uid(){
+if (!function_exists('gen_uid')) {
+    function gen_uid()
+    {
         do {
             $uid = str_replace('.', '0', uniqid(rand(0, 999999999), true));
         } while (strlen($uid) != 32);
@@ -236,5 +239,21 @@ if (!function_exists('is_json_str')) {
     {
         json_decode($string);
         return (json_last_error() == JSON_ERROR_NONE);
+    }
+}
+
+if (!function_exists('cjson_encode')) {
+    function cjson_encode($data)
+    {
+        return json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+}
+
+if (!function_exists('gen_trace_id')) {
+    function gen_trace_id()
+    {
+        [$m, $t] = explode(' ', microtime());
+        $trace_id = date('Ymdhis', $t) . floor($m * 10000) . mt_rand(100000, 999999);
+        return $trace_id;
     }
 }

@@ -36,7 +36,9 @@
         "nmred/kafka-php": "v0.2.0.8",
         "malkusch/lock": "^2.1",
         "yurunsoft/yurun-lock": "dev-master",
-        "yuanlj-tea/trace": "^1.0"
+        "yuanlj-tea/trace": "^1.0",
+        "ext-curl": "*",
+        "ext-json": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
