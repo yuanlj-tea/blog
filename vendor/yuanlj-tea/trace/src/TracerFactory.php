@@ -3,7 +3,7 @@
 namespace Trace;
 
 use Jaeger\Config;
-use Trace\Exception\InvalidParam;
+use Trace\exception\InvalidParam;
 
 class TracerFactory
 {

@@ -59,7 +59,7 @@ return array(
     'League\\Event\\' => array($vendorDir . '/league/event/src'),
     'Lcobucci\\JWT\\' => array($vendorDir . '/lcobucci/jwt/src'),
     'JakubOnderka\\PhpConsoleColor\\' => array($vendorDir . '/jakub-onderka/php-console-color/src'),
-    'Jaeger\\' => array($vendorDir . '/yuanlj-tea/jaeger/src/Jaeger'),
+    'Jaeger\\' => array($vendorDir . '/jonahgeorge/jaeger-client-php/src/Jaeger'),
     'Illuminate\\' => array($vendorDir . '/laravel/framework/src/Illuminate'),
     'Hhxsv5\\LaravelS\\' => array($vendorDir . '/hhxsv5/laravel-s/src'),
     'GuzzleHttp\\Stream\\' => array($vendorDir . '/guzzlehttp/streams/src'),

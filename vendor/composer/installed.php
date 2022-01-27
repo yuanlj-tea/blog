@@ -516,6 +516,15 @@
             'reference' => '5707d5821b30b9a07acfb4d76949784aaa0e9ce9',
             'dev_requirement' => false,
         ),
+        'jonahgeorge/jaeger-client-php' => array(
+            'pretty_version' => 'v1.3.0',
+            'version' => '1.3.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../jonahgeorge/jaeger-client-php',
+            'aliases' => array(),
+            'reference' => '7eac86c031403ebc62d54e41d6f1b1915b54cb58',
+            'dev_requirement' => false,
+        ),
         'kodova/hamcrest-php' => array(
             'dev_requirement' => true,
             'replaced' => array(
@@ -1299,22 +1308,13 @@
             'reference' => '6964c76c7804814a842473e0c8fd15bab0f18e25',
             'dev_requirement' => true,
         ),
-        'yuanlj-tea/jaeger' => array(
-            'pretty_version' => 'v1.0.0',
-            'version' => '1.0.0.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../yuanlj-tea/jaeger',
-            'aliases' => array(),
-            'reference' => 'b54f30ef1bd593dcfd93a5f827c972763f27849b',
-            'dev_requirement' => false,
-        ),
         'yuanlj-tea/trace' => array(
-            'pretty_version' => 'v1.0.5',
-            'version' => '1.0.5.0',
+            'pretty_version' => 'v1.0.1',
+            'version' => '1.0.1.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../yuanlj-tea/trace',
             'aliases' => array(),
-            'reference' => 'f236cf5d8f9cf35258beb0215bcd0b055e072936',
+            'reference' => '39f0bc92092ce94a5d35cec6ebad46f3f24d59ca',
             'dev_requirement' => false,
         ),
         'yurunsoft/yurun-lock' => array(

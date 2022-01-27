@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitb3fd0dfe5d055192a4828f5e95240968
+class ComposerStaticInitcfaece27dbf60189ac72b6b74461b5e1
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
@@ -28,7 +28,7 @@ class ComposerStaticInitb3fd0dfe5d055192a4828f5e95240968
         '256c1545158fc915c75e51a931bdba60' => __DIR__ . '/..' . '/lcobucci/jwt/compat/class-aliases.php',
         '0d273777b2b0d96e49fb3d800c6b0e81' => __DIR__ . '/..' . '/lcobucci/jwt/compat/json-exception-polyfill.php',
         'd6b246ac924292702635bb2349f4a64b' => __DIR__ . '/..' . '/lcobucci/jwt/compat/lcobucci-clock-polyfill.php',
-        '63028051ed68f3ea096f0c7d34930e44' => __DIR__ . '/..' . '/yuanlj-tea/jaeger/src/Jaeger/Constants.php',
+        '822502b10d2c1dae82956ef999e8b4be' => __DIR__ . '/..' . '/jonahgeorge/jaeger-client-php/src/Jaeger/Constants.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
         '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
@@ -419,7 +419,7 @@ class ComposerStaticInitb3fd0dfe5d055192a4828f5e95240968
         ),
         'Jaeger\\' => 
         array (
-            0 => __DIR__ . '/..' . '/yuanlj-tea/jaeger/src/Jaeger',
+            0 => __DIR__ . '/..' . '/jonahgeorge/jaeger-client-php/src/Jaeger',
         ),
         'Illuminate\\' => 
         array (
@@ -1202,11 +1202,11 @@ class ComposerStaticInitb3fd0dfe5d055192a4828f5e95240968
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitb3fd0dfe5d055192a4828f5e95240968::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitb3fd0dfe5d055192a4828f5e95240968::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInitb3fd0dfe5d055192a4828f5e95240968::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitb3fd0dfe5d055192a4828f5e95240968::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitb3fd0dfe5d055192a4828f5e95240968::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitcfaece27dbf60189ac72b6b74461b5e1::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitcfaece27dbf60189ac72b6b74461b5e1::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInitcfaece27dbf60189ac72b6b74461b5e1::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitcfaece27dbf60189ac72b6b74461b5e1::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitcfaece27dbf60189ac72b6b74461b5e1::$classMap;
 
         }, null, ClassLoader::class);
     }
