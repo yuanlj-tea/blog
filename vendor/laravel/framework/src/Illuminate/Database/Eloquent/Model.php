@@ -33,13 +33,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\ConnectionResolverInterface as Resolver;
 
-/**
- * 
- *
- * @mixin \Eloquent
- * @mixin \Illuminate\Database\Eloquent\Builder
- * @mixin \Illuminate\Database\Query\Builder
- */
 abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializable, QueueableEntity, UrlRoutable
 {
     /**
@@ -1493,11 +1486,6 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
         // which is typically an auto-increment value managed by the database.
         else {
             $saved = $this->performInsert($query, $options);
-
-            if (! $this->getConnectionName() &&
-                $connection = $query->getConnection()) {
-                $this->setConnection($connection->getName());
-            }
         }
 
         if ($saved) {

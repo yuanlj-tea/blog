@@ -52,6 +52,7 @@ class Loader
      * Set immutable value.
      *
      * @param bool $immutable
+     *
      * @return $this
      */
     public function setImmutable($immutable = false)
@@ -116,8 +117,8 @@ class Loader
      * - cleaning the name of quotes,
      * - resolving nested variables.
      *
-     * @param string $name
-     * @param string $value
+     * @param string      $name
+     * @param string|null $value
      *
      * @throws \Dotenv\Exception\InvalidFileException
      *
@@ -137,8 +138,8 @@ class Loader
      *
      * Called from `normaliseEnvironmentVariable` and the `VariableFactory`, passed as a callback in `$this->loadFromFile()`.
      *
-     * @param string $name
-     * @param string $value
+     * @param string      $name
+     * @param string|null $value
      *
      * @throws \Dotenv\Exception\InvalidFileException
      *
@@ -146,6 +147,10 @@ class Loader
      */
     public function processFilters($name, $value)
     {
+        if ($value === null) {
+            $value = '';
+        }
+
         list($name, $value) = $this->splitCompoundStringIntoParts($name, $value);
         list($name, $value) = $this->sanitiseVariableName($name, $value);
         list($name, $value) = $this->sanitiseVariableValue($name, $value);
@@ -297,6 +302,7 @@ class Loader
                 return $_SERVER[$name];
             default:
                 $value = getenv($name);
+
                 return $value === false ? null : $value; // switch getenv default to null
         }
     }

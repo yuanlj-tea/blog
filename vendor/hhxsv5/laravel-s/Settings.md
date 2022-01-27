@@ -9,9 +9,6 @@
 ## socket_type
 > `int` Default `SWOOLE_SOCK_TCP`. Usually, you don’t need to care about it. Unless you want Nginx to proxy to the `UnixSocket Stream` file, you need to modify it to `SWOOLE_SOCK_UNIX_STREAM`, and `listen_ip` is the path of `UnixSocket Stream` file.
 
-## enable_coroutine_runtime
-> `bool` Whether enable [runtime coroutine](https://wiki.swoole.com/wiki/page/965.html), require `Swoole>=4.1.0`, default `false`.
-
 ## server
 > `string` Set HTTP header `Server` when respond by LaravelS, default `LaravelS`.
 
@@ -54,17 +51,14 @@
 ## timer
 > `array` The millisecond timer, refer [Demo](https://github.com/hhxsv5/laravel-s/blob/master/README.md#millisecond-cron-job).
 
-## events
-> `array` The customized asynchronous event list of listener binding, refer [Demo](https://github.com/hhxsv5/laravel-s/blob/master/README.md#customized-asynchronous-events).
-
 ## swoole_tables
 > `array` The defined of `swoole_table` list, refer [Demo](https://github.com/hhxsv5/laravel-s/blob/master/README.md#use-swoole_table).
 
 ## cleaners
-> `array` The list of cleaners for `each request` is used to clean up some residual global variables, singleton objects, and static properties to avoid data pollution between requests, these classes must implement interface `Hhxsv5\LaravelS\Illuminate\Cleaners\CleanerInterface`. The order of cleanup is consistent with the order of the arrays. [Some cleaners](https://github.com/hhxsv5/laravel-s/blob/master/src/Illuminate/CleanerManager.php#L22) enabled by default.
+> `array` The list of cleaners for `each request` is used to clean up some residual global variables, singleton objects, and static properties to avoid data pollution between requests, these classes must implement interface `Hhxsv5\LaravelS\Illuminate\Cleaners\CleanerInterface`. The order of cleanup is consistent with the order of the arrays. [These cleaners](https://github.com/hhxsv5/laravel-s/blob/master/src/Illuminate/CleanerManager.php#L31) enabled by default, and do not need to be configured.
 
 ```php
-// If you use the session/authentication/passport in your project
+// Need to configure the following cleaners if you use the session/authentication/passport in your project
 'cleaners' => [
     Hhxsv5\LaravelS\Illuminate\Cleaners\SessionCleaner::class,
     Hhxsv5\LaravelS\Illuminate\Cleaners\AuthCleaner::class,
@@ -72,7 +66,7 @@
 ```
 
 ```php
-// If you use the package "tymon/jwt-auth" in your project
+// Need to configure the following cleaners if you use the package "tymon/jwt-auth" in your project
 'cleaners' => [
     Hhxsv5\LaravelS\Illuminate\Cleaners\SessionCleaner::class,
     Hhxsv5\LaravelS\Illuminate\Cleaners\AuthCleaner::class,
@@ -81,16 +75,34 @@
 ```
 
 ```php
-// If you use the package "spatie/laravel-menu" in your project
+// Need to configure the following cleaners if you use the package "spatie/laravel-menu" in your project
 'cleaners' => [
     Hhxsv5\LaravelS\Illuminate\Cleaners\MenuCleaner::class,
 ],
 ```
 
 ```php
-// If you use the package "encore/laravel-admin" in your project
+// Need to configure the following cleaners if you use the package "encore/laravel-admin" in your project
 'cleaners' => [
+    Hhxsv5\LaravelS\Illuminate\Cleaners\SessionCleaner::class,
+    Hhxsv5\LaravelS\Illuminate\Cleaners\AuthCleaner::class,
     Hhxsv5\LaravelS\Illuminate\Cleaners\LaravelAdminCleaner::class,
+],
+```
+
+```php
+// Need to configure the following cleaners if you use the package "jqhph/dcat-admin" in your project
+'cleaners' => [
+    Hhxsv5\LaravelS\Illuminate\Cleaners\SessionCleaner::class,
+    Hhxsv5\LaravelS\Illuminate\Cleaners\AuthCleaner::class,
+    Hhxsv5\LaravelS\Illuminate\Cleaners\DcatAdminCleaner::class,
+],
+```
+
+```php
+// Need to configure the following cleaners if you use the package "tightenco/ziggy" in your project to solve "Ziggy is not defined"
+'cleaners' => [
+    Hhxsv5\LaravelS\Illuminate\Cleaners\ZiggyCleaner::class,
 ],
 ```
 
@@ -109,4 +121,4 @@
 > `array` Automatically destroy the controllers after each request to solve the problem of the singleton controllers, refer [Demo](https://github.com/hhxsv5/laravel-s/blob/master/KnownIssues.md#singleton-controller).
 
 ## swoole
-> `array` Swoole's `original` configuration items, refer [Swoole Configuration](https://www.swoole.co.uk/docs/modules/swoole-server/configuration).
+> `array` Swoole's `original` configuration items, refer [Swoole Server Configuration](https://www.swoole.co.uk/docs/modules/swoole-server/configuration).

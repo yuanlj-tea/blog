@@ -2,14 +2,16 @@
 
 namespace Hhxsv5\LaravelS\Illuminate\Cleaners;
 
-use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Facade;
 
-class RequestCleaner implements CleanerInterface
+class RequestCleaner extends BaseCleaner
 {
-    public function clean(Container $app, Container $snapshot)
+    public function clean()
     {
-        $app->forgetInstance('request');
+        $this->currentApp->forgetInstance('url');
+        Facade::clearResolvedInstance('url');
+        
+        $this->currentApp->forgetInstance('request');
         Facade::clearResolvedInstance('request');
     }
 }

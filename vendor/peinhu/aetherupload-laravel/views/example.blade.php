@@ -51,9 +51,9 @@
 
     </div>
 </div>
-<script src="/public/js/spark-md5.min.js"></script><!--需要引入spark-md5.min.js-->
+<script src="{{ URL::asset('js/spark-md5.min.js') }}"></script><!--需要引入spark-md5.min.js-->
 <script src="//cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script><!--需要引入jquery.min.js-->
-<script src="/public/js/aetherupload.js"></script><!--需要引入aetherupload.js-->
+<script src="{{ URL::asset('js/aetherupload.js') }}"></script><!--需要引入aetherupload.js-->
 <script>
     // success(callback)中声名的回调方法需在此定义，参数callback可为任意名称，此方法将会在上传完成后被调用
     // 可使用this对象获得fileName,fileSize,uploadBaseName,uploadExt,subDir,group,savedPath等属性的值

@@ -4,8 +4,8 @@
 - 在`LaravelS`中，`Swoole`是以`cli`模式启动的`Http Server`，替代了`FPM`。
 - 投递任务、触发异步事件都会调用`app('swoole')`，从`Laravel容器`中获取`Swoole\http\server`实例。只有在`LaravelS`启动时，才会注入这个实例到容器中。
 - 所以，一旦脱离`LaravelS`，由于跨进程，以下情况，你将`无法`成功调用`app('swoole')`：
-    - 以各种`命令行`方式运行的代码，例如Artisan命令行、PHP脚本命令行。
-    - 运行在`FPM`/`Apache PHP Module`下的代码。
+    - 以各种`命令行`方式运行的代码，例如Artisan命令行、PHP脚本命令行；
+    - 运行在`FPM`/`Apache PHP Module`下的代码，查看SAPI `Log::info('PHP SAPI', [php_sapi_name()]);`。
 
 ## 使用包 [encore/laravel-admin](https://github.com/z-song/laravel-admin)
 > 修改`config/laravels.php`，在`cleaners`中增加`LaravelAdminCleaner`。
@@ -43,7 +43,7 @@
 ```
 
 ## 使用包 [overtrue/wechat](https://github.com/overtrue/wechat)
-> easywechat包会出现异步通知回调失败的问题，原因是`$app['request']`是空的，给其赋值即可。
+> easywechat包会出现异步通知回调失败的问题，原因是`$app['request']->getContent()`是空的，给其赋值即可。
 
 ```php
 //回调通知
@@ -161,7 +161,9 @@ class TestController extends Controller
 
 - `Swoole`限制了`GET`请求头的最大尺寸为`8KB`，建议`Cookie`的不要太大，不然Cookie可能解析失败。
 
-- `POST`数据或文件上传的最大尺寸受`Swoole`配置[`package_max_length`](https://wiki.swoole.com/wiki/page/301.html)影响，默认上限`2M`。
+- `POST`数据或文件上传的大小受`Swoole`配置[`package_max_length`](https://wiki.swoole.com/wiki/page/301.html)限制，默认上限`2M`。
+
+- 文件上传的大小受到了[memory_limit](https://www.php.net/manual/zh/ini.core.php#ini.memory-limit)的限制，默认`128M`。
 
 ## Inotify监听文件数达到上限
 > `Warning: inotify_add_watch(): The user limit on the total number of inotify watches was reached`

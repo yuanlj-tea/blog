@@ -36,7 +36,7 @@
         "nmred/kafka-php": "v0.2.0.8",
         "malkusch/lock": "^2.1",
         "yurunsoft/yurun-lock": "dev-master",
-        "yuanlj/kibana-logger" : "v1.0.0"
+        "yuanlj-tea/trace": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -85,11 +85,7 @@
     "repositories": {
         "packagist": {
             "type": "composer",
-            "url": "https://repo.huaweicloud.com/repository/php/"
-        },
-        "kibana-log": {
-            "type": "git",
-            "url": "git@gitlab.ops.kingnet.com:oa_web_dev/kibana-logger.git"
+            "url": "https://mirrors.aliyun.com/composer/"
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Hhxsv5\LaravelS\Console;
 
+use Hhxsv5\LaravelS\Components\Apollo\Client;
 use Hhxsv5\LaravelS\Illuminate\LogTrait;
 use Hhxsv5\LaravelS\LaravelS;
 use Swoole\Process;
@@ -39,8 +40,10 @@ class Portal extends Command
 
         $this->addArgument('action', InputArgument::OPTIONAL, 'start|stop|restart|reload|info|help', 'help');
         $this->addOption('env', 'e', InputOption::VALUE_OPTIONAL, 'The environment the command should run under, this feature requires Laravel 5.2+');
-        $this->addOption('daemonize', 'd', InputOption::VALUE_NONE, 'Whether run as a daemon for "start & restart"');
-        $this->addOption('ignore', 'i', InputOption::VALUE_NONE, 'Whether ignore checking process pid for "start & restart"');
+        $this->addOption('daemonize', 'd', InputOption::VALUE_NONE, 'Run as a daemon');
+        $this->addOption('ignore', 'i', InputOption::VALUE_NONE, 'Ignore checking PID file of Master process');
+        $this->addOption('x-version', 'x', InputOption::VALUE_OPTIONAL, 'The version(branch) of the current project, stored in $_ENV/$_SERVER');
+        Client::attachCommandOptions($this);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -53,20 +56,15 @@ class Portal extends Command
             $action = $input->getArgument('action');
             switch ($action) {
                 case 'start':
-                    $this->start();
-                    break;
+                    return $this->start();
                 case 'stop':
-                    $this->stop();
-                    break;
+                    return $this->stop();
                 case 'restart':
-                    $this->restart();
-                    break;
+                    return $this->restart();
                 case 'reload':
-                    $this->reload();
-                    break;
+                    return $this->reload();
                 case 'info':
-                    $this->showInfo();
-                    break;
+                    return $this->showInfo();
                 default:
                     $help = <<<EOS
 
@@ -78,12 +76,13 @@ Arguments:
 
 Options:
   -e, --env             The environment the command should run under, this feature requires Laravel 5.2+
-  -d, --daemonize       Whether run as a daemon for "start & restart"
-  -i, --ignore          Whether ignore checking process pid for "start & restart"
+  -d, --daemonize       Run as a daemon
+  -i, --ignore          Ignore checking PID file of Master process
+  -x, --x-version       The version(branch) of the current project, stored in \$_ENV/\$_SERVER
 EOS;
 
                     $this->info(sprintf($help, PHP_BINARY));
-                    break;
+                    return 0;
             }
         } catch (\Exception $e) {
             $error = sprintf(
@@ -97,25 +96,47 @@ EOS;
                 $e->getTraceAsString()
             );
             $this->error($error);
+            return 1;
         }
     }
 
     public function start()
     {
-        if (!extension_loaded('swoole')) {
-            $this->error('LaravelS requires swoole extension, try to `pecl install swoole` and `php --ri swoole`.');
+        if (!extension_loaded('swoole') && !extension_loaded('openswoole')) {
+            $this->error('LaravelS requires swoole / openswoole extension, try to `pecl install swoole` and `php --ri swoole` OR `pecl install openswoole` and `php --ri openswoole`.');
             return 1;
         }
 
-        // Initialize configuration config/laravels.json
+        // Generate conf file storage/laravels.conf
         $options = $this->input->getOptions();
-        unset($options['env']);
-        $options = array_filter($options);
-        $optionStr = '';
-        foreach ($options as $key => $value) {
-            $optionStr .= sprintf('--%s%s ', $key, is_bool($value) ? '' : ('=' . $value));
+        if (isset($options['env']) && $options['env'] !== '') {
+            $_SERVER['_ENV'] = $_ENV['_ENV'] = $options['env'];
         }
-        $this->runArtisanCommand(trim('laravels config ' . $optionStr));
+        if (isset($options['x-version']) && $options['x-version'] !== '') {
+            $_SERVER['X_VERSION'] = $_ENV['X_VERSION'] = $options['x-version'];
+        }
+
+        // Load Apollo configurations to .env file
+        if (!empty($options['enable-apollo'])) {
+            $this->loadApollo($options);
+        }
+
+        $passOptionStr = '';
+        $passOptions = ['daemonize', 'ignore', 'x-version'];
+        foreach ($passOptions as $key) {
+            if (!isset($options[$key])) {
+                continue;
+            }
+            $value = $options[$key];
+            if ($value === false) {
+                continue;
+            }
+            $passOptionStr .= sprintf('--%s%s ', $key, is_bool($value) ? '' : ('=' . $value));
+        }
+        $statusCode = self::runArtisanCommand($this->basePath, trim('laravels config ' . $passOptionStr));
+        if ($statusCode !== 0) {
+            return $statusCode;
+        }
 
         // Here we go...
         $config = $this->getConfig();
@@ -149,42 +170,40 @@ EOS;
         }
 
         $pid = file_get_contents($pidFile);
-        if (self::kill($pid, 0)) {
-            if (self::kill($pid, SIGTERM)) {
-                // Make sure that master process quit
-                $time = 1;
-                $waitTime = isset($config['server']['swoole']['max_wait_time']) ? $config['server']['swoole']['max_wait_time'] : 60;
-                $this->info("The max time of waiting to forcibly stop is {$waitTime}s.");
-                while (self::kill($pid, 0)) {
-                    if ($time > $waitTime) {
-                        $this->warning("Swoole [PID={$pid}] cannot be stopped gracefully in {$waitTime}s, will be stopped forced right now.");
-                        return 1;
-                    }
-                    $this->info("Waiting Swoole[PID={$pid}] to stop. [{$time}]");
-                    sleep(1);
-                    $time++;
-                }
-                $basePath = dirname($pidFile);
-                $deleteFiles = [
-                    $pidFile,
-                    $basePath . '/laravels-custom-processes.pid',
-                    $basePath . '/laravels-timer-process.pid',
-                ];
-                foreach ($deleteFiles as $deleteFile) {
-                    if (file_exists($deleteFile)) {
-                        unlink($deleteFile);
-                    }
-                }
-                $this->info("Swoole [PID={$pid}] is stopped.");
-                return 0;
-            } else {
-                $this->error("Swoole [PID={$pid}] is stopped failed.");
-                return 1;
-            }
-        } else {
+        if (!self::kill($pid, 0)) {
             $this->warning("Swoole [PID={$pid}] does not exist, or permission denied.");
             return 0;
         }
+        if (!self::kill($pid, SIGTERM)) {
+            $this->error("Swoole [PID={$pid}] is stopped failed.");
+            return 1;
+        }
+        // Make sure that master process quit
+        $time = 1;
+        $waitTime = isset($config['server']['swoole']['max_wait_time']) ? $config['server']['swoole']['max_wait_time'] : 60;
+        $this->info("The max time of waiting to forcibly stop is {$waitTime}s.");
+        while (self::kill($pid, 0)) {
+            if ($time > $waitTime) {
+                $this->warning("Swoole [PID={$pid}] cannot be stopped gracefully in {$waitTime}s, will be stopped forced right now.");
+                return 1;
+            }
+            $this->info("Waiting Swoole[PID={$pid}] to stop. [{$time}]");
+            sleep(1);
+            $time++;
+        }
+        $basePath = dirname($pidFile);
+        $deleteFiles = [
+            $pidFile,
+            $basePath . '/laravels-custom-processes.pid',
+            $basePath . '/laravels-timer-process.pid',
+        ];
+        foreach ($deleteFiles as $deleteFile) {
+            if (file_exists($deleteFile)) {
+                unlink($deleteFile);
+            }
+        }
+        $this->info("Swoole [PID={$pid}] is stopped.");
+        return 0;
     }
 
     public function restart()
@@ -202,14 +221,14 @@ EOS;
         $pidFile = $config['server']['swoole']['pid_file'];
         if (!file_exists($pidFile)) {
             $this->error('It seems that Swoole is not running.');
-            return;
+            return 1;
         }
 
         // Reload worker processes
         $pid = file_get_contents($pidFile);
         if (!$pid || !self::kill($pid, 0)) {
             $this->error("Swoole [PID={$pid}] does not exist, or permission denied.");
-            return;
+            return 1;
         }
         if (self::kill($pid, SIGUSR1)) {
             $this->info("Swoole [PID={$pid}] is reloaded.");
@@ -237,12 +256,12 @@ EOS;
         }
 
         // Reload timer process
-        if (!empty($config['server']['timer']['enable'])) {
+        if (!empty($config['server']['timer']['enable']) && !empty($config['server']['timer']['jobs'])) {
             $pidFile = dirname($pidFile) . '/laravels-timer-process.pid';
             $pid = file_get_contents($pidFile);
             if (!$pid || !self::kill($pid, 0)) {
                 $this->error("Timer process[PID={$pid}] does not exist, or permission denied.");
-                return;
+                return 1;
             }
 
             if (self::kill($pid, SIGUSR1)) {
@@ -251,32 +270,82 @@ EOS;
                 $this->error("Timer process[PID={$pid}] is reloaded failed.");
             }
         }
+        return 0;
     }
 
     public function showInfo()
     {
-        $this->runArtisanCommand('laravels info');
+        return self::runArtisanCommand($this->basePath, 'laravels info');
     }
 
-    public function artisanCmd($subCmd)
+    public function loadApollo(array $options)
     {
-        $phpCmd = sprintf('%s -c "%s"', PHP_BINARY, php_ini_loaded_file());
-        $env = $this->input->getOption('env');
-        $envs = $env ? "APP_ENV={$env}" : '';
-        $artisanCmd = trim(sprintf('%s %s %s/artisan %s', $envs, $phpCmd, $this->basePath, $subCmd));
-        return $artisanCmd;
+        Client::putCommandOptionsToEnv($options);
+        $envFile = $this->basePath . '/.env';
+        if (isset($options['env'])) {
+            $envFile .= '.' . $options['env'];
+        }
+        Client::createFromCommandOptions($options)->pullAllAndSave($envFile);
     }
 
-    public function runArtisanCommand($cmd)
+    protected static function makeArtisanCmd($basePath, $subCmd)
     {
-        $cmd = $this->artisanCmd($cmd);
-        self::runCommand($cmd);
+        $phpCmd = self::makePhpCmd();
+        $env = isset($_ENV['_ENV']) ? trim($_ENV['_ENV']) : '';
+        $appEnv = $env === '' ? '' : "APP_ENV={$env}";
+        return trim(sprintf('%s %s %s/artisan %s', $appEnv, $phpCmd, $basePath, $subCmd));
+    }
+
+    protected static function makeLaravelSCmd($basePath, $subCmd)
+    {
+        $phpCmd = self::makePhpCmd();
+        return trim(sprintf('%s %s/bin/laravels %s', $phpCmd, $basePath, $subCmd));
+    }
+
+    protected static function makePhpCmd($subCmd = '')
+    {
+        $iniFile = php_ini_loaded_file();
+        if ($iniFile === false) {
+            $phpCmd = PHP_BINARY;
+        } else {
+            $phpCmd = sprintf('%s -c "%s"', PHP_BINARY, $iniFile);
+        }
+
+        $checkSwooleCmd = $phpCmd.' --ri swoole';
+        $checkOpenSwooleCmd = $phpCmd.' --ri openswoole';
+        // Short-circuit, if Swoole is found Loaded already. If not, check for Open-Swoole as well.
+        if (stripos((string)shell_exec($checkSwooleCmd), 'enabled') === false
+          && stripos((string)shell_exec($checkOpenSwooleCmd), 'enabled') === false) {
+            $phpCmd .= ' -d "extension=swoole"';
+        }
+        
+        return trim($phpCmd . ' ' . $subCmd);
+    }
+
+    public static function runArtisanCommand($basePath, $cmd)
+    {
+        $cmd = self::makeArtisanCmd($basePath, $cmd);
+        return self::runCommand($cmd);
+    }
+
+    public static function runLaravelSCommand($basePath, $cmd)
+    {
+        $cmd = self::makeLaravelSCmd($basePath, $cmd);
+        return self::runCommand($cmd);
     }
 
     public function getConfig()
     {
-        $json = file_get_contents($this->basePath . '/storage/laravels.json');
-        return (array)json_decode($json, true);
+        return unserialize((string)file_get_contents($this->getConfigPath()));
+    }
+
+    protected function getConfigPath()
+    {
+        $storagePath = getenv('APP_STORAGE_PATH');
+        if ($storagePath === false) {
+            $storagePath = $this->basePath . '/storage';
+        }
+        return $storagePath . '/laravels.conf';
     }
 
     public static function runCommand($cmd, $input = null)
@@ -286,10 +355,12 @@ EOS;
             return false;
         }
         if ($input !== null) {
-            fwrite($fp, $input);
+            $bytes = fwrite($fp, $input);
+            if ($bytes === false) {
+                return 1;
+            }
         }
-        pclose($fp);
-        return true;
+        return pclose($fp);
     }
 
     public static function kill($pid, $sig)

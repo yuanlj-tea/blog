@@ -9,7 +9,6 @@ return array(
     'stringEncode' => array($vendorDir . '/paquettg/string-encode/src'),
     'UpdateHelper\\' => array($vendorDir . '/kylekatarnls/update-helper/src'),
     'SimpleSoftwareIO\\QrCode\\' => array($vendorDir . '/simplesoftwareio/simple-qrcode/src'),
-    'Sabberworm\\CSS' => array($vendorDir . '/sabberworm/php-css-parser/lib'),
     'PHPHtmlParser' => array($vendorDir . '/paquettg/php-html-parser/src'),
     'Mockery' => array($vendorDir . '/mockery/mockery/library'),
     'Kafka\\' => array($vendorDir . '/nmred/kafka-php/src'),

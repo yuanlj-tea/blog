@@ -2,6 +2,7 @@
 
 namespace Hhxsv5\LaravelS\Swoole;
 
+use Hhxsv5\LaravelS\Components\MetricCollectorInterface;
 use Hhxsv5\LaravelS\Illuminate\LogTrait;
 use Hhxsv5\LaravelS\Swoole\Process\ProcessTitleTrait;
 use Hhxsv5\LaravelS\Swoole\Socket\PortInterface;
@@ -30,14 +31,10 @@ class Server
     /**@var bool */
     protected $enableWebSocket = false;
 
-    /**@var array */
-    protected $attachedSockets = [];
-
     protected function __construct(array $conf)
     {
         $this->conf = $conf;
         $this->enableWebSocket = !empty($this->conf['websocket']['enable']);
-        $this->attachedSockets = empty($this->conf['sockets']) ? [] : $this->conf['sockets'];
 
         $ip = isset($conf['listen_ip']) ? $conf['listen_ip'] : '127.0.0.1';
         $port = isset($conf['listen_port']) ? $conf['listen_port'] : 5200;
@@ -45,8 +42,8 @@ class Server
 
         if ($socketType === SWOOLE_SOCK_UNIX_STREAM) {
             $socketDir = dirname($ip);
-            if (!file_exists($socketDir)) {
-                mkdir($socketDir);
+            if (!file_exists($socketDir) && !mkdir($socketDir) && !is_dir($socketDir)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $socketDir));
             }
         }
 
@@ -60,17 +57,23 @@ class Server
             $this->swoole = new $serverClass($ip, $port, SWOOLE_PROCESS, $socketType);
         }
 
+        // Disable Coroutine
+        $settings['enable_coroutine'] = false;
+
         $this->swoole->set($settings);
 
-        $this->bindBaseEvent();
-        $this->bindHttpEvent();
-        $this->bindTaskEvent();
-        $this->bindWebSocketEvent();
-        $this->bindAttachedSockets();
+        $this->bindBaseEvents();
+        $this->bindHttpEvents();
+        $this->bindTaskEvents();
+        $this->bindWebSocketEvents();
+        $this->bindPortEvents();
         $this->bindSwooleTables();
+
+        // Disable Hook
+        class_exists('Swoole\Coroutine') && \Swoole\Coroutine::set(['hook_flags' => false]);
     }
 
-    protected function bindBaseEvent()
+    protected function bindBaseEvents()
     {
         $this->swoole->on('Start', [$this, 'onStart']);
         $this->swoole->on('Shutdown', [$this, 'onShutdown']);
@@ -82,12 +85,12 @@ class Server
         $this->swoole->on('PipeMessage', [$this, 'onPipeMessage']);
     }
 
-    protected function bindHttpEvent()
+    protected function bindHttpEvents()
     {
         $this->swoole->on('Request', [$this, 'onRequest']);
     }
 
-    protected function bindTaskEvent()
+    protected function bindTaskEvents()
     {
         if (!empty($this->conf['swoole']['task_worker_num'])) {
             $this->swoole->on('Task', [$this, 'onTask']);
@@ -95,36 +98,67 @@ class Server
         }
     }
 
-    protected function bindWebSocketEvent()
+    protected function triggerWebSocketEvent($event, array $params)
+    {
+        return $this->callWithCatchException(function () use ($event, $params) {
+            $handler = $this->getWebSocketHandler();
+
+            if (method_exists($handler, $event)) {
+                call_user_func_array([$handler, $event], $params);
+            } elseif ($event === 'onHandShake') {
+                // Set default HandShake
+                call_user_func_array([$this, 'onHandShake'], $params);
+            }
+        });
+    }
+
+    protected function bindWebSocketEvents()
     {
         if ($this->enableWebSocket) {
-            $eventHandler = function ($method, array $params) {
-                $this->callWithCatchException(function () use ($method, $params) {
-                    call_user_func_array([$this->getWebSocketHandler(), $method], $params);
-                });
-            };
-
-            $this->swoole->on('Open', function () use ($eventHandler) {
-                $eventHandler('onOpen', func_get_args());
+            $this->swoole->on('HandShake', function () {
+                return $this->triggerWebSocketEvent('onHandShake', func_get_args());
             });
 
-            $this->swoole->on('Message', function () use ($eventHandler) {
-                $eventHandler('onMessage', func_get_args());
+            $this->swoole->on('Open', function () {
+                $this->triggerWebSocketEvent('onOpen', func_get_args());
             });
 
-            $this->swoole->on('Close', function (WebSocketServer $server, $fd, $reactorId) use ($eventHandler) {
+            $this->swoole->on('Message', function () {
+                $this->triggerWebSocketEvent('onMessage', func_get_args());
+            });
+
+            $this->swoole->on('Close', function (WebSocketServer $server, $fd, $reactorId) {
                 $clientInfo = $server->getClientInfo($fd);
                 if (isset($clientInfo['websocket_status']) && $clientInfo['websocket_status'] === \WEBSOCKET_STATUS_FRAME) {
-                    $eventHandler('onClose', func_get_args());
+                    $this->triggerWebSocketEvent('onClose', func_get_args());
                 }
                 // else ignore the close event for http server
             });
         }
     }
 
-    protected function bindAttachedSockets()
+    protected function triggerPortEvent(Port $port, $handlerClass, $event, array $params)
     {
-        foreach ($this->attachedSockets as $socket) {
+        return $this->callWithCatchException(function () use ($port, $handlerClass, $event, $params) {
+            $handler = $this->getSocketHandler($port, $handlerClass);
+
+            if (method_exists($handler, $event)) {
+                call_user_func_array([$handler, $event], $params);
+            } elseif ($event === 'onHandShake') {
+                // Set default HandShake
+                call_user_func_array([$this, 'onHandShake'], $params);
+            }
+        });
+    }
+
+    protected function bindPortEvents()
+    {
+        $sockets = empty($this->conf['sockets']) ? [] : $this->conf['sockets'];
+        foreach ($sockets as $socket) {
+            if (isset($socket['enable']) && !$socket['enable']) {
+                continue;
+            }
+
             $port = $this->swoole->addListener($socket['host'], $socket['port'], $socket['type']);
             if (!($port instanceof Port)) {
                 $errno = method_exists($this->swoole, 'getLastError') ? $this->swoole->getLastError() : 'unknown';
@@ -136,16 +170,10 @@ class Server
             $port->set(empty($socket['settings']) ? [] : $socket['settings']);
 
             $handlerClass = $socket['handler'];
-            $eventHandler = function ($method, array $params) use ($port, $handlerClass) {
-                $handler = $this->getSocketHandler($port, $handlerClass);
-                if (method_exists($handler, $method)) {
-                    $this->callWithCatchException(function () use ($handler, $method, $params) {
-                        call_user_func_array([$handler, $method], $params);
-                    });
-                }
-            };
-            static $events = [
+
+            $events = [
                 'Open',
+                'HandShake',
                 'Request',
                 'Message',
                 'Connect',
@@ -156,8 +184,8 @@ class Server
                 'BufferEmpty',
             ];
             foreach ($events as $event) {
-                $port->on($event, function () use ($event, $eventHandler) {
-                    $eventHandler('on' . $event, func_get_args());
+                $port->on($event, function () use ($port, $handlerClass, $event) {
+                    $this->triggerPortEvent($port, $handlerClass, 'on' . $event, func_get_args());
                 });
             }
         }
@@ -216,7 +244,7 @@ class Server
     {
         $this->setProcessTitle(sprintf('%s laravels: master process', $this->conf['process_prefix']));
 
-        if (version_compare(swoole_version(), '1.9.5', '<')) {
+        if (version_compare(SWOOLE_VERSION, '1.9.5', '<')) {
             file_put_contents($this->conf['swoole']['pid_file'], $server->master_pid);
         }
     }
@@ -236,15 +264,8 @@ class Server
 
     public function onWorkerStart(HttpServer $server, $workerId)
     {
-        if ($workerId >= $server->setting['worker_num']) {
-            $process = 'task worker';
-        } else {
-            $process = 'worker';
-            if (!empty($this->conf['enable_coroutine_runtime'])) {
-                \Swoole\Runtime::enableCoroutine();
-            }
-        }
-        $this->setProcessTitle(sprintf('%s laravels: %s process %d', $this->conf['process_prefix'], $process, $workerId));
+        $processName = $workerId >= $server->setting['worker_num'] ? 'task worker' : 'worker';
+        $this->setProcessTitle(sprintf('%s laravels: %s process %d', $this->conf['process_prefix'], $processName, $workerId));
 
         if (function_exists('opcache_reset')) {
             opcache_reset();
@@ -254,6 +275,9 @@ class Server
         }
 
         clearstatcache();
+
+        // Disable Hook
+        class_exists('Swoole\Runtime') && \Swoole\Runtime::enableCoroutine(false);
     }
 
     public function onWorkerStop(HttpServer $server, $workerId)
@@ -268,12 +292,54 @@ class Server
     public function onPipeMessage(HttpServer $server, $srcWorkerId, $message)
     {
         if ($message instanceof BaseTask) {
-            $this->onTask($server, null, $srcWorkerId, $message);
+            $server->task($message);
+            // $this->onTask($server, null, $srcWorkerId, $message);
+        } elseif ($message instanceof MetricCollectorInterface) {
+            $message->collect([
+                'process_id'   => $server->worker_id,
+                'process_type' => $server->taskworker ? 'task' : 'worker',
+            ]);
         }
     }
 
     public function onRequest(SwooleRequest $swooleRequest, SwooleResponse $swooleResponse)
     {
+    }
+
+    public function onHandShake(SwooleRequest $request, SwooleResponse $response)
+    {
+        if (!isset($request->header['sec-websocket-key'])) {
+            // Bad protocol implementation: it is not RFC6455.
+            $response->end();
+            return;
+        }
+        $secKey = $request->header['sec-websocket-key'];
+        if (!preg_match('#^[+/0-9A-Za-z]{21}[AQgw]==$#', $secKey) || 16 !== strlen(base64_decode($secKey))) {
+            // Header Sec-WebSocket-Key is illegal;
+            $response->end();
+            return;
+        }
+
+        $headers = [
+            'Upgrade'               => 'websocket',
+            'Connection'            => 'Upgrade',
+            'Sec-WebSocket-Accept'  => base64_encode(sha1($secKey . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11', true)),
+            'Sec-WebSocket-Version' => '13',
+        ];
+
+        // WebSocket connection to 'ws://127.0.0.1:5200/'
+        // failed: Error during WebSocket handshake:
+        // Response must not include 'Sec-WebSocket-Protocol' header if not present in request: websocket
+        if (isset($request->header['sec-websocket-protocol'])) {
+            $headers['Sec-WebSocket-Protocol'] = $request->header['sec-websocket-protocol'];
+        }
+
+        foreach ($headers as $key => $value) {
+            $response->header($key, $value);
+        }
+
+        $response->status(101);
+        $response->end();
     }
 
     public function onTask(HttpServer $server, $taskId, $srcWorkerId, $data)
@@ -296,20 +362,15 @@ class Server
 
     protected function handleEvent(Event $event)
     {
-        $eventClass = get_class($event);
-        if (!isset($this->conf['events'][$eventClass])) {
-            return false;
-        }
-
-        $listenerClasses = (array)$this->conf['events'][$eventClass];
+        $listenerClasses = $event->getListeners();
         foreach ($listenerClasses as $listenerClass) {
             /**@var Listener $listener */
-            $listener = new $listenerClass();
+            $listener = new $listenerClass($event);
             if (!($listener instanceof Listener)) {
                 throw new \InvalidArgumentException(sprintf('%s must extend the abstract class %s', $listenerClass, Listener::class));
             }
-            $this->callWithCatchException(function () use ($listener, $event) {
-                $listener->handle($event);
+            $this->callWithCatchException(function () use ($listener) {
+                $listener->handle();
             }, [], $event->getTries());
         }
         return true;
@@ -326,18 +387,20 @@ class Server
     protected function fireEvent($event, $interface, array $arguments)
     {
         if (isset($this->conf['event_handlers'][$event])) {
-            $eventHandler = $this->conf['event_handlers'][$event];
-            if (!isset(class_implements($eventHandler)[$interface])) {
-                throw new \InvalidArgumentException(sprintf(
-                        '%s must implement the interface %s',
-                        $eventHandler,
-                        $interface
-                    )
-                );
+            $eventHandlers = (array)$this->conf['event_handlers'][$event];
+            foreach ($eventHandlers as $eventHandler) {
+                if (!isset(class_implements($eventHandler)[$interface])) {
+                    throw new \InvalidArgumentException(sprintf(
+                            '%s must implement the interface %s',
+                            $eventHandler,
+                            $interface
+                        )
+                    );
+                }
+                $this->callWithCatchException(function () use ($eventHandler, $arguments) {
+                    call_user_func_array([(new $eventHandler), 'handle'], $arguments);
+                });
             }
-            $this->callWithCatchException(function () use ($eventHandler, $arguments) {
-                call_user_func_array([(new $eventHandler), 'handle'], $arguments);
-            });
         }
     }
 

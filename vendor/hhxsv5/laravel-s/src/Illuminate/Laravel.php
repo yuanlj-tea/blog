@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class Laravel
 {
     /**@var Container */
-    protected $app;
+    protected $currentApp;
 
     /**@var Container */
     protected $snapshotApp;
@@ -29,9 +29,13 @@ class Laravel
 
     /**@var array */
     protected static $staticBlackList = [
-        '/index.php'  => 1,
-        '/.htaccess'  => 1,
-        '/web.config' => 1,
+        '/index.php'  => true,
+        '/.htaccess'  => true,
+        '/web.config' => true,
+    ];
+    /**@var array */
+    protected static $staticIndexList = [
+        'index.html',
     ];
 
     /**@var array */
@@ -45,27 +49,25 @@ class Laravel
         $this->conf = $conf;
 
         // Merge $_ENV $_SERVER
-        $server = isset($this->conf['_SERVER']) ? $this->conf['_SERVER'] : [];
-        $env = isset($this->conf['_ENV']) ? $this->conf['_ENV'] : [];
-        $this->rawGlobals['_SERVER'] = $_SERVER + $server;
-        $this->rawGlobals['_ENV'] = $_ENV + $env;
+        $this->rawGlobals['_SERVER'] = $_SERVER + $this->conf['_SERVER'];
+        $this->rawGlobals['_ENV'] = $_ENV + $this->conf['_ENV'];
     }
 
     public function prepareLaravel()
     {
-        list($this->app, $this->kernel) = $this->createAppKernel();
+        list($this->currentApp, $this->kernel) = $this->createAppKernel();
 
-        $this->reflectionApp = new ReflectionApp($this->app);
+        $this->reflectionApp = new ReflectionApp($this->currentApp);
 
         $this->saveSnapshot();
 
         // Create cleaner manager
-        $this->cleanerManager = new CleanerManager($this->app, $this->conf);
+        $this->cleanerManager = new CleanerManager($this->currentApp, $this->snapshotApp, $this->conf);
     }
 
     protected function saveSnapshot()
     {
-        $this->snapshotApp = clone $this->app;
+        $this->snapshotApp = clone $this->currentApp;
 
         $instances = $this->reflectionApp->instances();
 
@@ -81,15 +83,11 @@ class Laravel
 
         // Make kernel for Laravel
         $app = require $this->conf['root_path'] . '/bootstrap/app.php';
-        $kernel = $this->isLumen() ? null : $app->make(HttpKernel::class);
-
-        // Load all Configurations for Lumen
-        if ($this->isLumen()) {
-            $this->configureLumen($app);
-        }
+        $kernel = $this->conf['is_lumen'] ? null : $app->make(HttpKernel::class);
 
         // Boot
-        if ($this->isLumen()) {
+        if ($this->conf['is_lumen']) {
+            $this->configureLumen($app);
             if (method_exists($app, 'boot')) {
                 $app->boot();
             }
@@ -142,12 +140,12 @@ class Laravel
     {
         ob_start();
 
-        if ($this->isLumen()) {
-            $response = $this->app->dispatch($request);
+        if ($this->conf['is_lumen']) {
+            $response = $this->currentApp->dispatch($request);
             if ($response instanceof SymfonyResponse) {
                 $content = $response->getContent();
             } else {
-                $content = (string)$response;
+                $content = $response;
             }
 
             $this->reflectionApp->callTerminableMiddleware($response);
@@ -158,7 +156,7 @@ class Laravel
         }
 
         // prefer content in response, secondly ob
-        if (!($response instanceof StreamedResponse) && strlen($content) === 0 && ob_get_length() > 0) {
+        if (!($response instanceof StreamedResponse) && (string)$content === '' && ob_get_length() > 0) {
             $response->setContent(ob_get_contents());
         }
 
@@ -175,26 +173,24 @@ class Laravel
         }
         $uri = urldecode($uri);
 
-        $publicPath = $this->conf['static_path'];
-        $requestFile = $publicPath . $uri;
+        $requestFile = $this->conf['static_path'] . $uri;
         if (is_file($requestFile)) {
             return $this->createStaticResponse($requestFile, $request);
-        } elseif (is_dir($requestFile)) {
+        }
+        if (is_dir($requestFile)) {
             $indexFile = $this->lookupIndex($requestFile);
             if ($indexFile === false) {
                 return false;
-            } else {
-                return $this->createStaticResponse($indexFile, $request);
             }
-        } else {
-            return false;
+            return $this->createStaticResponse($indexFile, $request);
         }
+        return false;
     }
 
     protected function lookupIndex($folder)
     {
         $folder = rtrim($folder, '/') . '/';
-        foreach (['index.html', 'index.htm'] as $index) {
+        foreach (self::$staticIndexList as $index) {
             $tmpFile = $folder . $index;
             if (is_file($tmpFile)) {
                 return $tmpFile;
@@ -213,43 +209,38 @@ class Laravel
 
     public function clean()
     {
-        $this->cleanerManager->clean($this->snapshotApp);
+        $this->cleanerManager->clean();
         $this->cleanerManager->cleanControllers();
     }
 
     public function cleanProviders()
     {
-        $this->cleanerManager->cleanProviders($this->reflectionApp);
+        $this->cleanerManager->cleanProviders();
     }
 
     public function fireEvent($name, array $params = [])
     {
-        $params[] = $this->app;
-        return method_exists($this->app['events'], 'dispatch') ?
-            $this->app['events']->dispatch($name, $params) : $this->app['events']->fire($name, $params);
+        $params[] = $this->currentApp;
+        return method_exists($this->currentApp['events'], 'dispatch') ?
+            $this->currentApp['events']->dispatch($name, $params) : $this->currentApp['events']->fire($name, $params);
     }
 
     public function bindRequest(IlluminateRequest $request)
     {
-        $this->app->instance('request', $request);
+        $this->currentApp->instance('request', $request);
     }
 
     public function bindSwoole($swoole)
     {
-        $this->app->singleton('swoole', function () use ($swoole) {
+        $this->currentApp->singleton('swoole', function () use ($swoole) {
             return $swoole;
         });
     }
 
     public function saveSession()
     {
-        if ($this->app->offsetExists('session')) {
-            $this->app['session']->save();
+        if (isset($this->currentApp['session'])) {
+            $this->currentApp['session']->save();
         }
-    }
-
-    protected function isLumen()
-    {
-        return $this->conf['is_lumen'];
     }
 }
