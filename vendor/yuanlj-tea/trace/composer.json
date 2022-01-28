@@ -21,6 +21,6 @@
     ],
     "require": {
         "php": ">=7.1",
-        "jonahgeorge/jaeger-client-php": "^1.3"
+        "yuanlj-tea/jaeger": "^1.0"
     }
 }

@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'setasign\\Fpdi\\' => array($vendorDir . '/setasign/fpdi/src'),
-    'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/reflection-common/src', $vendorDir . '/phpdocumentor/type-resolver/src', $vendorDir . '/phpdocumentor/reflection-docblock/src'),
+    'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/reflection-common/src', $vendorDir . '/phpdocumentor/reflection-docblock/src', $vendorDir . '/phpdocumentor/type-resolver/src'),
     'malkusch\\lock\\' => array($vendorDir . '/malkusch/lock/classes'),
     'Yurun\\Until\\Lock\\' => array($vendorDir . '/yurunsoft/yurun-lock/src'),
     'Xuexitest\\' => array($baseDir . '/Xuexitest'),
@@ -59,7 +59,7 @@ return array(
     'League\\Event\\' => array($vendorDir . '/league/event/src'),
     'Lcobucci\\JWT\\' => array($vendorDir . '/lcobucci/jwt/src'),
     'JakubOnderka\\PhpConsoleColor\\' => array($vendorDir . '/jakub-onderka/php-console-color/src'),
-    'Jaeger\\' => array($vendorDir . '/jonahgeorge/jaeger-client-php/src/Jaeger'),
+    'Jaeger\\' => array($vendorDir . '/yuanlj-tea/jaeger/src/Jaeger'),
     'Illuminate\\' => array($vendorDir . '/laravel/framework/src/Illuminate'),
     'Hhxsv5\\LaravelS\\' => array($vendorDir . '/hhxsv5/laravel-s/src'),
     'GuzzleHttp\\Stream\\' => array($vendorDir . '/guzzlehttp/streams/src'),

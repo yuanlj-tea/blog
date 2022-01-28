@@ -13,6 +13,7 @@ use Trace\SpanStarter;
 use OpenTracing\Tracer;
 use Trace\SwitchManager;
 use Trace\SpanTagManager;
+use const OpenTracing\Tags\SPAN_KIND_RPC_SERVER;
 
 class SpanHelper
 {
@@ -80,9 +81,9 @@ class SpanHelper
 
         $path = $request->getPathInfo();
         $method = $request->getMethod();
-        $header = $request->headers;
+        $header = $request->headers->all();
 
-        $span = $this->startSpan('request ' . $path);
+        $span = $this->startSpan('request ' . $path, [], SPAN_KIND_RPC_SERVER, $header);
 
         $span->setTag($this->spanTag->get('request', 'path'), $path);
         $span->setTag($this->spanTag->get('request', 'method'), $method);

@@ -4,15 +4,19 @@ namespace Trace;
 
 use OpenTracing\GlobalTracer;
 use OpenTracing\Span;
+use OpenTracing\Tracer;
 use const OpenTracing\Formats\TEXT_MAP;
 use const OpenTracing\Tags\SPAN_KIND;
 use const OpenTracing\Tags\SPAN_KIND_RPC_SERVER;
 
 trait SpanStarter
 {
-    protected function startSpan(string $name, array $option = [], string $kind = SPAN_KIND_RPC_SERVER, array $header = []): Span
+    protected function startSpan(string $name, array $option = [], string $kind = SPAN_KIND_RPC_SERVER, array $header = []): ?Span
     {
         $tracer = TracerFactory::$tracer;
+        if (!$tracer instanceof Tracer) {
+            return null;
+        }
         $root = ReqCtx::get(Constants::TRACER_ROOT);
 
         if (!$root instanceof Span) {

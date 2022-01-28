@@ -1,6 +1,6 @@
 <?php
 
-namespace Trace\exception;
+namespace Trace\Exception;
 
 class BaseException extends \Exception
 {
